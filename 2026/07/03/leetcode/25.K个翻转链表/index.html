@@ -4,19 +4,18 @@
   <meta charset="utf-8">
   
   
-  <title>15.三数之和 | Hexo</title>
+  <title>Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="做法：双指针123456789101112131415161718192021222324252627282930313233class Solution(object):    def threeSum(self, nums):        &quot;&quot;&quot;        :type nums: List[int]        :rtype: List[List[int]">
+  <meta name="description" content="K 个一组翻转链表Difficulty: Hard Tags: 递归, 链表 题目描述给你链表的头节点 head ，每 k * * 个节点一组进行翻转，请你返回修改后的链表。 k 是一个正整数，它的值小于或等于链表的长度。如果节点总数不是 k * * 的整数倍，那么请将最后剩余的节点保持原有顺序。 你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换。 示例 1：12输入：head &#x3D; [1">
 <meta property="og:type" content="article">
-<meta property="og:title" content="15.三数之和">
-<meta property="og:url" content="http://example.com/2026/07/03/leetcode/15_%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/index.html">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2026/07/03/leetcode/25.K%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="做法：双指针123456789101112131415161718192021222324252627282930313233class Solution(object):    def threeSum(self, nums):        &quot;&quot;&quot;        :type nums: List[int]        :rtype: List[List[int]">
+<meta property="og:description" content="K 个一组翻转链表Difficulty: Hard Tags: 递归, 链表 题目描述给你链表的头节点 head ，每 k * * 个节点一组进行翻转，请你返回修改后的链表。 k 是一个正整数，它的值小于或等于链表的长度。如果节点总数不是 k * * 的整数倍，那么请将最后剩余的节点保持原有顺序。 你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换。 示例 1：12输入：head &#x3D; [1">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-07-03T03:05:46.000Z">
-<meta property="article:modified_time" content="2026-07-03T03:08:55.661Z">
+<meta property="article:published_time" content="2026-07-03T11:34:19.326Z">
+<meta property="article:modified_time" content="2026-07-03T11:34:19.326Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="双指针">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
@@ -74,57 +73,59 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-leetcode/15_三数之和" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-leetcode/25.K个翻转链表" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2026/07/03/leetcode/15_%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/" class="article-date">
-  <time class="dt-published" datetime="2026-07-03T03:05:46.000Z" itemprop="datePublished">2026-07-03</time>
+    <a href="/2026/07/03/leetcode/25.K%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" class="article-date">
+  <time class="dt-published" datetime="2026-07-03T11:34:19.326Z" itemprop="datePublished">2026-07-03</time>
 </a>
     
   </div>
   <div class="article-inner">
     
     
-      <header class="article-header">
-        
-  
-    <h1 class="p-name article-title" itemprop="headline name">
-      15.三数之和
-    </h1>
-  
-
-      </header>
-    
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="做法：双指针"><a href="#做法：双指针" class="headerlink" title="做法：双指针"></a>做法：双指针</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">threeSum</span>(<span class="params">self, nums</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :type nums: List[int]</span></span><br><span class="line"><span class="string">        :rtype: List[List[int]]</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        ans = [] <span class="comment">#等效于 ans = list() 创建一个列表型</span></span><br><span class="line">        n = <span class="built_in">len</span>(nums)</span><br><span class="line">        sorted_nums = <span class="built_in">sorted</span>(nums)</span><br><span class="line">        <span class="comment"># i , j ,k</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, n):</span><br><span class="line">            <span class="keyword">if</span> sorted_nums[i] &gt; <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">if</span> i &gt; <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">if</span> sorted_nums[i] == sorted_nums[i - <span class="number">1</span>]:  <span class="comment"># 去重</span></span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">            add = <span class="number">0</span> - sorted_nums[i]</span><br><span class="line">            j = i + <span class="number">1</span>  <span class="comment"># 确定了i 因为后来和一样，所以用双指针</span></span><br><span class="line">            k = n - <span class="number">1</span></span><br><span class="line">            <span class="keyword">while</span> j &lt; k:</span><br><span class="line">                <span class="keyword">if</span> sorted_nums[j] + sorted_nums[k] == add:</span><br><span class="line">                    ans.append([sorted_nums[i], sorted_nums[j], sorted_nums[k] ])</span><br><span class="line">                    tmp = sorted_nums[k]</span><br><span class="line">                    <span class="keyword">while</span> (j &lt; k) <span class="keyword">and</span> (sorted_nums[k] == tmp):</span><br><span class="line">                        k -= <span class="number">1</span></span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">if</span> sorted_nums[j] + sorted_nums[k] &gt; add:</span><br><span class="line">                    k -= <span class="number">1</span></span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">if</span> sorted_nums[j] + sorted_nums[k] &lt; add:</span><br><span class="line">                    j += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line">            </span><br></pre></td></tr></table></figure>
+        <h1 id="K-个一组翻转链表"><a href="#K-个一组翻转链表" class="headerlink" title="K 个一组翻转链表"></a>K 个一组翻转链表</h1><p><strong>Difficulty:</strong> Hard</p>
+<p><strong>Tags:</strong> 递归, 链表</p>
+<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>给你链表的头节点 <code>head</code> ，每 <code>k</code> * * 个节点一组进行翻转，请你返回修改后的链表。</p>
+<p><code>k</code> 是一个正整数，它的值小于或等于链表的长度。如果节点总数不是 <code>k</code> * * 的整数倍，那么请将最后剩余的节点保持原有顺序。</p>
+<p>你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换。</p>
+<h2 id="示例-1："><a href="#示例-1：" class="headerlink" title="示例 1："></a>示例 1：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head = [1,2,3,4,5], k = 2</span><br><span class="line">输出：[2,1,4,3,5]</span><br></pre></td></tr></table></figure>
+
+<h2 id="示例-2："><a href="#示例-2：" class="headerlink" title="示例 2："></a>示例 2：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head = [1,2,3,4,5], k = 3</span><br><span class="line">输出：[3,2,1,4,5]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>链表中的节点数目为 <code>n</code></li>
+<li><code>1 &lt;= k &lt;= n &lt;= 5000</code></li>
+<li><code>0 &lt;= Node.val &lt;= 1000</code></li>
+</ul>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/leetcode/15_%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/" data-id="cmr7ign0n0004s4tlbd2j5vi1" data-title="15.三数之和" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/leetcode/25.K%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-id="cmr7ign0o0006s4tle7fpghmf" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li></ul>
-
     </footer>
   </div>
   
     
 <nav id="article-nav">
   
-    <a href="/2026/07/03/leetcode/25_k%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2026/07/05/CS231n/2.Regularization_and_Optimization/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          25.K个翻转链表
+          Lesson2
         
       </div>
     </a>
   
   
-    <a href="/2026/07/03/leetcode/283._%E7%A7%BB%E5%8A%A8%E9%9B%B6/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2026/07/03/CS231n/1_Introduction/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">283移动零</div>
+      <div class="article-nav-title">1.Introduction</div>
     </a>
   
 </nav>

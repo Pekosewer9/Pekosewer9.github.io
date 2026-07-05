@@ -71,6 +71,163 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-CS231n/2.Regularization_and_Optimization" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/07/05/CS231n/2.Regularization_and_Optimization/" class="article-date">
+  <time class="dt-published" datetime="2026-07-05T06:00:50.000Z" itemprop="datePublished">2026-07-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/07/05/CS231n/2.Regularization_and_Optimization/">Lesson2</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Regulation-and-Optimization"><a href="#Regulation-and-Optimization" class="headerlink" title="Regulation and Optimization"></a>Regulation and Optimization</h2><h3 id="Loss-Function-tell-u-how-bad-the-model-is"><a href="#Loss-Function-tell-u-how-bad-the-model-is" class="headerlink" title="Loss Function : tell u how bad the model is"></a>Loss Function : tell u how bad the model is</h3><h3 id="正则化"><a href="#正则化" class="headerlink" title="正则化"></a>正则化</h3><blockquote>
+<p>在Loss Function上加上 λR(W) -&gt; 正则项<br>goal：prevent the model doing too much on training data<br>不希望model过拟合</p>
+</blockquote>
+<p>λ -&gt; 超参数 ， 正则化强度</p>
+<p>L2 Regulation R(w) : W^2(每个权值平方相加) L2喜欢分散的权值 </p>
+<p>L2 R：如果权值很小，R(w) 结果就相当低</p>
+<p>L2 正则更喜欢小的但不接近0的权值</p>
+<p>L1 正则喜欢0的权值(稀疏向量)</p>
+<blockquote>
+<p>可能和导数相关?</p>
+</blockquote>
+<p><font color = 'white'>正则化可以让我们表达对模型分布的偏好，简化模型(不一定),比如dropout能让我们得到较好的效果，但是模型会更复杂</p>
+<h3 id="优化-得到最好的W"><a href="#优化-得到最好的W" class="headerlink" title="优化:得到最好的W"></a>优化:得到最好的W</h3><p>following the slope,going downhills</p>
+<blockquote>
+<p>Homework1 : calc the ▽W L</p>
+</blockquote>
+<h3 id="Gradient-descent-梯度下降"><a href="#Gradient-descent-梯度下降" class="headerlink" title="Gradient descent (梯度下降)"></a>Gradient descent (梯度下降)</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Gradient descent</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    weights_grad = evaluate_gradient(loss_fun,data,weights)</span><br><span class="line">    weights += - (step_size * weights_grad) <span class="comment"># - （步长 * 梯度)</span></span><br></pre></td></tr></table></figure>
+
+<p><font color = 'white'>到后面grad变小，长度也变小</p>
+<p>停止：</p>
+<ol>
+<li>固定迭代次数</li>
+<li>最小步长</li>
+</ol>
+<h3 id="Stochastic-Gradient-descent"><a href="#Stochastic-Gradient-descent" class="headerlink" title="Stochastic Gradient descent"></a>Stochastic Gradient descent</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Gradient descent</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    batched_data = sample_training_data(data, <span class="number">256</span>)</span><br><span class="line">    weights_grad = evaluate_gradient(loss_fun, batched_data, weights)</span><br><span class="line">    weights += - (step_size * weights_grad) <span class="comment"># - （步长 * 梯度)</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>problems</p>
+</blockquote>
+<ol>
+<li>jittering(抖动) </li>
+<li>局部最小 , 鞍点(梯度为0)<blockquote>
+<p>在维度变高时，鞍点会变多</p>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p>solution</p>
+</blockquote>
+<ol>
+<li>SGD + Momentum (it can converge faster)<font color = 'white'></li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># SGD + Momentum</span></span><br><span class="line"><span class="comment"># V_t+1 = ρV_t + ▽f(x_t)</span></span><br><span class="line"><span class="comment"># x_t+1 = x_t - αv_t+1 α步长</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    tmp = dx</span><br><span class="line">    dx = p * tmp + eva_gra(loss_func, data, weights)</span><br><span class="line">    x += - (α *dx)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>ρ 一般取 0.9 和 0.99, 反正很大</p>
+</blockquote>
+<h3 id="RMSProp"><a href="#RMSProp" class="headerlink" title="RMSProp"></a>RMSProp</h3><ol start="2">
+<li>RMSProp</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">grad_squared = <span class="number">0</span> <span class="comment"># [是一个向量]</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    dx = eva_gra(x)</span><br><span class="line">    grad_squared = decay_rate * grad_squared + (<span class="number">1</span> - decay_rate) * dx * dx</span><br><span class="line">    x -= learning_rate * dx / (np.sqrt(grad_squared) + <span class="number">1e-7</span>)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>对梯度变化剧烈的方向，减小其学习率；对梯度变化平缓的方向，放大其学习率。</p>
+</blockquote>
+<ol start="3">
+<li>Adam</li>
+</ol>
+<p>Adam &#x3D; SGD + Momentum + RMSProp</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># text here</span></span><br><span class="line"><span class="comment"># 1. Momentum</span></span><br><span class="line"><span class="comment"># 2. Bias correction</span></span><br><span class="line"><span class="comment"># 3. AdaGrad/ RMSProp</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Choose-the-learning-rate"><a href="#Choose-the-learning-rate" class="headerlink" title="Choose the learning rate"></a>Choose the learning rate</h3><p>change the learning rate:</p>
+<ol>
+<li><p>Cosine Learning Rate<br><img src="/image-10.png" alt="alt text"></p>
+</li>
+<li><p>迭代几次后learning rate 下降(比如变为原来1&#x2F;10)</p>
+</li>
+<li><p>Linear Warmup：先</p>
+</li>
+</ol>
+<blockquote>
+<p>Learning Rate Scaling Law:如果batch的数据上升N倍，learning rate 也应该上升N倍</p>
+</blockquote>
+<p>Second-Order Optimization:<br><img src="/image-11.png" alt="alt text"></p>
+<blockquote>
+<p>用Hessian矩阵拟合二阶函数来拟合这个图像<br>在小模型上运行很好</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/07/05/CS231n/2.Regularization_and_Optimization/" data-id="cmr7ign0m0001s4tle93bfzji" data-title="Lesson2" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Optimization/" rel="tag">Optimization</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Regulation/" rel="tag">Regulation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%BC%98%E5%8C%96/" rel="tag">优化</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" rel="tag">正则化</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-leetcode/25.K个翻转链表" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/07/03/leetcode/25.K%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" class="article-date">
+  <time class="dt-published" datetime="2026-07-03T11:34:19.326Z" itemprop="datePublished">2026-07-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="K-个一组翻转链表"><a href="#K-个一组翻转链表" class="headerlink" title="K 个一组翻转链表"></a>K 个一组翻转链表</h1><p><strong>Difficulty:</strong> Hard</p>
+<p><strong>Tags:</strong> 递归, 链表</p>
+<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>给你链表的头节点 <code>head</code> ，每 <code>k</code> * * 个节点一组进行翻转，请你返回修改后的链表。</p>
+<p><code>k</code> 是一个正整数，它的值小于或等于链表的长度。如果节点总数不是 <code>k</code> * * 的整数倍，那么请将最后剩余的节点保持原有顺序。</p>
+<p>你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换。</p>
+<h2 id="示例-1："><a href="#示例-1：" class="headerlink" title="示例 1："></a>示例 1：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head = [1,2,3,4,5], k = 2</span><br><span class="line">输出：[2,1,4,3,5]</span><br></pre></td></tr></table></figure>
+
+<h2 id="示例-2："><a href="#示例-2：" class="headerlink" title="示例 2："></a>示例 2：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head = [1,2,3,4,5], k = 3</span><br><span class="line">输出：[3,2,1,4,5]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>链表中的节点数目为 <code>n</code></li>
+<li><code>1 &lt;= k &lt;= n &lt;= 5000</code></li>
+<li><code>0 &lt;= Node.val &lt;= 1000</code></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/07/03/leetcode/25.K%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-id="cmr7ign0o0006s4tle7fpghmf" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-CS231n/1_Introduction" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2026/07/03/CS231n/1_Introduction/" class="article-date">
@@ -213,7 +370,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/CS231n/1_Introduction/" data-id="cmr4qqj1i000108tl1yhib2y6" data-title="1.Introduction" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/CS231n/1_Introduction/" data-id="cmr7ign0m0002s4tl10om92ts" data-title="1.Introduction" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -269,7 +426,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/leetcode/25_k%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-id="cmr4qqj1m000f08tl8heufnzg" data-title="25.K个翻转链表" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/leetcode/25_k%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-id="cmr7ign0p0008s4tlfdbb2bd9" data-title="25.K个翻转链表" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -309,7 +466,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/leetcode/15_%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/" data-id="cmr4qqj1l000c08tl2n5ne8rm" data-title="15.三数之和" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/leetcode/15_%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/" data-id="cmr7ign0n0004s4tlbd2j5vi1" data-title="15.三数之和" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -355,7 +512,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/leetcode/283._%E7%A7%BB%E5%8A%A8%E9%9B%B6/" data-id="cmr4qqj1l000d08tlbjtt8251" data-title="283移动零" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/leetcode/283._%E7%A7%BB%E5%8A%A8%E9%9B%B6/" data-id="cmr7ign0o0005s4tl25xr7dz7" data-title="283移动零" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -408,7 +565,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/hello-world/" data-id="cmr4qqj1g000008tl3odf7k0a" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/hello-world/" data-id="cmr7ign0f0000s4tlhpjo6vra" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -433,7 +590,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-drivern-approaches/" rel="tag">Data drivern approaches</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K-Nearest-Neighbor/" rel="tag">K-Nearest Neighbor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" rel="tag">K最近邻居算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linear-Classification/" rel="tag">Linear Classification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E7%BB%84/" rel="tag">数组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%88/" rel="tag">栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" rel="tag">线性分类</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%93%BE%E8%A1%A8/" rel="tag">链表</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-drivern-approaches/" rel="tag">Data drivern approaches</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K-Nearest-Neighbor/" rel="tag">K-Nearest Neighbor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" rel="tag">K最近邻居算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linear-Classification/" rel="tag">Linear Classification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Optimization/" rel="tag">Optimization</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Regulation/" rel="tag">Regulation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BC%98%E5%8C%96/" rel="tag">优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E7%BB%84/" rel="tag">数组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%88/" rel="tag">栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" rel="tag">正则化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" rel="tag">线性分类</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%93%BE%E8%A1%A8/" rel="tag">链表</a></li></ul>
     </div>
   </div>
 
@@ -443,7 +600,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Data-drivern-approaches/" style="font-size: 10px;">Data drivern approaches</a> <a href="/tags/K-Nearest-Neighbor/" style="font-size: 10px;">K-Nearest Neighbor</a> <a href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" style="font-size: 10px;">K最近邻居算法</a> <a href="/tags/LeetCode/" style="font-size: 10px;">LeetCode</a> <a href="/tags/Linear-Classification/" style="font-size: 10px;">Linear Classification</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 20px;">双指针</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%A0%88/" style="font-size: 10px;">栈</a> <a href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" style="font-size: 10px;">线性分类</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a>
+      <a href="/tags/Data-drivern-approaches/" style="font-size: 10px;">Data drivern approaches</a> <a href="/tags/K-Nearest-Neighbor/" style="font-size: 10px;">K-Nearest Neighbor</a> <a href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" style="font-size: 10px;">K最近邻居算法</a> <a href="/tags/LeetCode/" style="font-size: 10px;">LeetCode</a> <a href="/tags/Linear-Classification/" style="font-size: 10px;">Linear Classification</a> <a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a> <a href="/tags/Regulation/" style="font-size: 10px;">Regulation</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 10px;">优化</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 20px;">双指针</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%A0%88/" style="font-size: 10px;">栈</a> <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" style="font-size: 10px;">正则化</a> <a href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" style="font-size: 10px;">线性分类</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a>
     </div>
   </div>
 
@@ -465,6 +622,14 @@
       <ul>
         
           <li>
+            <a href="/2026/07/05/CS231n/2.Regularization_and_Optimization/">Lesson2</a>
+          </li>
+        
+          <li>
+            <a href="/2026/07/03/leetcode/25.K%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/">(no title)</a>
+          </li>
+        
+          <li>
             <a href="/2026/07/03/CS231n/1_Introduction/">1.Introduction</a>
           </li>
         
@@ -474,14 +639,6 @@
         
           <li>
             <a href="/2026/07/03/leetcode/15_%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/">15.三数之和</a>
-          </li>
-        
-          <li>
-            <a href="/2026/07/03/leetcode/283._%E7%A7%BB%E5%8A%A8%E9%9B%B6/">283移动零</a>
-          </li>
-        
-          <li>
-            <a href="/2026/07/03/hello-world/">Hello World</a>
           </li>
         
       </ul>
