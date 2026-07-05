@@ -111,7 +111,7 @@
 </blockquote>
 <h3 id="Gradient-descent-梯度下降"><a href="#Gradient-descent-梯度下降" class="headerlink" title="Gradient descent (梯度下降)"></a>Gradient descent (梯度下降)</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Gradient descent</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    weights_grad = evaluate_gradient(loss_fun,data,weights)</span><br><span class="line">    weights += - (step_size * weights_grad) <span class="comment"># - （步长 * 梯度)</span></span><br></pre></td></tr></table></figure>
 
-<p><font color = 'white'>到后面grad变小，长度也变小</p>
+<p><font color = 'black'>到后面grad变小，长度也变小</p>
 <p>停止：</p>
 <ol>
 <li>固定迭代次数</li>
@@ -133,7 +133,7 @@
 <p>solution</p>
 </blockquote>
 <ol>
-<li>SGD + Momentum (it can converge faster)<font color = 'white'></li>
+<li>SGD + Momentum (it can converge faster)<font color = 'black'></li>
 </ol>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># SGD + Momentum</span></span><br><span class="line"><span class="comment"># V_t+1 = ρV_t + ▽f(x_t)</span></span><br><span class="line"><span class="comment"># x_t+1 = x_t - αv_t+1 α步长</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    tmp = dx</span><br><span class="line">    dx = p * tmp + eva_gra(loss_func, data, weights)</span><br><span class="line">    x += - (α *dx)</span><br></pre></td></tr></table></figure>
 <blockquote>
