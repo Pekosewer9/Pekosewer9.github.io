@@ -110,7 +110,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/06/leetcode/394_%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A7%A3%E7%A0%81/" data-id="cmr8u6r6l001224tlabw29nuo" data-title="394. 字符串解码" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/06/leetcode/394_%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A7%A3%E7%A0%81/" data-id="cmr8vimfe000atstl8ylzaqc9" data-title="394. 字符串解码" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -157,11 +157,16 @@
 <p>当 0≤i≤n−2 时，rightMax[i]&#x3D;max(rightMax[i+1],height[i])。</p>
 <p>因此可以正向遍历数组 height 得到数组 leftMax 的每个元素值，反向遍历数组 height 得到数组 rightMax 的每个元素值。</p>
 <p>在得到数组 leftMax 和 rightMax 的每个元素值之后，对于 0≤i&lt;n，下标 i 处能接的雨水量等于 min(leftMax[i],rightMax[i])−height[i]。遍历每个下标位置即可得到能接的雨水总量。</p>
+<h2 id="单调栈"><a href="#单调栈" class="headerlink" title="单调栈"></a>单调栈</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">trap</span>(<span class="params">self, height: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        stack = <span class="built_in">list</span>()</span><br><span class="line">        n = <span class="built_in">len</span>(height)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i, h <span class="keyword">in</span> <span class="built_in">enumerate</span>(height):</span><br><span class="line">            <span class="keyword">while</span> stack <span class="keyword">and</span> h &gt; height[stack[-<span class="number">1</span>]]:</span><br><span class="line">                top = stack.pop()</span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> stack:</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">                left = stack[-<span class="number">1</span>]</span><br><span class="line">                currWidth = i - left - <span class="number">1</span></span><br><span class="line">                currHeight = <span class="built_in">min</span>(height[left], height[i]) - height[top]</span><br><span class="line">                ans += currWidth * currHeight</span><br><span class="line">            stack.append(i)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>弄出一个单调下降的栈，一层层加水</p>
+</blockquote>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/06/leetcode/42_%E6%8E%A5%E9%9B%A8%E6%B0%B4/" data-id="cmr8u6r6l001324tle16p4si2" data-title="42.接雨水" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/06/leetcode/42_%E6%8E%A5%E9%9B%A8%E6%B0%B4/" data-id="cmr8vimfh0016tstlgrxhhe43" data-title="42.接雨水" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -201,7 +206,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/05/CS231n/%E6%8E%A8%E5%AF%BC%E4%B8%80%E5%B1%82Linear_Network%E7%9A%84%E5%AF%BC%E6%95%B0/" data-id="cmr8u6r6g000424tlbemq1rpy" data-title="推导一层Linear_Network的导数" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/05/CS231n/%E6%8E%A8%E5%AF%BC%E4%B8%80%E5%B1%82Linear_Network%E7%9A%84%E5%AF%BC%E6%95%B0/" data-id="cmr8vimfe0009tstlbnoa106o" data-title="推导一层Linear_Network的导数" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -314,7 +319,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/05/CS231n/2.Regularization_and_Optimization/" data-id="cmr8u6r6f000224tlfltv6crd" data-title="Lesson2" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/05/CS231n/2.Regularization_and_Optimization/" data-id="cmr8vimff000ctstlc1t57ed9" data-title="Lesson2" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -358,7 +363,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/leetcode/25.K%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-id="cmr8u6r6h000524tlg517aejk" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/leetcode/25.K%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-id="cmr8vimfd0004tstlgt4uhvfy" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -512,7 +517,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/CS231n/1_Introduction/" data-id="cmr8u6r6e000124tl2i1ge01o" data-title="1.Introduction" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/CS231n/1_Introduction/" data-id="cmr8vimfc0002tstle7bshv9k" data-title="1.Introduction" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -568,7 +573,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/leetcode/25_k%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-id="cmr8u6r6i000924tlfce05smh" data-title="25.K个翻转链表" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/leetcode/25_k%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-id="cmr8vimfe0006tstlbc5qb5y9" data-title="25.K个翻转链表" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -608,7 +613,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/leetcode/15_%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/" data-id="cmr8u6r6h000624tl7gwna24m" data-title="15.三数之和" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/leetcode/15_%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/" data-id="cmr8vimfb0001tstlfysd183y" data-title="15.三数之和" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -654,7 +659,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/leetcode/283._%E7%A7%BB%E5%8A%A8%E9%9B%B6/" data-id="cmr8u6r6h000824tlf2598ia8" data-title="283移动零" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/leetcode/283._%E7%A7%BB%E5%8A%A8%E9%9B%B6/" data-id="cmr8vimfd0005tstl35ci83ug" data-title="283移动零" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -707,7 +712,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/hello-world/" data-id="cmr8u6r6d000024tl1yn3g3we" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/hello-world/" data-id="cmr8vimf90000tstlfqyq3elj" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
