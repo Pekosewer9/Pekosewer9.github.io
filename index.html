@@ -71,6 +71,107 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-leetcode/394_字符串解码" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/07/06/leetcode/394_%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A7%A3%E7%A0%81/" class="article-date">
+  <time class="dt-published" datetime="2026-07-06T05:51:49.000Z" itemprop="datePublished">2026-07-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/07/06/leetcode/394_%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A7%A3%E7%A0%81/">394. 字符串解码</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="递归"><a href="#递归" class="headerlink" title="递归"></a>递归</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">decodeString</span>(<span class="params">self, s</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :type s: str</span></span><br><span class="line"><span class="string">        :rtype: str</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        nums = []</span><br><span class="line">        pain = <span class="string">&quot;&quot;</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">recap</span>(<span class="params">ans,left_index, right_index</span>):</span><br><span class="line">            index = left_index + <span class="number">1</span></span><br><span class="line">            <span class="keyword">while</span> index &lt; right_index:</span><br><span class="line">                num = <span class="number">0</span></span><br><span class="line">                <span class="keyword">if</span> s[index] &lt;= <span class="string">&#x27;9&#x27;</span> <span class="keyword">and</span> s[index] &gt;= <span class="string">&#x27;0&#x27;</span> :</span><br><span class="line">                    mark = <span class="literal">True</span></span><br><span class="line">                    <span class="keyword">while</span> s[index] != <span class="string">&#x27;[&#x27;</span>:</span><br><span class="line">                        num = num * <span class="number">10</span> + <span class="built_in">int</span>(s[index])</span><br><span class="line">                        index += <span class="number">1</span></span><br><span class="line">                    left_count = <span class="number">1</span></span><br><span class="line">                    left_index_post = index</span><br><span class="line">                    <span class="keyword">while</span> left_count != <span class="number">0</span>:</span><br><span class="line">                        index += <span class="number">1</span></span><br><span class="line">                        <span class="keyword">if</span> s[index] == <span class="string">&#x27;[&#x27;</span>:</span><br><span class="line">                            left_count += <span class="number">1</span></span><br><span class="line">                        <span class="keyword">if</span> s[index] == <span class="string">&#x27;]&#x27;</span>:</span><br><span class="line">                            left_count -= <span class="number">1</span></span><br><span class="line">                    right_index_post = index</span><br><span class="line">                    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num):</span><br><span class="line">                        ans = recap(ans,left_index_post, right_index_post)</span><br><span class="line">                    nums.append(num)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    ans = ans + s[index]</span><br><span class="line">                index += <span class="number">1</span></span><br><span class="line">            <span class="keyword">return</span> ans</span><br><span class="line">        pain = recap(<span class="string">&quot;&quot;</span>,-<span class="number">1</span>, <span class="built_in">len</span>(s))</span><br><span class="line">        <span class="keyword">return</span> pain</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">decodeString</span>(<span class="params">self, s: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        stack = <span class="built_in">list</span>()</span><br><span class="line">        index = <span class="number">0</span></span><br><span class="line">        n = <span class="built_in">len</span>(s)</span><br><span class="line">        test = []</span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">strpop</span>():</span><br><span class="line">            str_pre = <span class="string">&quot;&quot;</span></span><br><span class="line">            ch = <span class="string">&#x27;&#x27;</span></span><br><span class="line">            <span class="keyword">while</span> ch != <span class="string">&#x27;[&#x27;</span>:</span><br><span class="line">                ch = stack.pop()</span><br><span class="line">                <span class="keyword">if</span> ch == <span class="string">&#x27;[&#x27;</span>:</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">                str_pre += ch</span><br><span class="line">            cnt = stack.pop()</span><br><span class="line">            str_pre = str_pre[::-<span class="number">1</span>]</span><br><span class="line">            test.append(str_pre)</span><br><span class="line">            l = <span class="built_in">len</span>(str_pre)</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(cnt):</span><br><span class="line">                <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(l):</span><br><span class="line">                    stack.append(str_pre[j])</span><br><span class="line">        <span class="keyword">while</span> index &lt; n:</span><br><span class="line">            <span class="keyword">if</span> (s[index] &lt;= <span class="string">&#x27;9&#x27;</span>) <span class="keyword">and</span> (s[index] &gt;= <span class="string">&#x27;0&#x27;</span>):</span><br><span class="line">                num = <span class="number">0</span></span><br><span class="line">                <span class="keyword">while</span> s[index] != <span class="string">&#x27;[&#x27;</span>:</span><br><span class="line">                    num = num * <span class="number">10</span> + <span class="built_in">int</span>(s[index])</span><br><span class="line">                    index += <span class="number">1</span></span><br><span class="line">                stack.append(num)</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">if</span> s[index] == <span class="string">&#x27;]&#x27;</span>:</span><br><span class="line">                strpop()</span><br><span class="line">                index += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                stack.append(s[index])</span><br><span class="line">                index += <span class="number">1</span></span><br><span class="line">        <span class="comment">## 用join整合stack</span></span><br><span class="line">        result = <span class="string">&quot;&quot;</span></span><br><span class="line">        result = <span class="string">&quot;&quot;</span>.join(stack)</span><br><span class="line">        <span class="comment">## result前的&quot;&quot;是分隔符号，如果为/则为 a/b/c/.....</span></span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>用join整合stack</p>
+</blockquote>
+<p><font color = 'black'>思路就是把整个栈当成输出，当然中间部分需要一些reverse<br>reverse用 str &#x3D; str[::-1]实现</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/07/06/leetcode/394_%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A7%A3%E7%A0%81/" data-id="cmr8u6r6l001224tlabw29nuo" data-title="394. 字符串解码" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%A0%88/" rel="tag">栈</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%80%92%E5%BD%92/" rel="tag">递归</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-leetcode/42_接雨水" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/07/06/leetcode/42_%E6%8E%A5%E9%9B%A8%E6%B0%B4/" class="article-date">
+  <time class="dt-published" datetime="2026-07-06T02:21:25.000Z" itemprop="datePublished">2026-07-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/07/06/leetcode/42_%E6%8E%A5%E9%9B%A8%E6%B0%B4/">42.接雨水</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="模拟"><a href="#模拟" class="headerlink" title="模拟"></a>模拟</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">trap</span>(<span class="params">self, height</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :type height: List[int]</span></span><br><span class="line"><span class="string">        :rtype: int</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        height_cmp = []</span><br><span class="line">        left_bound = <span class="number">0</span></span><br><span class="line">        right_bound = <span class="number">0</span></span><br><span class="line">        n = <span class="built_in">len</span>(height)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            height_cmp.append([height[i], i])</span><br><span class="line">        height_comp = <span class="built_in">sorted</span>(height_cmp, key=<span class="keyword">lambda</span> x: x[<span class="number">0</span>], reverse=<span class="literal">True</span>)</span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, n - <span class="number">1</span>):</span><br><span class="line">            <span class="keyword">if</span> height_comp[i + <span class="number">1</span>][<span class="number">0</span>] == <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            loop = <span class="literal">True</span></span><br><span class="line">            test = []</span><br><span class="line">            loop_bound = [<span class="number">0</span>,<span class="number">0</span>]</span><br><span class="line">            <span class="keyword">if</span> i == <span class="number">0</span>: <span class="comment">#初始条件判断</span></span><br><span class="line">                <span class="keyword">if</span> height_comp[i][<span class="number">1</span>] &lt; height_comp[i + <span class="number">1</span>][<span class="number">1</span>]:</span><br><span class="line">                    left_bound = height_comp[i][<span class="number">1</span>]</span><br><span class="line">                    right_bound = height_comp[i + <span class="number">1</span>][<span class="number">1</span>]</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    right_bound = height_comp[i][<span class="number">1</span>]</span><br><span class="line">                    left_bound = height_comp[i + <span class="number">1</span>][<span class="number">1</span>]</span><br><span class="line">                loop_bound = [left_bound, right_bound]</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">if</span> (height_comp[i + <span class="number">1</span>][<span class="number">1</span>] &lt;= right_bound) <span class="keyword">and</span> (height_comp[i + <span class="number">1</span>][<span class="number">1</span>] &gt;= left_bound):</span><br><span class="line">                    loop = <span class="literal">False</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">if</span> height_comp[i + <span class="number">1</span>][<span class="number">1</span>] &lt; left_bound:</span><br><span class="line">                        loop_bound = [height_comp[i + <span class="number">1</span>][<span class="number">1</span>], left_bound]</span><br><span class="line">                        left_bound = height_comp[i + <span class="number">1</span>][<span class="number">1</span>]</span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        loop_bound = [right_bound, height_comp[i + <span class="number">1</span>][<span class="number">1</span>]]</span><br><span class="line">                        right_bound = height_comp[i + <span class="number">1</span>][<span class="number">1</span>]</span><br><span class="line">            test.append(loop_bound)</span><br><span class="line">            <span class="keyword">if</span> loop == <span class="literal">True</span>:</span><br><span class="line">                <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(loop_bound[<span class="number">0</span>] + <span class="number">1</span>, loop_bound[<span class="number">1</span>]):</span><br><span class="line">                    ans += height_comp[i + <span class="number">1</span>][<span class="number">0</span>] - height[j]</span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line">        </span><br><span class="line"><span class="comment"># 原创思想:按照高度排序，逐步扩展边界</span></span><br><span class="line"><span class="comment"># 速度慢        </span></span><br></pre></td></tr></table></figure>
+
+<h2 id="双指针-动态规划"><a href="#双指针-动态规划" class="headerlink" title="双指针 动态规划"></a>双指针 动态规划</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">trap</span>(<span class="params">self, height</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :type height: List[int]</span></span><br><span class="line"><span class="string">        :rtype: int</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        left, right = <span class="number">0</span>, <span class="built_in">len</span>(height) - <span class="number">1</span></span><br><span class="line">        left_Max = right_Max = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> left &lt; right:</span><br><span class="line">            left_Max = <span class="built_in">max</span>(left_Max, height[left])</span><br><span class="line">            right_Max = <span class="built_in">max</span>(right_Max, height[right])</span><br><span class="line">            <span class="keyword">if</span> height[left] &lt; height[right]:</span><br><span class="line">                ans += left_Max - height[left]</span><br><span class="line">                left += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                ans += right_Max - height[right]</span><br><span class="line">                right -= <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+<p>上述做法的时间复杂度较高是因为需要对每个下标位置都向两边扫描。如果已经知道每个位置两边的最大高度，则可以在 O(n) 的时间内得到能接的雨水总量。使用动态规划的方法，可以在 O(n) 的时间内预处理得到每个位置两边的最大高度。</p>
+<p>创建两个长度为 n 的数组 leftMax 和 rightMax。对于 0≤i&lt;n，leftMax[i] 表示下标 i 及其左边的位置中，height 的最大高度，rightMax[i] 表示下标 i 及其右边的位置中，height 的最大高度。</p>
+<p>显然，leftMax[0]&#x3D;height[0]，rightMax[n−1]&#x3D;height[n−1]。两个数组的其余元素的计算如下：</p>
+<p>当 1≤i≤n−1 时，leftMax[i]&#x3D;max(leftMax[i−1],height[i])；</p>
+<p>当 0≤i≤n−2 时，rightMax[i]&#x3D;max(rightMax[i+1],height[i])。</p>
+<p>因此可以正向遍历数组 height 得到数组 leftMax 的每个元素值，反向遍历数组 height 得到数组 rightMax 的每个元素值。</p>
+<p>在得到数组 leftMax 和 rightMax 的每个元素值之后，对于 0≤i&lt;n，下标 i 处能接的雨水量等于 min(leftMax[i],rightMax[i])−height[i]。遍历每个下标位置即可得到能接的雨水总量。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/07/06/leetcode/42_%E6%8E%A5%E9%9B%A8%E6%B0%B4/" data-id="cmr8u6r6l001324tle16p4si2" data-title="42.接雨水" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" rel="tag">单调栈</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%A0%88/" rel="tag">栈</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-CS231n/推导一层Linear_Network的导数" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2026/07/05/CS231n/%E6%8E%A8%E5%AF%BC%E4%B8%80%E5%B1%82Linear_Network%E7%9A%84%E5%AF%BC%E6%95%B0/" class="article-date">
@@ -97,7 +198,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/05/CS231n/%E6%8E%A8%E5%AF%BC%E4%B8%80%E5%B1%82Linear_Network%E7%9A%84%E5%AF%BC%E6%95%B0/" data-id="cmr7la70h00040ktl9ih408e5" data-title="推导一层Linear_Network的导数" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/05/CS231n/%E6%8E%A8%E5%AF%BC%E4%B8%80%E5%B1%82Linear_Network%E7%9A%84%E5%AF%BC%E6%95%B0/" data-id="cmr8u6r6g000424tlbemq1rpy" data-title="推导一层Linear_Network的导数" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -210,7 +311,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/05/CS231n/2.Regularization_and_Optimization/" data-id="cmr7la70g00020ktlh0s805q2" data-title="Lesson2" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/05/CS231n/2.Regularization_and_Optimization/" data-id="cmr8u6r6f000224tlfltv6crd" data-title="Lesson2" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -254,7 +355,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/leetcode/25.K%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-id="cmr7la70i00060ktl6ggd7zuk" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/leetcode/25.K%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-id="cmr8u6r6h000524tlg517aejk" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -408,7 +509,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/CS231n/1_Introduction/" data-id="cmr7la70f00010ktl6dmncpwe" data-title="1.Introduction" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/CS231n/1_Introduction/" data-id="cmr8u6r6e000124tl2i1ge01o" data-title="1.Introduction" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -464,7 +565,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/leetcode/25_k%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-id="cmr7la70k000r0ktl6ffk8qnd" data-title="25.K个翻转链表" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/leetcode/25_k%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-id="cmr8u6r6i000924tlfce05smh" data-title="25.K个翻转链表" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -504,7 +605,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/leetcode/15_%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/" data-id="cmr7la70h00050ktl17j18iw8" data-title="15.三数之和" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/leetcode/15_%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/" data-id="cmr8u6r6h000624tl7gwna24m" data-title="15.三数之和" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -550,7 +651,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/leetcode/283._%E7%A7%BB%E5%8A%A8%E9%9B%B6/" data-id="cmr7la70j000q0ktl0aacfvug" data-title="283移动零" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/leetcode/283._%E7%A7%BB%E5%8A%A8%E9%9B%B6/" data-id="cmr8u6r6h000824tlf2598ia8" data-title="283移动零" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -603,7 +704,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/hello-world/" data-id="cmr7la70d00000ktlbbbc7q9x" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/hello-world/" data-id="cmr8u6r6d000024tl1yn3g3we" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -628,7 +729,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-drivern-approaches/" rel="tag">Data drivern approaches</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K-Nearest-Neighbor/" rel="tag">K-Nearest Neighbor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" rel="tag">K最近邻居算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linear-Classification/" rel="tag">Linear Classification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Optimization/" rel="tag">Optimization</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Regulation/" rel="tag">Regulation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BC%98%E5%8C%96/" rel="tag">优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E7%BB%84/" rel="tag">数组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%88/" rel="tag">栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" rel="tag">正则化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" rel="tag">线性分类</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%93%BE%E8%A1%A8/" rel="tag">链表</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-drivern-approaches/" rel="tag">Data drivern approaches</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K-Nearest-Neighbor/" rel="tag">K-Nearest Neighbor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" rel="tag">K最近邻居算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linear-Classification/" rel="tag">Linear Classification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Optimization/" rel="tag">Optimization</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Regulation/" rel="tag">Regulation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BC%98%E5%8C%96/" rel="tag">优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" rel="tag">单调栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E7%BB%84/" rel="tag">数组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%88/" rel="tag">栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" rel="tag">正则化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" rel="tag">线性分类</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%92%E5%BD%92/" rel="tag">递归</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%93%BE%E8%A1%A8/" rel="tag">链表</a></li></ul>
     </div>
   </div>
 
@@ -638,7 +739,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Data-drivern-approaches/" style="font-size: 10px;">Data drivern approaches</a> <a href="/tags/K-Nearest-Neighbor/" style="font-size: 10px;">K-Nearest Neighbor</a> <a href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" style="font-size: 10px;">K最近邻居算法</a> <a href="/tags/LeetCode/" style="font-size: 10px;">LeetCode</a> <a href="/tags/Linear-Classification/" style="font-size: 10px;">Linear Classification</a> <a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a> <a href="/tags/Regulation/" style="font-size: 10px;">Regulation</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 10px;">优化</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 20px;">双指针</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%A0%88/" style="font-size: 10px;">栈</a> <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" style="font-size: 10px;">正则化</a> <a href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" style="font-size: 10px;">线性分类</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a>
+      <a href="/tags/Data-drivern-approaches/" style="font-size: 10px;">Data drivern approaches</a> <a href="/tags/K-Nearest-Neighbor/" style="font-size: 10px;">K-Nearest Neighbor</a> <a href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" style="font-size: 10px;">K最近邻居算法</a> <a href="/tags/LeetCode/" style="font-size: 10px;">LeetCode</a> <a href="/tags/Linear-Classification/" style="font-size: 10px;">Linear Classification</a> <a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a> <a href="/tags/Regulation/" style="font-size: 10px;">Regulation</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 10px;">优化</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 10px;">动态规划</a> <a href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" style="font-size: 10px;">单调栈</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 20px;">双指针</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%A0%88/" style="font-size: 20px;">栈</a> <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" style="font-size: 10px;">正则化</a> <a href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" style="font-size: 10px;">线性分类</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 10px;">递归</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a>
     </div>
   </div>
 
@@ -660,6 +761,14 @@
       <ul>
         
           <li>
+            <a href="/2026/07/06/leetcode/394_%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A7%A3%E7%A0%81/">394. 字符串解码</a>
+          </li>
+        
+          <li>
+            <a href="/2026/07/06/leetcode/42_%E6%8E%A5%E9%9B%A8%E6%B0%B4/">42.接雨水</a>
+          </li>
+        
+          <li>
             <a href="/2026/07/05/CS231n/%E6%8E%A8%E5%AF%BC%E4%B8%80%E5%B1%82Linear_Network%E7%9A%84%E5%AF%BC%E6%95%B0/">推导一层Linear_Network的导数</a>
           </li>
         
@@ -669,14 +778,6 @@
         
           <li>
             <a href="/2026/07/03/leetcode/25.K%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/">(no title)</a>
-          </li>
-        
-          <li>
-            <a href="/2026/07/03/CS231n/1_Introduction/">1.Introduction</a>
-          </li>
-        
-          <li>
-            <a href="/2026/07/03/leetcode/25_k%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/">25.K个翻转链表</a>
           </li>
         
       </ul>
