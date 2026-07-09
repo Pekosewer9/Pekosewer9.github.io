@@ -4,15 +4,22 @@
   <meta charset="utf-8">
   
   
-  <title>Tag: 栈 | Hexo</title>
+  <title>CNN | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/tags/%E6%A0%88/index.html">
+  <meta name="description" content="ReLu:   Max(0,Wx) CNNPerceiving and Understanding the virtual world  Convolution Layer || Pooling layer  之前的工作：raw picture -&gt; feature representation -&gt; Neural Network -&gt; label output 怎么把featu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CNN">
+<meta property="og:url" content="http://example.com/2026/07/09/CS231n/CNN/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="ReLu:   Max(0,Wx) CNNPerceiving and Understanding the virtual world  Convolution Layer || Pooling layer  之前的工作：raw picture -&gt; feature representation -&gt; Neural Network -&gt; label output 怎么把featu">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/image-12.png">
+<meta property="article:published_time" content="2026-07-09T07:32:06.000Z">
+<meta property="article:modified_time" content="2026-07-09T08:36:12.510Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="CNN">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/image-12.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -69,77 +76,69 @@
 </header>
 
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2026" class="archive-year">2026</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2026/07/06/leetcode/394_%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A7%A3%E7%A0%81/" class="archive-article-date">
-  <time class="dt-published" datetime="2026-07-06T05:51:49.000Z" itemprop="datePublished">Jul 6</time>
+        <section id="main"><article id="post-CS231n/CNN" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/07/09/CS231n/CNN/" class="article-date">
+  <time class="dt-published" datetime="2026-07-09T07:32:06.000Z" itemprop="datePublished">2026-07-09</time>
 </a>
-      
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2026/07/06/leetcode/394_%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A7%A3%E7%A0%81/">394. 字符串解码</a>
+    <h1 class="p-name article-title" itemprop="headline name">
+      CNN
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
+      </header>
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2026/07/06/leetcode/42_%E6%8E%A5%E9%9B%A8%E6%B0%B4/" class="archive-article-date">
-  <time class="dt-published" datetime="2026-07-06T02:21:25.000Z" itemprop="datePublished">Jul 6</time>
-</a>
+    <div class="e-content article-entry" itemprop="articleBody">
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2026/07/06/leetcode/42_%E6%8E%A5%E9%9B%A8%E6%B0%B4/">42.接雨水</a>
-    </h1>
-  
+        <p>ReLu:   Max(0,Wx)</p>
+<h2 id="CNN"><a href="#CNN" class="headerlink" title="CNN"></a>CNN</h2><p><font color = 'black'>Perceiving and Understanding the virtual world</p>
+<blockquote>
+<p>Convolution Layer || Pooling layer</p>
+</blockquote>
+<p>之前的工作：<br>raw picture -&gt; feature representation -&gt; Neural Network -&gt; label output</p>
+<p>怎么把feature representation输入NN：</p>
+<ol>
+<li>把feature的向量全部连接在一起</li>
+</ol>
+<h4 id="直接NN-VS-feature后NN"><a href="#直接NN-VS-feature后NN" class="headerlink" title="直接NN VS feature后NN"></a>直接NN VS feature后NN</h4><p>一般来说，用直接NN会更好</p>
+<blockquote>
+<p>但是我们还需要人工设计design计算图-&gt;layer的连接样式</p>
+</blockquote>
+<p>CNN结构<br><img src="/image-12.png" alt="alt text"></p>
 
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2026/07/03/leetcode/283._%E7%A7%BB%E5%8A%A8%E9%9B%B6/" class="archive-article-date">
-  <time class="dt-published" datetime="2026-07-03T01:49:24.000Z" itemprop="datePublished">Jul 3</time>
-</a>
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2026/07/03/leetcode/283._%E7%A7%BB%E5%8A%A8%E9%9B%B6/">283移动零</a>
-    </h1>
-  
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/07/09/CS231n/CNN/" data-id="cmrd9600s00058ktl5g9s4kdc" data-title="CNN" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CNN/" rel="tag">CNN</a></li></ul>
 
-    </header>
+    </footer>
   </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2026/07/06/CS231n/3_NN_BackPropagation/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">3_NN_BackPropagation</div>
+    </a>
+  
+</nav>
+
+  
 </article>
-  
-  
-    </div></section>
-  
 
 
 </section>
