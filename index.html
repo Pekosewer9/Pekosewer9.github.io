@@ -205,6 +205,7 @@
 <p>如果没有激活函数，就是linear的，W &#x3D; W1 * W2</p>
 </blockquote>
 <p><font color = 'blue'>max(W1,0)被称为 Relu</p>
+<p>合适的零中心值 和 平滑度 可以获得更快的收敛速度 </p>
 <blockquote>
 <p>缺点:可能创造死的神经元</p>
 </blockquote>
@@ -216,6 +217,18 @@ SiLU x* sigmoid(x)
 <p>缺点:会把数值压缩在一个较窄的范围内，又是会让梯度消失，所以我们不会把他们用在NN的中间层</p>
 </blockquote>
 <h3 id="3layers-FULLY-CONNECTED"><a href="#3layers-FULLY-CONNECTED" class="headerlink" title="3layers - FULLY CONNECTED"></a>3layers - FULLY CONNECTED</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">f = <span class="keyword">lambda</span> x: <span class="number">1.0</span>/(<span class="number">1.0</span> + np.exp(-x)) <span class="comment">#用lambda定义sigmoid函数</span></span><br><span class="line">x = np.random.randn(<span class="number">3</span>, <span class="number">1</span>) </span><br><span class="line">h1 = f(np.dot(W1, x) + b1) <span class="comment">#hidden layer 1</span></span><br><span class="line">h2 = f(np.dot(W2, h1) + b2) <span class="comment"># hidden layer 2</span></span><br><span class="line">out = np.dot(W3, h2) +b3 <span class="comment"># output layer</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>我们选择正则化项而不是减少神经网络层数来防止过拟合</p>
+</blockquote>
+<p>原因：我们要先确保神经网络理解我们的数据，确保表达能力</p>
+<p>如L2 -&gt;  不让W参数过大</p>
+<h2 id="Backpropagation"><a href="#Backpropagation" class="headerlink" title="Backpropagation"></a>Backpropagation</h2><p>we should know how to compute dL&#x2F;dW1 dL&#x2F;dW2 </p>
+<p>![“”,&#x2F;]</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> (<span class="number">1</span> / (<span class="number">1</span> + std::exp((-a))))</span><br></pre></td></tr></table></figure>
+
+<p>sparse jacobian matrix xxxxxxx</p>
+<p>jacobian matrix 当维数大的时候太耗费计算资源：</p>
 
       
     </div>
