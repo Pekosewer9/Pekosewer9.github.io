@@ -20,3 +20,10 @@ class NearestNeighbor(object):
             y_predict[i] = self.Ytr[index]
 
         return y_predict
+    
+    '''
+    np.zeros()
+    np.sum(para,axis = x)
+    np.argmin() 返回index
+    
+    '''
