@@ -4,22 +4,21 @@
   <meta charset="utf-8">
   
   
-  <title>CNN | Hexo</title>
+  <title>279. 完全平方数 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="ReLu:   Max(0,Wx) CNNPerceiving and Understanding the virtual world  Convolution Layer || Pooling layer  之前的工作：raw picture -&gt; feature representation -&gt; Neural Network -&gt; label output 怎么把featu">
+  <meta name="description" content="给你一个整数 n ，返回 和为 n 的完全平方数的最少数量 。 完全平方数 是一个整数，其值等于另一个整数的平方；换句话说，其值等于一个整数自乘的积。例如，1、4、9 和 16 都是完全平方数，而 3 和 11 不是。 完全背包 因为一定会遇到 完全平方数, 我们可以直接遍历小于i的完全平方数，让O（n^2） 变为O（nlogn）  12345678910111213class Solution:">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CNN">
-<meta property="og:url" content="http://example.com/2026/07/09/CS231n/CNN/index.html">
+<meta property="og:title" content="279. 完全平方数">
+<meta property="og:url" content="http://example.com/2026/07/11/leetcode/279.%20%E5%AE%8C%E5%85%A8%E5%B9%B3%E6%96%B9%E6%95%B0/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="ReLu:   Max(0,Wx) CNNPerceiving and Understanding the virtual world  Convolution Layer || Pooling layer  之前的工作：raw picture -&gt; feature representation -&gt; Neural Network -&gt; label output 怎么把featu">
+<meta property="og:description" content="给你一个整数 n ，返回 和为 n 的完全平方数的最少数量 。 完全平方数 是一个整数，其值等于另一个整数的平方；换句话说，其值等于一个整数自乘的积。例如，1、4、9 和 16 都是完全平方数，而 3 和 11 不是。 完全背包 因为一定会遇到 完全平方数, 我们可以直接遍历小于i的完全平方数，让O（n^2） 变为O（nlogn）  12345678910111213class Solution:">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2026/07/09/CS231n/CNN/image-12.png">
-<meta property="article:published_time" content="2026-07-09T07:32:06.000Z">
-<meta property="article:modified_time" content="2026-07-09T10:45:13.261Z">
+<meta property="article:published_time" content="2026-07-11T05:55:21.000Z">
+<meta property="article:modified_time" content="2026-07-11T06:08:19.198Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="CNN">
+<meta property="article:tag" content="动态规划">
+<meta property="article:tag" content="完全背包">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2026/07/09/CS231n/CNN/image-12.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -76,10 +75,10 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-CS231n/CNN" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-leetcode/279. 完全平方数" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2026/07/09/CS231n/CNN/" class="article-date">
-  <time class="dt-published" datetime="2026-07-09T07:32:06.000Z" itemprop="datePublished">2026-07-09</time>
+    <a href="/2026/07/11/leetcode/279.%20%E5%AE%8C%E5%85%A8%E5%B9%B3%E6%96%B9%E6%95%B0/" class="article-date">
+  <time class="dt-published" datetime="2026-07-11T05:55:21.000Z" itemprop="datePublished">2026-07-11</time>
 </a>
     
   </div>
@@ -90,7 +89,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      CNN
+      279. 完全平方数
     </h1>
   
 
@@ -98,79 +97,22 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>ReLu:   Max(0,Wx)</p>
-<h2 id="CNN"><a href="#CNN" class="headerlink" title="CNN"></a>CNN</h2><p><font color = 'black'>Perceiving and Understanding the virtual world</p>
-<blockquote>
-<p>Convolution Layer || Pooling layer</p>
+        <p>给你一个整数 n ，返回 和为 n 的完全平方数的最少数量 。</p>
+<p>完全平方数 是一个整数，其值等于另一个整数的平方；换句话说，其值等于一个整数自乘的积。例如，1、4、9 和 16 都是完全平方数，而 3 和 11 不是。</p>
+<h2 id="完全背包"><a href="#完全背包" class="headerlink" title="完全背包"></a>完全背包</h2><blockquote>
+<p>因为一定会遇到 完全平方数, 我们可以直接遍历小于i的完全平方数，让O（n^2） 变为O（nlogn）</p>
 </blockquote>
-<p>之前的工作：<br>raw picture -&gt; feature representation -&gt; Neural Network -&gt; label output</p>
-<p>怎么把feature representation输入NN：</p>
-<ol>
-<li>把feature的向量全部连接在一起</li>
-</ol>
-<h4 id="直接NN-VS-feature后NN"><a href="#直接NN-VS-feature后NN" class="headerlink" title="直接NN VS feature后NN"></a>直接NN VS feature后NN</h4><p>一般来说，用直接NN会更好</p>
-<blockquote>
-<p>但是我们还需要人工设计design计算图-&gt;layer的连接样式</p>
-</blockquote>
-<p>CNN结构</p>
-<img src="/2026/07/09/CS231n/CNN/image-12.png" class="" title="alt text">
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">numSquares</span>(<span class="params">self, n: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># dp[i] -&gt; i 为最低的完全平方数之和</span></span><br><span class="line">        dp = (n + <span class="number">1</span>) * [<span class="number">99999999</span>]</span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">0</span></span><br><span class="line">        index = <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,n + <span class="number">1</span>):</span><br><span class="line">            j = <span class="number">1</span></span><br><span class="line">            <span class="keyword">while</span> j * j &lt;= i:</span><br><span class="line">                dp[i] = <span class="built_in">min</span>(dp[i] , dp[i - j * j] + <span class="number">1</span>)</span><br><span class="line">                j += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> dp[n]</span><br><span class="line">        <span class="comment"># 完全背包</span></span><br></pre></td></tr></table></figure>
 
-<p>用途：几乎所有视觉问题，包括TEXT2IMG IMG2TEXT , 视觉分割</p>
-<p>Fully Connected layer: templates , 拉伸</p>
-<p>Convolution layer: 不拉伸 , filter: pixel image , </p>
-
-
-
-<h3 id="Exp"><a href="#Exp" class="headerlink" title="Exp:"></a>Exp:</h3><p>32 * 32 * 3 image — 5 * 5 * 3 filter -&gt; 28 * 28  * 1 result</p>
-<p>用 6 个 filter</p>
-<p>3* 32 * 32  image — 6 * 3 * 5 * 5 -&gt; 6 * 28 * 28 + bias (6 维)[每个filter公用一个bias，这个bias在一个filter中是一个标量，所以bias总共是6维的] -&gt; 6* 28 * 28 result</p>
-<blockquote>
-<p>bias 和 6-d的filter都是通过梯度下降得到的</p>
-</blockquote>
-<p>Filter size:<br><font color = 'blue'> cout * cin * Kw * Kh </p>
-<p><font colot = 'black'>在Convolution layer中间，我们需要加入Relu等其他激活函数-&gt;不然就会退化成一层convolution layer</p>
-<p>第一层filter最终学习到的样式：</p>
-<ol>
-<li>对比色 （如pink &amp;&amp; green）</li>
-<li>边缘检测</li>
-</ol>
-<blockquote>
-<p>Q:为什么滤波器会不同<br>A:因为随机初始化不同，所以随机的初始时很重要的</p>
-</blockquote>
-<p>后面的filter不能直接看出来，要看对哪些图像响应明显</p>
-<p>Input : x * x</p>
-<p>Filter y * y</p>
-<p>Output (x-y+1) * (x - y + 1)</p>
-<h3 id="想要让OUTPUT也保持x-x"><a href="#想要让OUTPUT也保持x-x" class="headerlink" title="想要让OUTPUT也保持x * x"></a>想要让OUTPUT也保持x * x</h3><ol>
-<li>paddle ，在外面一圈加入额外的数字 0</li>
-</ol>
-<h3 id="感受野"><a href="#感受野" class="headerlink" title="感受野"></a>感受野</h3><p>越到后面，每一个pixel表示的感受野越大</p>
-<p>但是我们想让感受野变大变得更快</p>
-<ol>
-<li>stride</li>
-<li>pooling</li>
-</ol>
-<h3 id="stride-每一次filter跳的步数"><a href="#stride-每一次filter跳的步数" class="headerlink" title="stride , 每一次filter跳的步数"></a>stride , 每一次filter跳的步数</h3><blockquote>
-<p>input W  filter K padding P Stride S<br>output &#x3D; (W-K+2P)&#x2F;S + 1 &#x3D; (W&#x2F;S) + 1</p>
-</blockquote>
-<h2 id="Pooling"><a href="#Pooling" class="headerlink" title="Pooling"></a>Pooling</h2><p>Exp:</p>
-<p>64 * 224 * 224 -pool-&gt; 64* 112 * 112</p>
-<p>一般使用stride &#x3D; 2 || 4</p>
-<h3 id="downsampling-method"><a href="#downsampling-method" class="headerlink" title="downsampling method:"></a>downsampling method:</h3><ol>
-<li>maxpooling</li>
-<li>meanpooling</li>
-</ol>
-<h3 id="平移不变性"><a href="#平移不变性" class="headerlink" title="平移不变性"></a>平移不变性</h3><p>先平移再卷积和先卷积再平移得到的结果一样</p>
-<p>所以CNN是尊重空间结构的</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/09/CS231n/CNN/" data-id="cmrd988r1001ec4tl23bwdkh3" data-title="CNN" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/11/leetcode/279.%20%E5%AE%8C%E5%85%A8%E5%B9%B3%E6%96%B9%E6%95%B0/" data-id="cmrfyrh710000i4tlexpcdljn" data-title="279. 完全平方数" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CNN/" rel="tag">CNN</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/" rel="tag">完全背包</a></li></ul>
 
     </footer>
   </div>
@@ -178,19 +120,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2026/07/10/leetcode/739.%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          739.每日温度
-        
-      </div>
-    </a>
   
-  
-    <a href="/2026/07/06/CS231n/3_NN_BackPropagation/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2026/07/11/leetcode/438.%20%E6%89%BE%E5%88%B0%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%AD%E6%89%80%E6%9C%89%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">3_NN_BackPropagation</div>
+      <div class="article-nav-title">438. 找到字符串中所有字母异位词</div>
     </a>
   
 </nav>
