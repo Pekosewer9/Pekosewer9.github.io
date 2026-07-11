@@ -138,7 +138,7 @@
 <h2 id="CNN-Archetectures"><a href="#CNN-Archetectures" class="headerlink" title="CNN Archetectures"></a>CNN Archetectures</h2>
 
 <p>最后的FC 1000 -&gt; ImageNet有1000个类别</p>
-<p><font color = 'red' > why 3 * 3 Conv(stride &#x3D; 1, pad &#x3D; 1) : 在每一层都可以将感受野边长加长 2 ， 3个3 * 3 Conv -&gt; 7 * 7 感受野，且 3个 3 * 3有更少的 参数</p>
+<p><font color = 'red' > why 3 * 3 Conv(stride &#x3D; 1, pad &#x3D; 1) : 在每一层都可以将感受野边长加长 2 ， 3个3 * 3 Conv -&gt; 7 * 7 感受野，且 3个 3 * 3有更少的 参数，且多个3*3有更多非线性的激活函数</p>
 <font color = 'black'>
 
 <h3 id="RestNet"><a href="#RestNet" class="headerlink" title="RestNet"></a>RestNet</h3><p>更深层模型为什么表示能力反而变差了：更难优化！(局部最小化)</p>
@@ -147,6 +147,52 @@
 <p>用了RestNet后 ： 更大层数带来了更好的性能，一直到100-152层之后就没有很大变化</p>
 <p>在极深的网络中，反向传播时梯度非常容易在倒退回前几层时“干涸”（梯度消失）。而右边的 Identity 相当于铺设了一条梯度高速公路。在反向传播计算导数时，$\frac{d(F(X)+X)}{dX} &#x3D; \frac{dF(X)}{dX} + 1$。即使主干部分的梯度 $\frac{dF(X)}{dX}$ 趋近于 $0$，后面那个恒稳的 $+1$ 也能保证梯度毫无损耗地传回前一层，从而彻底解决了网络堆叠太深时无法训练的问题。</p>
 
+
+
+<h2 id="Weight-Initialization"><a href="#Weight-Initialization" class="headerlink" title="Weight Initialization"></a>Weight Initialization</h2><p>kai ming initialize : </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">W = np.random.randomn(Din, Dout) * np.sqrt(<span class="number">2</span>/ Din)</span><br><span class="line"><span class="comment"># Din 维度越大 ， W需要越小的lamda</span></span><br></pre></td></tr></table></figure>
+
+<p>Normlization:可能会难以优化</p>
+<h2 id="Data-Preprocessing"><a href="#Data-Preprocessing" class="headerlink" title="Data Preprocessing"></a>Data Preprocessing</h2><p>数据预处理</p>
+<ol>
+<li>img : 在不同的通道上归一化<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">norm_pixel[i, j, c] = (pixel[i, j, c] - np.mean(pixel[:,:,c]))/ np.std(pixel[:,:,c])</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="Data-augmentation"><a href="#Data-augmentation" class="headerlink" title="Data augmentation"></a>Data augmentation</h2><p>Data Augmentation（数据增强） 是机器学习和深度学习中的一项关键技术，指的是在不增加真实数据的情况下，通过对现有数据进行各种变换，人工生成更多样的训练样本。</p>
+<ol>
+<li>水平|垂直翻转，旋转(CV)</li>
+<li>调整大小|裁剪 先随机裁剪，再随机reshape成需要的大小(CV)</li>
+<li>color jitter 调整对比度和亮度</li>
+<li>Cutout 在图片的某个部分加上灰框(模拟遮挡)</li>
+</ol>
+<p>If we dont have a lot of data,Can u still train CNNs?</p>
+<h2 id="Transfer-Learning"><a href="#Transfer-Learning" class="headerlink" title="Transfer Learning"></a>Transfer Learning</h2><p>把模型最后一层看成一个KNN 或者 Linear layer,只不过对象不是像素，而是各种被提取出来的特征</p>
+<blockquote>
+<p>小数据集</p>
+</blockquote>
+<ol>
+<li>在大的数据集上训练出来trainer</li>
+<li>冻结下面的Conv以及FC.</li>
+<li>用小数据集训练加上在FC1000后的，最后一层FC - C</li>
+</ol>
+<blockquote>
+<p>大数据集</p>
+</blockquote>
+<ol>
+<li>在大数据上训练出来trainer</li>
+<li>用这个参数初始化每一层的参数W</li>
+<li>用我的大数据集在所有参数上面训练(finetuning)</li>
+</ol>
+<p>如果数据集和原来有很多不同：</p>
+<ol>
+<li>LoRa</li>
+<li>一些迁移方法</li>
+</ol>
+<h3 id="超参数选择"><a href="#超参数选择" class="headerlink" title="超参数选择"></a>超参数选择</h3><ol>
+<li>Overfit a small sample</li>
+<li>grid search</li>
+<li>Find Accuracy Curves</li>
+</ol>
+
       
     </div>
     <footer class="article-footer">
@@ -154,7 +200,7 @@
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Activation-Functions/" rel="tag">Activation Functions</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CNN/" rel="tag">CNN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CS231n/" rel="tag">CS231n</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Dropout/" rel="tag">Dropout</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Normalization-Layers/" rel="tag">Normalization Layers</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Activation-Functions/" rel="tag">Activation Functions</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CNN/" rel="tag">CNN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CS231n/" rel="tag">CS231n</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Dropout/" rel="tag">Dropout</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Normalization-Layers/" rel="tag">Normalization Layers</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RestNet/" rel="tag">RestNet</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Weight-Initialization/" rel="tag">Weight Initialization</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/" rel="tag">数据增强</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86/" rel="tag">数据预处理</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E8%BF%81%E7%A7%BB/" rel="tag">模型迁移</a></li></ul>
 
     </footer>
   </div>
@@ -705,7 +751,7 @@ SiLU x* sigmoid(x)
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Activation-Functions/" rel="tag">Activation Functions</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BackPropagation/" rel="tag">BackPropagation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CNN/" rel="tag">CNN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CS231n/" rel="tag">CS231n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-drivern-approaches/" rel="tag">Data drivern approaches</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dropout/" rel="tag">Dropout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K-Nearest-Neighbor/" rel="tag">K-Nearest Neighbor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" rel="tag">K最近邻居算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linear-Classification/" rel="tag">Linear Classification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NN/" rel="tag">NN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Normalization-Layers/" rel="tag">Normalization Layers</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Optimization/" rel="tag">Optimization</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Regulation/" rel="tag">Regulation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dp/" rel="tag">dp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BC%98%E5%8C%96/" rel="tag">优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" rel="tag">单调栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/" rel="tag">完全背包</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E7%BB%84/" rel="tag">数组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%88/" rel="tag">栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" rel="tag">正则化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" rel="tag">滑动窗口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" rel="tag">线性分类</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%92%E5%BD%92/" rel="tag">递归</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%93%BE%E8%A1%A8/" rel="tag">链表</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Activation-Functions/" rel="tag">Activation Functions</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BackPropagation/" rel="tag">BackPropagation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CNN/" rel="tag">CNN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CS231n/" rel="tag">CS231n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-drivern-approaches/" rel="tag">Data drivern approaches</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dropout/" rel="tag">Dropout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K-Nearest-Neighbor/" rel="tag">K-Nearest Neighbor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" rel="tag">K最近邻居算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linear-Classification/" rel="tag">Linear Classification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NN/" rel="tag">NN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Normalization-Layers/" rel="tag">Normalization Layers</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Optimization/" rel="tag">Optimization</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Regulation/" rel="tag">Regulation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RestNet/" rel="tag">RestNet</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Weight-Initialization/" rel="tag">Weight Initialization</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dp/" rel="tag">dp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BC%98%E5%8C%96/" rel="tag">优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" rel="tag">单调栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/" rel="tag">完全背包</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/" rel="tag">数据增强</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86/" rel="tag">数据预处理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E7%BB%84/" rel="tag">数组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%88/" rel="tag">栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E8%BF%81%E7%A7%BB/" rel="tag">模型迁移</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" rel="tag">正则化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" rel="tag">滑动窗口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" rel="tag">线性分类</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%92%E5%BD%92/" rel="tag">递归</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%93%BE%E8%A1%A8/" rel="tag">链表</a></li></ul>
     </div>
   </div>
 
@@ -715,7 +761,7 @@ SiLU x* sigmoid(x)
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Activation-Functions/" style="font-size: 10px;">Activation Functions</a> <a href="/tags/BackPropagation/" style="font-size: 13.33px;">BackPropagation</a> <a href="/tags/CNN/" style="font-size: 13.33px;">CNN</a> <a href="/tags/CS231n/" style="font-size: 20px;">CS231n</a> <a href="/tags/Data-drivern-approaches/" style="font-size: 10px;">Data drivern approaches</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/K-Nearest-Neighbor/" style="font-size: 10px;">K-Nearest Neighbor</a> <a href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" style="font-size: 10px;">K最近邻居算法</a> <a href="/tags/LeetCode/" style="font-size: 10px;">LeetCode</a> <a href="/tags/Linear-Classification/" style="font-size: 10px;">Linear Classification</a> <a href="/tags/NN/" style="font-size: 10px;">NN</a> <a href="/tags/Normalization-Layers/" style="font-size: 10px;">Normalization Layers</a> <a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a> <a href="/tags/Regulation/" style="font-size: 10px;">Regulation</a> <a href="/tags/dp/" style="font-size: 10px;">dp</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 10px;">优化</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 16.67px;">动态规划</a> <a href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" style="font-size: 16.67px;">单调栈</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 16.67px;">双指针</a> <a href="/tags/%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/" style="font-size: 10px;">完全背包</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%A0%88/" style="font-size: 16.67px;">栈</a> <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" style="font-size: 10px;">正则化</a> <a href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" style="font-size: 10px;">滑动窗口</a> <a href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" style="font-size: 10px;">线性分类</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 10px;">递归</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a>
+      <a href="/tags/Activation-Functions/" style="font-size: 10px;">Activation Functions</a> <a href="/tags/BackPropagation/" style="font-size: 13.33px;">BackPropagation</a> <a href="/tags/CNN/" style="font-size: 13.33px;">CNN</a> <a href="/tags/CS231n/" style="font-size: 20px;">CS231n</a> <a href="/tags/Data-drivern-approaches/" style="font-size: 10px;">Data drivern approaches</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/K-Nearest-Neighbor/" style="font-size: 10px;">K-Nearest Neighbor</a> <a href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" style="font-size: 10px;">K最近邻居算法</a> <a href="/tags/LeetCode/" style="font-size: 10px;">LeetCode</a> <a href="/tags/Linear-Classification/" style="font-size: 10px;">Linear Classification</a> <a href="/tags/NN/" style="font-size: 10px;">NN</a> <a href="/tags/Normalization-Layers/" style="font-size: 10px;">Normalization Layers</a> <a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a> <a href="/tags/Regulation/" style="font-size: 10px;">Regulation</a> <a href="/tags/RestNet/" style="font-size: 10px;">RestNet</a> <a href="/tags/Weight-Initialization/" style="font-size: 10px;">Weight Initialization</a> <a href="/tags/dp/" style="font-size: 10px;">dp</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 10px;">优化</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 16.67px;">动态规划</a> <a href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" style="font-size: 16.67px;">单调栈</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 16.67px;">双指针</a> <a href="/tags/%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/" style="font-size: 10px;">完全背包</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/" style="font-size: 10px;">数据增强</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86/" style="font-size: 10px;">数据预处理</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%A0%88/" style="font-size: 16.67px;">栈</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E8%BF%81%E7%A7%BB/" style="font-size: 10px;">模型迁移</a> <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" style="font-size: 10px;">正则化</a> <a href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" style="font-size: 10px;">滑动窗口</a> <a href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" style="font-size: 10px;">线性分类</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 10px;">递归</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a>
     </div>
   </div>
 
