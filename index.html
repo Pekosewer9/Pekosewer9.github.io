@@ -71,6 +71,60 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-leetcode/438. 找到字符串中所有字母异位词" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/07/11/leetcode/438.%20%E6%89%BE%E5%88%B0%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%AD%E6%89%80%E6%9C%89%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D/" class="article-date">
+  <time class="dt-published" datetime="2026-07-11T05:10:10.000Z" itemprop="datePublished">2026-07-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/07/11/leetcode/438.%20%E6%89%BE%E5%88%B0%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%AD%E6%89%80%E6%9C%89%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D/">438. 找到字符串中所有字母异位词</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <ol start="438">
+<li>找到字符串中所有字母异位词</li>
+</ol>
+<p>给定两个字符串 s 和 p，找到 s 中所有 p 的 异位词 的子串，返回这些子串的起始索引。不考虑答案输出的顺序。</p>
+<p>示例 1:</p>
+<p>输入: s &#x3D; “cbaebabacd”, p &#x3D; “abc”<br>输出: [0,6]<br>解释:<br>起始索引等于 0 的子串是 “cba”, 它是 “abc” 的异位词。<br>起始索引等于 6 的子串是 “bac”, 它是 “abc” 的异位词。</p>
+<h2 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h2><p>用一个26位大小桶来实现</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">findAnagrams</span>(<span class="params">self, s: <span class="built_in">str</span>, p: <span class="built_in">str</span></span>) -&gt; <span class="type">List</span>[<span class="built_in">int</span>]:</span><br><span class="line">        n = <span class="built_in">len</span>(s)</span><br><span class="line">        m = <span class="built_in">len</span>(p)</span><br><span class="line">        <span class="keyword">if</span> m &gt; n:</span><br><span class="line">            <span class="keyword">return</span> []</span><br><span class="line">        left_index = <span class="number">0</span></span><br><span class="line">        right_index = m - <span class="number">1</span></span><br><span class="line">        bucket = [<span class="number">0</span>] * <span class="number">26</span></span><br><span class="line">        comp = [<span class="number">0</span>] * <span class="number">26</span></span><br><span class="line">        ans = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">            j = <span class="built_in">ord</span>(s[i]) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">            bucket[j] += <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">            j = <span class="built_in">ord</span>(p[i]) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">            comp[j] += <span class="number">1</span></span><br><span class="line">        <span class="keyword">while</span> right_index &lt; n:</span><br><span class="line">            <span class="keyword">if</span> bucket == comp:</span><br><span class="line">                ans.append(left_index)</span><br><span class="line">            <span class="keyword">if</span> right_index == n - <span class="number">1</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            j = <span class="built_in">ord</span>(s[left_index]) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">            bucket[j] -= <span class="number">1</span></span><br><span class="line">            j = <span class="built_in">ord</span>(s[right_index + <span class="number">1</span>]) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">            bucket[j] += <span class="number">1</span></span><br><span class="line">            right_index += <span class="number">1</span></span><br><span class="line">            left_index += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line">        </span><br></pre></td></tr></table></figure>
+
+
+<h2 id="优化的滑动窗口"><a href="#优化的滑动窗口" class="headerlink" title="优化的滑动窗口"></a>优化的滑动窗口</h2><p>用相同的方法，但是为了让时间复杂度从 O(26n) 到 O(n) ， 我们用一个differ维护</p>
+<blockquote>
+<p>把代码里面if bucket &#x3D;&#x3D; comp: 换成用differ &#x3D;&#x3D; 0</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">findAnagrams</span>(<span class="params">self, s: <span class="built_in">str</span>, p: <span class="built_in">str</span></span>) -&gt; <span class="type">List</span>[<span class="built_in">int</span>]:</span><br><span class="line">        n = <span class="built_in">len</span>(s)</span><br><span class="line">        m = <span class="built_in">len</span>(p)</span><br><span class="line">        <span class="keyword">if</span> m &gt; n:</span><br><span class="line">            <span class="keyword">return</span> []</span><br><span class="line">        left_index = <span class="number">0</span></span><br><span class="line">        right_index = m - <span class="number">1</span></span><br><span class="line">        bucket = [<span class="number">0</span>] * <span class="number">26</span></span><br><span class="line">        comp = [<span class="number">0</span>] * <span class="number">26</span></span><br><span class="line">        ans = []</span><br><span class="line">        differ = <span class="number">0</span></span><br><span class="line">        fu  = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">            j = <span class="built_in">ord</span>(s[i]) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">            bucket[j] += <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">            j = <span class="built_in">ord</span>(p[i]) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">            comp[j] += <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">26</span>):</span><br><span class="line">            <span class="keyword">if</span> comp[i] != bucket[i]:</span><br><span class="line">                differ += <span class="number">1</span></span><br><span class="line">        <span class="keyword">while</span> right_index &lt; n:</span><br><span class="line">            fu.append(differ)</span><br><span class="line">            <span class="keyword">if</span> differ == <span class="number">0</span>:</span><br><span class="line">                ans.append(left_index)</span><br><span class="line">            <span class="keyword">if</span> right_index == n - <span class="number">1</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            j = <span class="built_in">ord</span>(s[left_index]) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">            <span class="keyword">if</span> bucket[j] == comp[j]:</span><br><span class="line">                differ += <span class="number">1</span></span><br><span class="line">            bucket[j] -= <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> bucket[j] == comp[j]:</span><br><span class="line">                differ -= <span class="number">1</span></span><br><span class="line">            j = <span class="built_in">ord</span>(s[right_index + <span class="number">1</span>]) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">            <span class="keyword">if</span> bucket[j] == comp[j]:</span><br><span class="line">                differ += <span class="number">1</span></span><br><span class="line">            bucket[j] += <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> bucket[j] == comp[j]:</span><br><span class="line">                differ -= <span class="number">1</span></span><br><span class="line">            right_index += <span class="number">1</span></span><br><span class="line">            left_index += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/07/11/leetcode/438.%20%E6%89%BE%E5%88%B0%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%AD%E6%89%80%E6%9C%89%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D/" data-id="cmrfx7ckg000014tldtq662qw" data-title="438. 找到字符串中所有字母异位词" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" rel="tag">滑动窗口</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-leetcode/84. 柱状图中最大的矩形" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2026/07/10/leetcode/84.%20%E6%9F%B1%E7%8A%B6%E5%9B%BE%E4%B8%AD%E6%9C%80%E5%A4%A7%E7%9A%84%E7%9F%A9%E5%BD%A2/" class="article-date">
@@ -644,162 +698,6 @@ SiLU x* sigmoid(x)
 
 
   
-    <article id="post-CS231n/1_Introduction" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2026/07/03/CS231n/1_Introduction/" class="article-date">
-  <time class="dt-published" datetime="2026-07-03T07:22:42.000Z" itemprop="datePublished">2026-07-03</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2026/07/03/CS231n/1_Introduction/">1.Introduction</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="图像分类"><a href="#图像分类" class="headerlink" title="图像分类"></a>图像分类</h2><p>· 给出labels的集合 </p>
-<p>· 给图片赋予一个label’</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">classify_image</span>(<span class="params">image</span>):</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> class_label</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="图像"><a href="#图像" class="headerlink" title="图像"></a>图像</h3><p>由数据矩阵定义，每个像素值[0,255]<br>RGB -&gt; 3个颜色通道<br>800 * 600 * 3矩阵</p>
-<p>不同角度\光照 -&gt; 图像像素完全不一样</p>
-<blockquote>
-<p>Challenges: zoom in &amp; out , illuminations , angles , background , occulusion(遮挡), deformation(可塑性),context</p>
-</blockquote>
-<h3 id="Attempts"><a href="#Attempts" class="headerlink" title="Attempts"></a>Attempts</h3><h4 id="hardcodes"><a href="#hardcodes" class="headerlink" title="hardcodes"></a>hardcodes</h4><p>Find edges -&gt; find corners -&gt; maps the features around the corners &#x2F; find the nums of the corners -&gt; labels</p>
-<blockquote>
-<p>很难扩展</p>
-</blockquote>
-<h4 id="machine-learning"><a href="#machine-learning" class="headerlink" title="machine learning"></a>machine learning</h4><blockquote>
-<p>由数据驱动</p>
-</blockquote>
-<ol>
-<li>collect dataset of images and labels(收集数据集)</li>
-<li>using machine learning algorithms to train a classifier</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">dataset[image,labels]</span>):</span><br><span class="line">    <span class="comment">#machine learning</span></span><br><span class="line">    <span class="keyword">return</span> classifer</span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>eva the classifier on  images</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">predict</span>(<span class="params">model, test_images</span>):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> test_labels</span><br></pre></td></tr></table></figure>
-
-<h3 id="最近邻居分类-Nearest-Neighbors-Classifacation"><a href="#最近邻居分类-Nearest-Neighbors-Classifacation" class="headerlink" title="最近邻居分类(Nearest Neighbors Classifacation)"></a>最近邻居分类(Nearest Neighbors Classifacation)</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">dataset[image,labels]</span>):</span><br><span class="line">    <span class="comment"># 将所有data和labels都存储起来(memorize)</span></span><br><span class="line">    <span class="keyword">return</span> classifer</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">predict</span>(<span class="params">model, test_images</span>):</span><br><span class="line">    <span class="comment"># 找到最相似的图片，输出它的labels</span></span><br><span class="line">    <span class="keyword">return</span> test_labels</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>计算距离，我们需要一个Distanc Metric(pic1, pic2)</p>
-</blockquote>
-<p>L1 distance -&gt; 逐像素相减取绝对值</p>
-<p>L2 distance</p>
-<p><img src="/image-2.png" alt="alt text"></p>
-<p>最简单的实现L1</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">NearestNeighbor</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">self, X, y</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot; X is N x D where each row is an example. Y is 1-dimension of size N &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># the nearest neighbor classifier simply remembers all the training data</span></span><br><span class="line">    <span class="variable language_">self</span>.Xtr = X</span><br><span class="line">    <span class="variable language_">self</span>.ytr = y</span><br><span class="line"></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">predict</span>(<span class="params">self, X</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot; X is N x D where each row is an example we wish to predict label for &quot;&quot;&quot;</span></span><br><span class="line">    num_test = X.shape[<span class="number">0</span>]</span><br><span class="line">    <span class="comment"># lets make sure that the output type matches the input type</span></span><br><span class="line">    Ypred = np.zeros(num_test, dtype = <span class="variable language_">self</span>.ytr.dtype) <span class="comment"># 归零</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># loop over all test rows</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num_test):</span><br><span class="line">      <span class="comment"># find the nearest training image to the i&#x27;th test image</span></span><br><span class="line">      <span class="comment"># using the L1 distance (sum of absolute value differences)</span></span><br><span class="line">      distances = np.<span class="built_in">sum</span>(np.<span class="built_in">abs</span>(<span class="variable language_">self</span>.Xtr - X[i,:]), axis = <span class="number">1</span>)</span><br><span class="line">      min_index = np.argmin(distances) <span class="comment"># get the index with smallest distance</span></span><br><span class="line">      Ypred[i] = <span class="variable language_">self</span>.ytr[min_index] <span class="comment"># predict the label of the nearest example</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> Ypred</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>张量变换<br>self.Xtr &#x3D; [N,D] N-数量 D-特征量</p>
-</blockquote>
-<p><font color = 'black'>  可以为[x_size, y_size, channels] 展平后的 [x_size * y_size * channels]的一维</p>
-<p>self.Ytr &#x3D; [N,]</p>
-<p>X &#x3D; [N,D]</p>
-<p>X[i,:] &#x3D; [D,]</p>
-<blockquote>
-<p>Xtr - X[i,:] &#x3D; [N,D] - [D,] 广播后为 [N,D] - N * [,D] &#x3D; [N,D]</p>
-</blockquote>
-<p>np.sum(axis &#x3D; 1) &#x3D; [N,D] (axis &#x3D; 0,axis &#x3D; 1) &#x3D; [N,]</p>
-<p>distance &#x3D; [N,]</p>
-<blockquote>
-<p>时间复杂度<br>TRAIN O(1)</p>
-</blockquote>
-<h2 id="PREDICT-O-N-预测一个样本的复杂度"><a href="#PREDICT-O-N-预测一个样本的复杂度" class="headerlink" title="PREDICT O(N) # 预测一个样本的复杂度"></a>PREDICT O(N) # 预测一个样本的复杂度</h2><h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><blockquote>
-<p>我们需要在Predict降低复杂度，Train复杂度升高是OK的</p>
-</blockquote>
-<h3 id="1-nearest-neighbors"><a href="#1-nearest-neighbors" class="headerlink" title="1-nearest neighbors"></a>1-nearest neighbors</h3><p><img src="/image.png" alt="alt text"></p>
-<blockquote>
-<p>会出现噪点 ， 比如前面的黄色</p>
-</blockquote>
-<p>所以我们用K-Nearest Neighbors</p>
-<h2 id="KNN"><a href="#KNN" class="headerlink" title="KNN"></a>KNN</h2><p><img src="/image-1.png" alt="alt text"></p>
-<p>根据这个划分空间，白色区域是相等可能的区域，可能属于不同的labels</p>
-<p><font color = 'blue'>特征有特定的意义,我们想要保存这个特征：L1更好(对特征值的选取更敏感)</p>
-<p>特征是任意的，可以旋转：L2更好(划分边缘更平滑)</p>
-<h3 id="hyperparameters-（超参数）"><a href="#hyperparameters-（超参数）" class="headerlink" title="hyperparameters （超参数）"></a>hyperparameters （超参数）</h3><font color = 'black'>
-比如 KNN 中的 K 和 distance function
-
-<blockquote>
-<p>我们需要找到最佳参数 (tuning) 调参</p>
-</blockquote>
-<ol>
-<li>选择对training data最好的参数 (x)<blockquote>
-<p>K &#x3D; 1 永远是最佳的</p>
-</blockquote>
-</li>
-<li>选择对test data最好的参数 (x)<blockquote>
-<p>可能只对测试集有用</p>
-</blockquote>
-</li>
-<li>将training data 一部分改为validation验证data，用train训练，来后在validation上找到最好的参数，最后test，不要用test data 调参</li>
-<li>交叉验证(每个fold都验证一遍)</li>
-</ol>
-<blockquote>
-<p>在大型数据集上太难了，在论文中会用，但是工程上很难</p>
-</blockquote>
-<h2 id="Linear-Classifier-线性分类-Linear-layer-线性层"><a href="#Linear-Classifier-线性分类-Linear-layer-线性层" class="headerlink" title="Linear Classifier (线性分类) &#x3D; Linear layer(线性层)"></a>Linear Classifier (线性分类) &#x3D; Linear layer(线性层)</h2><p>image-x 32 * 32 * 3 &#x3D; 3072</p>
-<p>labels &#x3D; [10, ]</p>
-<p>x &#x3D; [3072, 1]</p>
-<p>W &#x3D; [10, 3072]</p>
-<p>F(x,W) &#x3D; Wx + b[10, 1] &#x3D; [10, 1]</p>
-<p>选出可行度最大的</p>
-<blockquote>
-<p>N * N Linear Classifier &#x3D; NN</p>
-</blockquote>
-<p><img src="/image-4.png" alt="alt text"></p>
-<p>相同颜色的就是对于不同的labels的模板的分数权值(templates)</p>
-<p><img src="/image-5.png" alt="alt text"></p>
-<p>linear classifier 对于空间分类的是直线的分类边界</p>
-<blockquote>
-<p>可以看出，b的存在让划分线更加灵活</p>
-</blockquote>
-<h3 id="choose-W"><a href="#choose-W" class="headerlink" title="choose W"></a>choose W</h3><ol>
-<li>用loss function: 量化分类器有多坏</li>
-<li>optimiztions</li>
-</ol>
-<p>Loss Function:<br><img src="/image-6.png" alt="alt text"></p>
-<h2 id="Softmax-Classifier"><a href="#Softmax-Classifier" class="headerlink" title="Softmax Classifier"></a>Softmax Classifier</h2><p><img src="/image-7.png" alt="alt text"></p>
-<blockquote>
-<p>将有正有负的评分转化为percent</p>
-</blockquote>
-<p>我们得到了这些概率，我们可以让正确的labels最大，所以我们设计Loss Function如下：<br><img src="/image-8.png" alt="alt text"></p>
-<p>或者我们可以用KL散度</p>
-<p><img src="/image-9.png" alt="alt text"></p>
-<p>或者交叉熵</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/CS231n/1_Introduction/" data-id="cmrd988qx000ac4tl0pjq0a2k" data-title="1.Introduction" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Data-drivern-approaches/" rel="tag">Data drivern approaches</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/K-Nearest-Neighbor/" rel="tag">K-Nearest Neighbor</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" rel="tag">K最近邻居算法</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linear-Classification/" rel="tag">Linear Classification</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" rel="tag">线性分类</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -818,7 +716,7 @@ SiLU x* sigmoid(x)
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CNN/" rel="tag">CNN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-drivern-approaches/" rel="tag">Data drivern approaches</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K-Nearest-Neighbor/" rel="tag">K-Nearest Neighbor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" rel="tag">K最近邻居算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linear-Classification/" rel="tag">Linear Classification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Optimization/" rel="tag">Optimization</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Regulation/" rel="tag">Regulation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dp/" rel="tag">dp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BC%98%E5%8C%96/" rel="tag">优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" rel="tag">单调栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E7%BB%84/" rel="tag">数组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%88/" rel="tag">栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" rel="tag">正则化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" rel="tag">线性分类</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%92%E5%BD%92/" rel="tag">递归</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%93%BE%E8%A1%A8/" rel="tag">链表</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CNN/" rel="tag">CNN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-drivern-approaches/" rel="tag">Data drivern approaches</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K-Nearest-Neighbor/" rel="tag">K-Nearest Neighbor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" rel="tag">K最近邻居算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linear-Classification/" rel="tag">Linear Classification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Optimization/" rel="tag">Optimization</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Regulation/" rel="tag">Regulation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dp/" rel="tag">dp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BC%98%E5%8C%96/" rel="tag">优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" rel="tag">单调栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E7%BB%84/" rel="tag">数组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%88/" rel="tag">栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" rel="tag">正则化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" rel="tag">滑动窗口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" rel="tag">线性分类</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%92%E5%BD%92/" rel="tag">递归</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%93%BE%E8%A1%A8/" rel="tag">链表</a></li></ul>
     </div>
   </div>
 
@@ -828,7 +726,7 @@ SiLU x* sigmoid(x)
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Data-drivern-approaches/" style="font-size: 10px;">Data drivern approaches</a> <a href="/tags/K-Nearest-Neighbor/" style="font-size: 10px;">K-Nearest Neighbor</a> <a href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" style="font-size: 10px;">K最近邻居算法</a> <a href="/tags/LeetCode/" style="font-size: 10px;">LeetCode</a> <a href="/tags/Linear-Classification/" style="font-size: 10px;">Linear Classification</a> <a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a> <a href="/tags/Regulation/" style="font-size: 10px;">Regulation</a> <a href="/tags/dp/" style="font-size: 10px;">dp</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 10px;">优化</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 15px;">动态规划</a> <a href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" style="font-size: 20px;">单调栈</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 20px;">双指针</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%A0%88/" style="font-size: 20px;">栈</a> <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" style="font-size: 10px;">正则化</a> <a href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" style="font-size: 10px;">线性分类</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 10px;">递归</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a>
+      <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Data-drivern-approaches/" style="font-size: 10px;">Data drivern approaches</a> <a href="/tags/K-Nearest-Neighbor/" style="font-size: 10px;">K-Nearest Neighbor</a> <a href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" style="font-size: 10px;">K最近邻居算法</a> <a href="/tags/LeetCode/" style="font-size: 10px;">LeetCode</a> <a href="/tags/Linear-Classification/" style="font-size: 10px;">Linear Classification</a> <a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a> <a href="/tags/Regulation/" style="font-size: 10px;">Regulation</a> <a href="/tags/dp/" style="font-size: 10px;">dp</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 10px;">优化</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 15px;">动态规划</a> <a href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" style="font-size: 20px;">单调栈</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 20px;">双指针</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%A0%88/" style="font-size: 20px;">栈</a> <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" style="font-size: 10px;">正则化</a> <a href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" style="font-size: 10px;">滑动窗口</a> <a href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" style="font-size: 10px;">线性分类</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 10px;">递归</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a>
     </div>
   </div>
 
@@ -850,6 +748,10 @@ SiLU x* sigmoid(x)
       <ul>
         
           <li>
+            <a href="/2026/07/11/leetcode/438.%20%E6%89%BE%E5%88%B0%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%AD%E6%89%80%E6%9C%89%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D/">438. 找到字符串中所有字母异位词</a>
+          </li>
+        
+          <li>
             <a href="/2026/07/10/leetcode/84.%20%E6%9F%B1%E7%8A%B6%E5%9B%BE%E4%B8%AD%E6%9C%80%E5%A4%A7%E7%9A%84%E7%9F%A9%E5%BD%A2/">84. 柱状图中最大的矩形</a>
           </li>
         
@@ -863,10 +765,6 @@ SiLU x* sigmoid(x)
         
           <li>
             <a href="/2026/07/06/CS231n/3_NN_BackPropagation/">3_NN_BackPropagation</a>
-          </li>
-        
-          <li>
-            <a href="/2026/07/06/leetcode/394_%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A7%A3%E7%A0%81/">394. 字符串解码</a>
           </li>
         
       </ul>
