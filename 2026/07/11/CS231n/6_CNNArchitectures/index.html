@@ -4,22 +4,23 @@
   <meta charset="utf-8">
   
   
-  <title>283移动零 | Hexo</title>
+  <title>Lecture 6: CNN Architectures | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="移动零双指针做法1234567891011121314class Solution(object):    def moveZeroes(self, nums):        &quot;&quot;&quot;        :type nums: List[int]        :rtype: None Do not return anything, modify nums in-plac">
+  <meta name="description" content="CNN ArchitecturesNormalization Layers根据学习到参数的均值和标准差来缩放和平移我们的input data(输入数据) 问题：怎么计算均值和标准差 x : N * D 从D方向上：计算μ，σ ： N * 1 (per batch) scale因子 : 从N方向计算 ： 1 * D  不同的Norm形式    Batch Normalization (BatchNo">
 <meta property="og:type" content="article">
-<meta property="og:title" content="283移动零">
-<meta property="og:url" content="http://example.com/2026/07/03/leetcode/283._%E7%A7%BB%E5%8A%A8%E9%9B%B6/index.html">
+<meta property="og:title" content="Lecture 6: CNN Architectures">
+<meta property="og:url" content="http://example.com/2026/07/11/CS231n/6_CNNArchitectures/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="移动零双指针做法1234567891011121314class Solution(object):    def moveZeroes(self, nums):        &quot;&quot;&quot;        :type nums: List[int]        :rtype: None Do not return anything, modify nums in-plac">
+<meta property="og:description" content="CNN ArchitecturesNormalization Layers根据学习到参数的均值和标准差来缩放和平移我们的input data(输入数据) 问题：怎么计算均值和标准差 x : N * D 从D方向上：计算μ，σ ： N * 1 (per batch) scale因子 : 从N方向计算 ： 1 * D  不同的Norm形式    Batch Normalization (BatchNo">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-07-03T01:49:24.000Z">
-<meta property="article:modified_time" content="2026-07-03T02:47:36.512Z">
+<meta property="article:published_time" content="2026-07-11T06:24:08.000Z">
+<meta property="article:modified_time" content="2026-07-11T07:39:42.052Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="双指针">
-<meta property="article:tag" content="栈">
-<meta property="article:tag" content="LeetCode">
-<meta property="article:tag" content="数组">
+<meta property="article:tag" content="CNN">
+<meta property="article:tag" content="CS231n">
+<meta property="article:tag" content="Normalization Layers">
+<meta property="article:tag" content="Dropout">
+<meta property="article:tag" content="Activation Functions">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
@@ -77,10 +78,10 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-leetcode/283._移动零" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-CS231n/6_CNNArchitectures" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2026/07/03/leetcode/283._%E7%A7%BB%E5%8A%A8%E9%9B%B6/" class="article-date">
-  <time class="dt-published" datetime="2026-07-03T01:49:24.000Z" itemprop="datePublished">2026-07-03</time>
+    <a href="/2026/07/11/CS231n/6_CNNArchitectures/" class="article-date">
+  <time class="dt-published" datetime="2026-07-11T06:24:08.000Z" itemprop="datePublished">2026-07-11</time>
 </a>
     
   </div>
@@ -91,7 +92,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      283移动零
+      Lecture 6: CNN Architectures
     </h1>
   
 
@@ -99,21 +100,68 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h1 id="移动零"><a href="#移动零" class="headerlink" title="移动零"></a>移动零</h1><h3 id="双指针做法"><a href="#双指针做法" class="headerlink" title="双指针做法"></a>双指针做法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">moveZeroes</span>(<span class="params">self, nums</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :type nums: List[int]</span></span><br><span class="line"><span class="string">        :rtype: None Do not return anything, modify nums in-place instead.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        n = <span class="built_in">len</span>(nums)</span><br><span class="line">        left_index = <span class="number">0</span></span><br><span class="line">        right_index = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> right_index &lt; n:</span><br><span class="line">            <span class="keyword">if</span> nums[right_index] != <span class="number">0</span>:</span><br><span class="line">                nums[left_index], nums[right_index] = nums[right_index], nums[left_index]</span><br><span class="line">                left_index += <span class="number">1</span></span><br><span class="line">            right_index += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+        <h2 id="CNN-Architectures"><a href="#CNN-Architectures" class="headerlink" title="CNN Architectures"></a>CNN Architectures</h2><h3 id="Normalization-Layers"><a href="#Normalization-Layers" class="headerlink" title="Normalization Layers"></a>Normalization Layers</h3><p><font color = 'blue'>根据学习到参数的均值和标准差来缩放和平移我们的input data(输入数据)</p>
+<p><font color = 'black'>问题：怎么计算均值和标准差</p>
+<p>x : N * D</p>
+<p>从D方向上：计算μ，σ ： N * 1 (per batch)</p>
+<p>scale因子 : 从N方向计算 ： 1 * D</p>
+<blockquote>
+<p>不同的Norm形式</p>
+</blockquote>
 
-<p>解释:<br>我们只考虑不为0的序列<br>left_index 作用于已经处理的尾部 + 1<br>right_index作用于已经未处理的序列头部<br>这两个之间夹着一堆 0 ，处理后一定会被交换到队列尾部</p>
-<h3 id="原地栈做法"><a href="#原地栈做法" class="headerlink" title="原地栈做法"></a>原地栈做法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">moveZeroes</span>(<span class="params">self, nums</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :type nums: List[int]</span></span><br><span class="line"><span class="string">        :rtype: None Do not return anything, modify nums in-place instead.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        n = <span class="built_in">len</span>(nums)</span><br><span class="line">        stack_size = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> ele <span class="keyword">in</span> nums:</span><br><span class="line">            <span class="keyword">if</span> ele != <span class="number">0</span>:</span><br><span class="line">                nums[stack_size] = ele</span><br><span class="line">                stack_size += <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(stack_size , n ): <span class="comment"># [stack_size , n]</span></span><br><span class="line">            nums[i] = <span class="number">0</span></span><br></pre></td></tr></table></figure>
 
-<p>解释：<br>原地栈，因为stack大小一定小于等于处理过的大小<br>后面补0</p>
+<h4 id="Batch-Normalization-BatchNorm"><a href="#Batch-Normalization-BatchNorm" class="headerlink" title="Batch Normalization (BatchNorm)"></a>Batch Normalization (BatchNorm)</h4><p>核心操作： 跨样本（Batch）做归一化。</p>
+<p>具体做法： 对于同一个特征通道（Channel），它会把当前 Batch 里所有样本的特征值凑在一起，计算出均值和方差，然后进行缩放。结果是(1 * D)</p>
+<h4 id="Layer-Normalization-LayerNorm"><a href="#Layer-Normalization-LayerNorm" class="headerlink" title="Layer Normalization (LayerNorm)"></a>Layer Normalization (LayerNorm)</h4><p>核心操作： 样本内（Layer&#x2F;Feature）做归一化。</p>
+<p>具体做法： 彻底切断样本之间的联系。对于某一个特定样本，它把该样本当前层的所有特征通道（Channel）凑在一起，计算这个单一样本自身的均值和方差。结果是(N * 1)</p>
+<p>我们减去μ 除以σ,(归一化)</p>
+<h4 id="Group-Norm-Instance-Norm"><a href="#Group-Norm-Instance-Norm" class="headerlink" title="Group Norm, Instance Norm"></a>Group Norm, Instance Norm</h4><p>对一个样本内不同的一个或者几个样本通道做归一化</p>
+<h3 id="Dropout"><a href="#Dropout" class="headerlink" title="Dropout"></a>Dropout</h3><p>在每次反向传播中，我们会将某些激活函数置零，让某些点对最后结果不起作用</p>
+<p>redundent representation : 让分类器不会过度依赖某一个特征，让它泛化在更多特征上</p>
+<p>丢弃率: 50% || 25%</p>
+<p>会让train时间 longer , test 更准确</p>
+<blockquote>
+<p>注意，如果dropout 50%的数值，训练时： 随机把 $50%$ 的神经元清零，然后把剩下的神经元全部除以 $0.5$（也就是乘以 2）。</p>
+</blockquote>
+<p>反向传播： 将上游梯度0 传入，这些数据不会被更新</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## test time</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">predict</span>():</span><br><span class="line">    H1 = np.maximum(<span class="number">0</span>, np.dot(W1, X) +b1) * p</span><br><span class="line">    H2 = np.maximum(<span class="number">0</span>,np.dot(W2, H1) + b2) *p</span><br><span class="line">    out = np.dot(W3, H2) + b3</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>或者训练时间不变，predict的时候乘以dropout率 p</p>
+</blockquote>
+<h3 id="激活函数"><a href="#激活函数" class="headerlink" title="激活函数"></a>激活函数</h3><p>sigmoid : 不再用了</p>
+<p>sigmoid两端的gradient非常小</p>
+<p>原因 : 多层的sigmoid会让梯度越来越小， 最后近乎没有</p>
+<p>ReLu: Rectified Linear Unit: 计算方便， 梯度为1不会造成梯度快速下降</p>
+<p>问题：在 x &#x3D; 0接近处不平滑</p>
+<p>GELU： 在中间更加平滑 x * N(x) -&gt; x 乘以正态分布</p>
+
+
+
+<p>同时还有SiLU &#x2F; ELU &#x2F;Leaky ReLu &#x2F; </p>
+<blockquote>
+<p>Activation Function的位置：线性层后面：全连接层，卷积层</p>
+</blockquote>
+<h2 id="CNN-Archetectures"><a href="#CNN-Archetectures" class="headerlink" title="CNN Archetectures"></a>CNN Archetectures</h2>
+
+<p>最后的FC 1000 -&gt; ImageNet有1000个类别</p>
+<p><font color = 'red' > why 3 * 3 Conv(stride &#x3D; 1, pad &#x3D; 1) : 在每一层都可以将感受野边长加长 2 ， 3个3 * 3 Conv -&gt; 7 * 7 感受野，且 3个 3 * 3有更少的 参数</p>
+<font color = 'black'>
+
+<h3 id="RestNet"><a href="#RestNet" class="headerlink" title="RestNet"></a>RestNet</h3><p>更深层模型为什么表示能力反而变差了：更难优化！(局部最小化)</p>
+<p>我们至少想让深层模型和浅层模型一样的表示能看里</p>
+<p>所以我们让 H(x)  &#x3D; F(x)(deep layer的接受x后的输出) + x(shallow layer的输出) 这就是Restnet</p>
+<p>用了RestNet后 ： 更大层数带来了更好的性能，一直到100-152层之后就没有很大变化</p>
+<p>在极深的网络中，反向传播时梯度非常容易在倒退回前几层时“干涸”（梯度消失）。而右边的 Identity 相当于铺设了一条梯度高速公路。在反向传播计算导数时，$\frac{d(F(X)+X)}{dX} &#x3D; \frac{dF(X)}{dX} + 1$。即使主干部分的梯度 $\frac{dF(X)}{dX}$ 趋近于 $0$，后面那个恒稳的 $+1$ 也能保证梯度毫无损耗地传回前一层，从而彻底解决了网络堆叠太深时无法训练的问题。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/leetcode/283._%E7%A7%BB%E5%8A%A8%E9%9B%B6/" data-id="cmrd988qw0006c4tl9ybm4vci" data-title="283移动零" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/11/CS231n/6_CNNArchitectures/" data-id="cmrg20u2m00072gtl0wc49fx0" data-title="Lecture 6: CNN Architectures" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E7%BB%84/" rel="tag">数组</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%A0%88/" rel="tag">栈</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Activation-Functions/" rel="tag">Activation Functions</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CNN/" rel="tag">CNN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CS231n/" rel="tag">CS231n</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Dropout/" rel="tag">Dropout</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Normalization-Layers/" rel="tag">Normalization Layers</a></li></ul>
 
     </footer>
   </div>
@@ -121,19 +169,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2026/07/03/leetcode/15_%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          15.三数之和
-        
-      </div>
-    </a>
   
-  
-    <a href="/2026/07/03/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2026/07/11/leetcode/279.%20%E5%AE%8C%E5%85%A8%E5%B9%B3%E6%96%B9%E6%95%B0/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Hello World</div>
+      <div class="article-nav-title">279. 完全平方数</div>
     </a>
   
 </nav>
