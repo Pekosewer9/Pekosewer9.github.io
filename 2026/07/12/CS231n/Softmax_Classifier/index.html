@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>softmax_classiefier的向量化表示 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="一般表示123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657def softmax_loss_naive(W, X, y, reg):    &quot;&quot;&quot;    Softmax loss function, naive">
+<meta property="og:type" content="article">
+<meta property="og:title" content="softmax_classiefier的向量化表示">
+<meta property="og:url" content="http://example.com/2026/07/12/CS231n/Softmax_Classifier/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="一般表示123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657def softmax_loss_naive(W, X, y, reg):    &quot;&quot;&quot;    Softmax loss function, naive">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-07-12T07:33:45.000Z">
+<meta property="article:modified_time" content="2026-07-12T08:21:14.056Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="CS231n">
+<meta property="article:tag" content="softmax">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-CS231n/Softmax_Classifier" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/07/12/CS231n/Softmax_Classifier/" class="article-date">
+  <time class="dt-published" datetime="2026-07-12T07:33:45.000Z" itemprop="datePublished">2026-07-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      softmax_classiefier的向量化表示
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="一般表示"><a href="#一般表示" class="headerlink" title="一般表示"></a>一般表示</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">softmax_loss_naive</span>(<span class="params">W, X, y, reg</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Softmax loss function, naive implementation (with loops)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Inputs have dimension D, there are C classes, and we operate on minibatches</span></span><br><span class="line"><span class="string">    of N examples.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Inputs:</span></span><br><span class="line"><span class="string">    - W: A numpy array of shape (D, C) containing weights.</span></span><br><span class="line"><span class="string">    - X: A numpy array of shape (N, D) containing a minibatch of data.</span></span><br><span class="line"><span class="string">    - y: A numpy array of shape (N,) containing training labels; y[i] = c means</span></span><br><span class="line"><span class="string">      that X[i] has label c, where 0 &lt;= c &lt; C.</span></span><br><span class="line"><span class="string">    - reg: (float) regularization strength</span></span><br><span class="line"><span class="string">    -</span></span><br><span class="line"><span class="string">    Returns a tuple of:</span></span><br><span class="line"><span class="string">    - loss as single float</span></span><br><span class="line"><span class="string">    - gradient with respect to weights W; an array of same shape as W</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># Initialize the loss and gradient to zero.</span></span><br><span class="line">    loss = <span class="number">0.0</span></span><br><span class="line">    dW = np.zeros_like(W)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># compute the loss and the gradient</span></span><br><span class="line">    num_classes = W.shape[<span class="number">1</span>]</span><br><span class="line">    num_train = X.shape[<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num_train):</span><br><span class="line">        scores = X[i].dot(W)</span><br><span class="line">        <span class="comment"># compute the probabilities in numerically stable way</span></span><br><span class="line">        scores -= np.<span class="built_in">max</span>(scores) <span class="comment"># 防止数值溢出，且对最后softmax计算一点没有影响</span></span><br><span class="line">        p = np.exp(scores)</span><br><span class="line">        p /= p.<span class="built_in">sum</span>()  <span class="comment"># normalize</span></span><br><span class="line">        logp = np.log(p)</span><br><span class="line">        loss -= logp[y[i]]  <span class="comment"># negative log probability is the loss</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(num_classes):</span><br><span class="line">            <span class="keyword">if</span> j == y[i]:</span><br><span class="line">                dW[:, j] += (p[j] - <span class="number">1</span>) * X[i]</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                dW[:, j] += p[j] * X[i]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment"># normalized hinge loss plus regularization</span></span><br><span class="line">    loss = loss / num_train + reg * np.<span class="built_in">sum</span>(W * W)</span><br><span class="line">    dW /= num_train</span><br><span class="line">    dW += <span class="number">2</span> * reg * W</span><br><span class="line"></span><br><span class="line">    <span class="comment">#############################################################################</span></span><br><span class="line">    <span class="comment"># <span class="doctag">TODO:</span>                                                                     #</span></span><br><span class="line">    <span class="comment"># Compute the gradient of the loss function and store it dW.                #</span></span><br><span class="line">    <span class="comment"># Rather that first computing the loss and then computing the derivative,   #</span></span><br><span class="line">    <span class="comment"># it may be simpler to compute the derivative at the same time that the     #</span></span><br><span class="line">    <span class="comment"># loss is being computed. As a result you may need to modify some of the    #</span></span><br><span class="line">    <span class="comment"># code above to compute the gradient.                                       #</span></span><br><span class="line">    <span class="comment">#############################################################################</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> loss, dW</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="向量化表示-1-用外积"><a href="#向量化表示-1-用外积" class="headerlink" title="向量化表示(1.用外积)"></a>向量化表示(1.用外积)</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">softmax_loss_vectorized</span>(<span class="params">W, X, y, reg</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Softmax loss function, vectorized version.</span></span><br><span class="line"><span class="string">    Inputs and outputs are the same as softmax_loss_naive.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># Initialize the loss and gradient to zero.</span></span><br><span class="line">    loss = <span class="number">0.0</span></span><br><span class="line">    dW = np.zeros_like(W)</span><br><span class="line"></span><br><span class="line">    num_train = X.shape[<span class="number">0</span>]</span><br><span class="line">    <span class="comment"># W = (D,C)</span></span><br><span class="line">    <span class="comment"># X = (N,D)</span></span><br><span class="line">    <span class="comment"># y = (N,)</span></span><br><span class="line">    Z = np.dot(X, W)</span><br><span class="line">    Z -= np.<span class="built_in">max</span>(Z, axis = <span class="number">1</span>, keepdims= <span class="literal">True</span>)</span><br><span class="line">    Probs = np.exp(Z)</span><br><span class="line">    Probs /= np.<span class="built_in">sum</span>(Z, axis = <span class="number">1</span>, keepdims= <span class="literal">True</span>)</span><br><span class="line">    <span class="comment"># 要让广播启动，probs (N,C) / (N,1) 而不能是 (N,1)</span></span><br><span class="line">    <span class="comment"># probs (N,C)</span></span><br><span class="line">    result = -np.log(Probs[np.arange(num_train), y]) <span class="comment"># (N,)</span></span><br><span class="line">    loss = np.<span class="built_in">sum</span>(result)</span><br><span class="line">    loss /= num_train</span><br><span class="line">    loss += reg * np.<span class="built_in">sum</span>(W * W)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Probs (N,C) 提取出一个就是(C)</span></span><br><span class="line">    <span class="comment"># dW = [p - c] [N,C] *  (N,D) -&gt; (N,D,C)</span></span><br><span class="line">    <span class="comment"># c = [0,0,0,y[j],0]</span></span><br><span class="line">    C = np.zeros_like(Probs)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num_train):</span><br><span class="line">        C[i][y[i]] = <span class="number">1</span></span><br><span class="line">    Probs -= C</span><br><span class="line">    <span class="comment"># Probs</span></span><br><span class="line">    <span class="comment"># 对每个i  dW = x[i] 外积 Probs[i]</span></span><br><span class="line">    ter_Probs = X[:, :, np.newaxis] * Probs[:, np.newaxis, :]</span><br><span class="line">    <span class="comment"># (N,D) * (N,C)变为 (N,D,1) * (N,1,C) -&gt; (N,D,C)</span></span><br><span class="line">    dW = np.<span class="built_in">sum</span>(ter_Probs, axis = <span class="number">0</span>)</span><br><span class="line">    dW /= num_train</span><br><span class="line">    dW += reg * <span class="number">2</span> * W</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> loss, dW</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>广播机制:从前往后对比一致的维度，对齐，不一样的扩展成一样的，然后相乘，维度大小要么相等，要么其中一个为 1，要么其中一个不存在。就比如里面ter_probs里面的计算 -&gt; (N,D,1) * (N,1,C) 一个个对比，若一样就合并，有1就扩张成一样</p>
+</blockquote>
+<h2 id="向量化表示-2-用内积"><a href="#向量化表示-2-用内积" class="headerlink" title="向量化表示(2.用内积)"></a>向量化表示(2.用内积)</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">softmax_loss_vectorized</span>(<span class="params">W, X, y, reg</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Softmax loss function, vectorized version.</span></span><br><span class="line"><span class="string">    Inputs and outputs are the same as softmax_loss_naive.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># Initialize the loss and gradient to zero.</span></span><br><span class="line">    loss = <span class="number">0.0</span></span><br><span class="line">    dW = np.zeros_like(W)</span><br><span class="line"></span><br><span class="line">    num_train = X.shape[<span class="number">0</span>]</span><br><span class="line">    <span class="comment"># W = (D,C)</span></span><br><span class="line">    <span class="comment"># X = (N,D)</span></span><br><span class="line">    <span class="comment"># y = (N,)</span></span><br><span class="line">    Z = np.dot(X, W)</span><br><span class="line">    Z -= np.<span class="built_in">max</span>(Z, axis = <span class="number">1</span>, keepdims= <span class="literal">True</span>)</span><br><span class="line">    Probs = np.exp(Z)</span><br><span class="line">    Probs /= np.<span class="built_in">sum</span>(Z, axis = <span class="number">1</span>, keepdims= <span class="literal">True</span>)</span><br><span class="line">    <span class="comment"># 要让广播启动，probs (N,C) / (N,1) 而不能是 (N,1)</span></span><br><span class="line">    <span class="comment"># probs (N,C)</span></span><br><span class="line">    result = -np.log(Probs[np.arange(num_train), y]) <span class="comment"># (N,)</span></span><br><span class="line">    loss = np.<span class="built_in">sum</span>(result)</span><br><span class="line">    loss /= num_train</span><br><span class="line">    loss += reg * np.<span class="built_in">sum</span>(W * W)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Probs (N,C) 提取出一个就是(C)</span></span><br><span class="line">    <span class="comment"># dW = [p - c] [N,C] *  (N,D) -&gt; (N,D,C)</span></span><br><span class="line">    <span class="comment"># c = [0,0,0,y[j],0]</span></span><br><span class="line">    <span class="comment"># 1. 直接克隆 Probs，避免直接修改原矩阵</span></span><br><span class="line">    dscores = np.copy(Probs) </span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 2. 纯向量化消灭 for 循环：用高级索引在正确类别处减 1</span></span><br><span class="line">    <span class="comment"># 这相当于完成了你的 Probs -= C 逻辑</span></span><br><span class="line">    dscores[np.arange(num_train), y] -= <span class="number">1</span></span><br><span class="line">    <span class="comment"># np.arrange(num_train) = [0,1....]</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 3. 用矩阵乘法替代三维外积，内存开销小且速度极快</span></span><br><span class="line">    <span class="comment"># (D, N) 点乘 (N, C) -&gt; (D, C)</span></span><br><span class="line">    dW = np.dot(X.T, dscores)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 4. 求平均值</span></span><br><span class="line">    dW /= num_train</span><br><span class="line"></span><br><span class="line">    dW += reg * <span class="number">2</span> * W</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> loss, dW</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/07/12/CS231n/Softmax_Classifier/" data-id="cmrhiy8ko0000a0tl0ck23jz8" data-title="softmax_classiefier的向量化表示" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CS231n/" rel="tag">CS231n</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/softmax/" rel="tag">softmax</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2026/07/12/leetcode/%E4%BA%8C%E5%88%86%E6%B3%95/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">二分法特辑</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Activation-Functions/" rel="tag">Activation Functions</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BackPropagation/" rel="tag">BackPropagation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CNN/" rel="tag">CNN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CS231n/" rel="tag">CS231n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-drivern-approaches/" rel="tag">Data drivern approaches</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dropout/" rel="tag">Dropout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K-Nearest-Neighbor/" rel="tag">K-Nearest Neighbor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" rel="tag">K最近邻居算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linear-Classification/" rel="tag">Linear Classification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NN/" rel="tag">NN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Normalization-Layers/" rel="tag">Normalization Layers</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Optimization/" rel="tag">Optimization</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Regulation/" rel="tag">Regulation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RestNet/" rel="tag">RestNet</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Weight-Initialization/" rel="tag">Weight Initialization</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dp/" rel="tag">dp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/softmax/" rel="tag">softmax</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%88%86%E6%B3%95/" rel="tag">二分法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BC%98%E5%8C%96/" rel="tag">优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" rel="tag">单调栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/" rel="tag">完全背包</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/" rel="tag">数据增强</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86/" rel="tag">数据预处理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E7%BB%84/" rel="tag">数组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%88/" rel="tag">栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E8%BF%81%E7%A7%BB/" rel="tag">模型迁移</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" rel="tag">正则化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" rel="tag">滑动窗口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" rel="tag">线性分类</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%92%E5%BD%92/" rel="tag">递归</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%93%BE%E8%A1%A8/" rel="tag">链表</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Activation-Functions/" style="font-size: 10px;">Activation Functions</a> <a href="/tags/BackPropagation/" style="font-size: 12.5px;">BackPropagation</a> <a href="/tags/CNN/" style="font-size: 12.5px;">CNN</a> <a href="/tags/CS231n/" style="font-size: 20px;">CS231n</a> <a href="/tags/Data-drivern-approaches/" style="font-size: 10px;">Data drivern approaches</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/K-Nearest-Neighbor/" style="font-size: 10px;">K-Nearest Neighbor</a> <a href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" style="font-size: 10px;">K最近邻居算法</a> <a href="/tags/LeetCode/" style="font-size: 10px;">LeetCode</a> <a href="/tags/Linear-Classification/" style="font-size: 10px;">Linear Classification</a> <a href="/tags/NN/" style="font-size: 10px;">NN</a> <a href="/tags/Normalization-Layers/" style="font-size: 10px;">Normalization Layers</a> <a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a> <a href="/tags/Regulation/" style="font-size: 10px;">Regulation</a> <a href="/tags/RestNet/" style="font-size: 10px;">RestNet</a> <a href="/tags/Weight-Initialization/" style="font-size: 10px;">Weight Initialization</a> <a href="/tags/dp/" style="font-size: 10px;">dp</a> <a href="/tags/softmax/" style="font-size: 10px;">softmax</a> <a href="/tags/%E4%BA%8C%E5%88%86%E6%B3%95/" style="font-size: 10px;">二分法</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 10px;">优化</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 17.5px;">动态规划</a> <a href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" style="font-size: 15px;">单调栈</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 15px;">双指针</a> <a href="/tags/%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/" style="font-size: 10px;">完全背包</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/" style="font-size: 10px;">数据增强</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86/" style="font-size: 10px;">数据预处理</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%A0%88/" style="font-size: 15px;">栈</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E8%BF%81%E7%A7%BB/" style="font-size: 10px;">模型迁移</a> <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" style="font-size: 10px;">正则化</a> <a href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" style="font-size: 10px;">滑动窗口</a> <a href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" style="font-size: 10px;">线性分类</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 10px;">递归</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/07/">July 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/07/12/CS231n/Softmax_Classifier/">softmax_classiefier的向量化表示</a>
+          </li>
+        
+          <li>
+            <a href="/2026/07/12/leetcode/%E4%BA%8C%E5%88%86%E6%B3%95/">二分法特辑</a>
+          </li>
+        
+          <li>
+            <a href="/2026/07/12/leetcode/300.%20%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E5%BA%8F%E5%88%97/">300. 最长递增子序列</a>
+          </li>
+        
+          <li>
+            <a href="/2026/07/11/CS231n/6_CNNArchitectures/">Lecture 6: CNN Architectures</a>
+          </li>
+        
+          <li>
+            <a href="/2026/07/11/leetcode/279.%20%E5%AE%8C%E5%85%A8%E5%B9%B3%E6%96%B9%E6%95%B0/">279. 完全平方数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
