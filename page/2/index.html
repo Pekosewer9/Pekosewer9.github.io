@@ -71,6 +71,78 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-CS231n/3_NN_BackPropagation" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/07/06/CS231n/3_NN_BackPropagation/" class="article-date">
+  <time class="dt-published" datetime="2026-07-06T07:26:50.000Z" itemprop="datePublished">2026-07-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/07/06/CS231n/3_NN_BackPropagation/">3_NN_BackPropagation</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Neural-Networks"><a href="#Neural-Networks" class="headerlink" title="Neural Networks"></a>Neural Networks</h2><figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">x - [D]</span><br><span class="line">W1 - [H * D]</span><br><span class="line">W2 - [C * D]</span><br><span class="line">C - 分类数</span><br><span class="line">f = Wx</span><br><span class="line">f = W2max(W1x,0)</span><br></pre></td></tr></table></figure>
+
+<p><font color = 'black'> 每个第二层的可以成为一个被共享所有类共享的模板</p>
+<p>max(W1x,0) -&gt; 一个简单的激活函数</p>
+<blockquote>
+<p>如果没有激活函数，就是linear的，W &#x3D; W1 * W2</p>
+</blockquote>
+<p><font color = 'blue'>max(W1,0)被称为 Relu</p>
+<p>合适的零中心值 和 平滑度 可以获得更快的收敛速度 </p>
+<blockquote>
+<p>缺点:可能创造死的神经元</p>
+</blockquote>
+<font color = 'black'> 
+Sigmoid: 1/1+e^x
+SiLU x* sigmoid(x)
+
+<blockquote>
+<p>缺点:会把数值压缩在一个较窄的范围内，又是会让梯度消失，所以我们不会把他们用在NN的中间层</p>
+</blockquote>
+<h3 id="3layers-FULLY-CONNECTED"><a href="#3layers-FULLY-CONNECTED" class="headerlink" title="3layers - FULLY CONNECTED"></a>3layers - FULLY CONNECTED</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">f = <span class="keyword">lambda</span> x: <span class="number">1.0</span>/(<span class="number">1.0</span> + np.exp(-x)) <span class="comment">#用lambda定义sigmoid函数</span></span><br><span class="line">x = np.random.randn(<span class="number">3</span>, <span class="number">1</span>) </span><br><span class="line">h1 = f(np.dot(W1, x) + b1) <span class="comment">#hidden layer 1</span></span><br><span class="line">h2 = f(np.dot(W2, h1) + b2) <span class="comment"># hidden layer 2</span></span><br><span class="line">out = np.dot(W3, h2) +b3 <span class="comment"># output layer</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>我们选择正则化项而不是减少神经网络层数来防止过拟合</p>
+</blockquote>
+<p>原因：我们要先确保神经网络理解我们的数据，确保表达能力</p>
+<p>如L2 -&gt;  不让W参数过大</p>
+<h2 id="Backpropagation"><a href="#Backpropagation" class="headerlink" title="Backpropagation"></a>Backpropagation</h2><p>we should know how to compute dL&#x2F;dW1 dL&#x2F;dW2 </p>
+<p>![“”,&#x2F;]</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> (<span class="number">1</span> / (<span class="number">1</span> + std::exp((-a))))</span><br></pre></td></tr></table></figure>
+
+<p>sparse jacobian matrix xxxxxxx</p>
+<p>jacobian matrix 当维数大的时候太耗费计算资源：</p>
+<img src="/2026/07/06/CS231n/3_NN_BackPropagation/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20260709201458_206_39.jpg" class="" title="alt text">
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/07/06/CS231n/3_NN_BackPropagation/" data-id="cmrivkvp2000i6stl9r20gxei" data-title="3_NN_BackPropagation" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/BackPropagation/" rel="tag">BackPropagation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CS231n/" rel="tag">CS231n</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NN/" rel="tag">NN</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-leetcode/394_字符串解码" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2026/07/06/leetcode/394_%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A7%A3%E7%A0%81/" class="article-date">
@@ -110,7 +182,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/06/leetcode/394_%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A7%A3%E7%A0%81/" data-id="cmrg95ncr001zngtlgobs2xrq" data-title="394. 字符串解码" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/06/leetcode/394_%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A7%A3%E7%A0%81/" data-id="cmrivkvp3000n6stlfxms683m" data-title="394. 字符串解码" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -166,7 +238,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/06/leetcode/42_%E6%8E%A5%E9%9B%A8%E6%B0%B4/" data-id="cmrg95ncr0020ngtl605mdtum" data-title="42.接雨水" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/06/leetcode/42_%E6%8E%A5%E9%9B%A8%E6%B0%B4/" data-id="cmrivkvp3000p6stlh5da6pty" data-title="42.接雨水" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -206,7 +278,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/05/CS231n/%E6%8E%A8%E5%AF%BC%E4%B8%80%E5%B1%82Linear_Network%E7%9A%84%E5%AF%BC%E6%95%B0/" data-id="cmrg95nck0009ngtl44sv2hrp" data-title="推导一层Linear_Network的导数" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/05/CS231n/%E6%8E%A8%E5%AF%BC%E4%B8%80%E5%B1%82Linear_Network%E7%9A%84%E5%AF%BC%E6%95%B0/" data-id="cmrivkvp000086stl1p418ai2" data-title="推导一层Linear_Network的导数" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -321,7 +393,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/05/CS231n/2.Regularization_and_Optimization/" data-id="cmrg95nch0002ngtl57b79c1l" data-title="Lesson2" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/05/CS231n/2.Regularization_and_Optimization/" data-id="cmrivkvoz00046stl8fze9s9w" data-title="Lesson2" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -365,7 +437,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/leetcode/25.K%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-id="cmrg95ncp001ungtl1zgf03vd" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/leetcode/25.K%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-id="cmrivkvp1000b6stlexleew9i" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -519,7 +591,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/CS231n/1_Introduction/" data-id="cmrg95ncg0001ngtl826f5dxy" data-title="1.Introduction" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/CS231n/1_Introduction/" data-id="cmrivkvou00006stlai2oh5bz" data-title="1.Introduction" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -575,7 +647,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/leetcode/25_k%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-id="cmrg95ncq001wngtl7j4l0dia" data-title="25.K个翻转链表" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/leetcode/25_k%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-id="cmrivkvp2000g6stlba4ngx1k" data-title="25.K个翻转链表" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -615,7 +687,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/leetcode/15_%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/" data-id="cmrg95ncj0006ngtl2vyr1k43" data-title="15.三数之和" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/leetcode/15_%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/" data-id="cmrivkvp1000d6stlgofn9cgf" data-title="15.三数之和" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -661,7 +733,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/leetcode/283._%E7%A7%BB%E5%8A%A8%E9%9B%B6/" data-id="cmrg95ncr001yngtl4wok4u4o" data-title="283移动零" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/leetcode/283._%E7%A7%BB%E5%8A%A8%E9%9B%B6/" data-id="cmrivkvp2000e6stl3831fdqo" data-title="283移动零" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -675,62 +747,11 @@
 
 
   
-    <article id="post-hello-world" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2026/07/03/hello-world/" class="article-date">
-  <time class="dt-published" datetime="2026-07-03T01:41:24.526Z" itemprop="datePublished">2026-07-03</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2026/07/03/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/hello-world/" data-id="cmrg95nce0000ngtlar3lde3y" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -776,6 +797,10 @@
       <ul>
         
           <li>
+            <a href="/2026/07/13/CS231n/%E5%89%8D%E5%90%91%E4%BC%A0%E6%92%AD%E5%92%8C%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E4%BB%A3%E7%A0%81/">前向传播和反向传播代码</a>
+          </li>
+        
+          <li>
             <a href="/2026/07/12/CS231n/Softmax_Classifier/">softmax_classiefier的向量化表示</a>
           </li>
         
@@ -789,10 +814,6 @@
         
           <li>
             <a href="/2026/07/11/CS231n/6_CNNArchitectures/">Lecture 6: CNN Architectures</a>
-          </li>
-        
-          <li>
-            <a href="/2026/07/11/leetcode/279.%20%E5%AE%8C%E5%85%A8%E5%B9%B3%E6%96%B9%E6%95%B0/">279. 完全平方数</a>
           </li>
         
       </ul>

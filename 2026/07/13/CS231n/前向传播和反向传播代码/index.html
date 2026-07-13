@@ -4,19 +4,19 @@
   <meta charset="utf-8">
   
   
-  <title>25.K个翻转链表 | Hexo</title>
+  <title>前向传播和反向传播代码 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="题目K 个一组翻转链表Difficulty: Hard Tags: 递归, 链表 题目描述给你链表的头节点 head ，每 k * * 个节点一组进行翻转，请你返回修改后的链表。 k 是一个正整数，它的值小于或等于链表的长度。如果节点总数不是 k * * 的整数倍，那么请将最后剩余的节点保持原有顺序。 你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换。 示例 1：12输入：head &#x3D;">
+  <meta name="description" content="向前传播(包含flat)12345678910111213141516171819202122232425262728293031def affine_forward(x, w, b):    &quot;&quot;&quot;    Computes the forward pass for an affine (fully-connected) layer.    The input x h">
 <meta property="og:type" content="article">
-<meta property="og:title" content="25.K个翻转链表">
-<meta property="og:url" content="http://example.com/2026/07/03/leetcode/25_k%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/index.html">
+<meta property="og:title" content="前向传播和反向传播代码">
+<meta property="og:url" content="http://example.com/2026/07/13/CS231n/%E5%89%8D%E5%90%91%E4%BC%A0%E6%92%AD%E5%92%8C%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E4%BB%A3%E7%A0%81/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="题目K 个一组翻转链表Difficulty: Hard Tags: 递归, 链表 题目描述给你链表的头节点 head ，每 k * * 个节点一组进行翻转，请你返回修改后的链表。 k 是一个正整数，它的值小于或等于链表的长度。如果节点总数不是 k * * 的整数倍，那么请将最后剩余的节点保持原有顺序。 你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换。 示例 1：12输入：head &#x3D;">
+<meta property="og:description" content="向前传播(包含flat)12345678910111213141516171819202122232425262728293031def affine_forward(x, w, b):    &quot;&quot;&quot;    Computes the forward pass for an affine (fully-connected) layer.    The input x h">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-07-03T03:26:06.000Z">
-<meta property="article:modified_time" content="2026-07-03T03:27:01.940Z">
+<meta property="article:published_time" content="2026-07-13T07:01:05.000Z">
+<meta property="article:modified_time" content="2026-07-13T07:02:31.954Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="链表">
+<meta property="article:tag" content="CS231n">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
@@ -74,10 +74,10 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-leetcode/25_k个翻转链表" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-CS231n/前向传播和反向传播代码" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2026/07/03/leetcode/25_k%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" class="article-date">
-  <time class="dt-published" datetime="2026-07-03T03:26:06.000Z" itemprop="datePublished">2026-07-03</time>
+    <a href="/2026/07/13/CS231n/%E5%89%8D%E5%90%91%E4%BC%A0%E6%92%AD%E5%92%8C%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E4%BB%A3%E7%A0%81/" class="article-date">
+  <time class="dt-published" datetime="2026-07-13T07:01:05.000Z" itemprop="datePublished">2026-07-13</time>
 </a>
     
   </div>
@@ -88,7 +88,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      25.K个翻转链表
+      前向传播和反向传播代码
     </h1>
   
 
@@ -96,31 +96,18 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><h1 id="K-个一组翻转链表"><a href="#K-个一组翻转链表" class="headerlink" title="K 个一组翻转链表"></a>K 个一组翻转链表</h1><p><strong>Difficulty:</strong> Hard</p>
-<p><strong>Tags:</strong> 递归, 链表</p>
-<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>给你链表的头节点 <code>head</code> ，每 <code>k</code> * * 个节点一组进行翻转，请你返回修改后的链表。</p>
-<p><code>k</code> 是一个正整数，它的值小于或等于链表的长度。如果节点总数不是 <code>k</code> * * 的整数倍，那么请将最后剩余的节点保持原有顺序。</p>
-<p>你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换。</p>
-<h2 id="示例-1："><a href="#示例-1：" class="headerlink" title="示例 1："></a>示例 1：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head = [1,2,3,4,5], k = 2</span><br><span class="line">输出：[2,1,4,3,5]</span><br></pre></td></tr></table></figure>
+        <h1 id="向前传播-包含flat"><a href="#向前传播-包含flat" class="headerlink" title="向前传播(包含flat)"></a>向前传播(包含flat)</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">affine_forward</span>(<span class="params">x, w, b</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Computes the forward pass for an affine (fully-connected) layer.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    The input x has shape (N, d_1, ..., d_k) and contains a minibatch of N</span></span><br><span class="line"><span class="string">    examples, where each example x[i] has shape (d_1, ..., d_k). We will</span></span><br><span class="line"><span class="string">    reshape each input into a vector of dimension D = d_1 * ... * d_k, and</span></span><br><span class="line"><span class="string">    then transform it to an output vector of dimension M.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Inputs:</span></span><br><span class="line"><span class="string">    - x: A numpy array containing input data, of shape (N, d_1, ..., d_k)</span></span><br><span class="line"><span class="string">    - w: A numpy array of weights, of shape (D, M)</span></span><br><span class="line"><span class="string">    - b: A numpy array of biases, of shape (M,)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns a tuple of:</span></span><br><span class="line"><span class="string">    - out: output, of shape (N, M)</span></span><br><span class="line"><span class="string">    - cache: (x, w, b)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    out = <span class="literal">None</span></span><br><span class="line">    <span class="comment">###########################################################################</span></span><br><span class="line">    <span class="comment"># <span class="doctag">TODO:</span> Implement the affine forward pass. Store the result in out. You   #</span></span><br><span class="line">    <span class="comment"># will need to reshape the input into rows.                               #</span></span><br><span class="line">    <span class="comment">###########################################################################</span></span><br><span class="line">    N = x.shape[<span class="number">0</span>]</span><br><span class="line">    x_flatten = x.reshape(N, -<span class="number">1</span>)</span><br><span class="line">    out = np.dot(x_flatten, w) + b</span><br><span class="line">    <span class="comment">###########################################################################</span></span><br><span class="line">    <span class="comment">#                             END OF YOUR CODE                            #</span></span><br><span class="line">    <span class="comment">###########################################################################</span></span><br><span class="line">    cache = (x, w, b)</span><br><span class="line">    <span class="keyword">return</span> out, cache</span><br></pre></td></tr></table></figure>
 
-<h2 id="示例-2："><a href="#示例-2：" class="headerlink" title="示例 2："></a>示例 2：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head = [1,2,3,4,5], k = 3</span><br><span class="line">输出：[3,2,1,4,5]</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>链表中的节点数目为 <code>n</code></li>
-<li><code>1 &lt;= k &lt;= n &lt;= 5000</code></li>
-<li><code>0 &lt;= Node.val &lt;= 1000</code></li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"># class ListNode(object):</span></span><br><span class="line"><span class="comment">#     def __init__(self, val=0, next=None):</span></span><br><span class="line"><span class="comment">#         self.val = val</span></span><br><span class="line"><span class="comment">#         self.next = next</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">reverse</span>(<span class="params">self, head , tail</span>):</span><br><span class="line">        cur = head</span><br><span class="line">        prev = <span class="literal">None</span></span><br><span class="line">        <span class="keyword">while</span> prev != tail :</span><br><span class="line">            tmp = cur.<span class="built_in">next</span></span><br><span class="line">            cur.<span class="built_in">next</span> = prev</span><br><span class="line">            prev = cur</span><br><span class="line">            cur = tmp</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">reverseKGroup</span>(<span class="params">self, head, k</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :type head: Optional[ListNode]</span></span><br><span class="line"><span class="string">        :type k: int</span></span><br><span class="line"><span class="string">        :rtype: Optional[ListNode]</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        dummy = ListNode(<span class="number">0</span>)</span><br><span class="line">        dummy.<span class="built_in">next</span> = head</span><br><span class="line">        prev = dummy</span><br><span class="line">        tail = head</span><br><span class="line">        <span class="keyword">while</span> tail != <span class="literal">None</span>:</span><br><span class="line">            cnt = <span class="number">0</span></span><br><span class="line">            <span class="keyword">while</span> ( tail != <span class="literal">None</span> ) <span class="keyword">and</span> ( cnt &lt; k - <span class="number">1</span> ):</span><br><span class="line">                cnt += <span class="number">1</span></span><br><span class="line">                tail = tail.<span class="built_in">next</span></span><br><span class="line">            <span class="keyword">if</span> tail != <span class="literal">None</span>:</span><br><span class="line">                tmp = tail.<span class="built_in">next</span></span><br><span class="line">                <span class="variable language_">self</span>.reverse(head = head,tail = tail)</span><br><span class="line">                prev.<span class="built_in">next</span> = tail</span><br><span class="line">                head.<span class="built_in">next</span> = tmp</span><br><span class="line">                prev = head</span><br><span class="line">                head = tmp</span><br><span class="line">                tail = tmp</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">return</span> dummy.<span class="built_in">next</span></span><br><span class="line"> <span class="comment"># 结构化，比如里面的reverse就能省去不少时间</span></span><br><span class="line"> <span class="comment"># prev，post,tmp等的记录</span></span><br></pre></td></tr></table></figure>
-
+<h1 id="反向传播"><a href="#反向传播" class="headerlink" title="反向传播"></a>反向传播</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">affine_backward</span>(<span class="params">dout, cache</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Computes the backward pass for an affine layer.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Inputs:</span></span><br><span class="line"><span class="string">    - dout: Upstream derivative, of shape (N, M)</span></span><br><span class="line"><span class="string">    - cache: Tuple of:</span></span><br><span class="line"><span class="string">      - x: Input data, of shape (N, d_1, ... d_k)</span></span><br><span class="line"><span class="string">      - w: Weights, of shape (D, M)</span></span><br><span class="line"><span class="string">      - b: Biases, of shape (M,)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns a tuple of:</span></span><br><span class="line"><span class="string">    - dx: Gradient with respect to x, of shape (N, d1, ..., d_k)</span></span><br><span class="line"><span class="string">    - dw: Gradient with respect to w, of shape (D, M)</span></span><br><span class="line"><span class="string">    - db: Gradient with respect to b, of shape (M,)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    x, w, b = cache</span><br><span class="line">    dx, dw, db = <span class="literal">None</span>, <span class="literal">None</span>, <span class="literal">None</span></span><br><span class="line">    N = x.shape[<span class="number">0</span>]</span><br><span class="line">    x_new = x.reshape(N,-<span class="number">1</span>)</span><br><span class="line">    dx = np.dot(dout, w.T)</span><br><span class="line">    dx.reshape(x.shape)</span><br><span class="line"></span><br><span class="line">    dw = np.dot(x_new.T, dout)</span><br><span class="line">    </span><br><span class="line">    db = np.<span class="built_in">sum</span>(dout, axis = <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">###########################################################################</span></span><br><span class="line">    <span class="comment"># <span class="doctag">TODO:</span> Implement the affine backward pass.                               #</span></span><br><span class="line">    <span class="comment">###########################################################################</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">###########################################################################</span></span><br><span class="line">    <span class="comment">#                             END OF YOUR CODE                            #</span></span><br><span class="line">    <span class="comment">###########################################################################</span></span><br><span class="line">    <span class="keyword">return</span> dx, dw, db</span><br></pre></td></tr></table></figure>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/leetcode/25_k%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-id="cmrivkvp2000g6stlba4ngx1k" data-title="25.K个翻转链表" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/13/CS231n/%E5%89%8D%E5%90%91%E4%BC%A0%E6%92%AD%E5%92%8C%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E4%BB%A3%E7%A0%81/" data-id="cmrivkvp1000a6stlckfn4cse" data-title="前向传播和反向传播代码" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%93%BE%E8%A1%A8/" rel="tag">链表</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CS231n/" rel="tag">CS231n</a></li></ul>
 
     </footer>
   </div>
@@ -128,19 +115,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2026/07/03/CS231n/1_Introduction/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          1.Introduction
-        
-      </div>
-    </a>
   
-  
-    <a href="/2026/07/03/leetcode/15_%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2026/07/12/CS231n/Softmax_Classifier/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">15.三数之和</div>
+      <div class="article-nav-title">softmax_classiefier的向量化表示</div>
     </a>
   
 </nav>

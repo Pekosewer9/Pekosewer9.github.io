@@ -71,6 +71,49 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-CS231n/前向传播和反向传播代码" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/07/13/CS231n/%E5%89%8D%E5%90%91%E4%BC%A0%E6%92%AD%E5%92%8C%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E4%BB%A3%E7%A0%81/" class="article-date">
+  <time class="dt-published" datetime="2026-07-13T07:01:05.000Z" itemprop="datePublished">2026-07-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/07/13/CS231n/%E5%89%8D%E5%90%91%E4%BC%A0%E6%92%AD%E5%92%8C%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E4%BB%A3%E7%A0%81/">前向传播和反向传播代码</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="向前传播-包含flat"><a href="#向前传播-包含flat" class="headerlink" title="向前传播(包含flat)"></a>向前传播(包含flat)</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">affine_forward</span>(<span class="params">x, w, b</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Computes the forward pass for an affine (fully-connected) layer.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    The input x has shape (N, d_1, ..., d_k) and contains a minibatch of N</span></span><br><span class="line"><span class="string">    examples, where each example x[i] has shape (d_1, ..., d_k). We will</span></span><br><span class="line"><span class="string">    reshape each input into a vector of dimension D = d_1 * ... * d_k, and</span></span><br><span class="line"><span class="string">    then transform it to an output vector of dimension M.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Inputs:</span></span><br><span class="line"><span class="string">    - x: A numpy array containing input data, of shape (N, d_1, ..., d_k)</span></span><br><span class="line"><span class="string">    - w: A numpy array of weights, of shape (D, M)</span></span><br><span class="line"><span class="string">    - b: A numpy array of biases, of shape (M,)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns a tuple of:</span></span><br><span class="line"><span class="string">    - out: output, of shape (N, M)</span></span><br><span class="line"><span class="string">    - cache: (x, w, b)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    out = <span class="literal">None</span></span><br><span class="line">    <span class="comment">###########################################################################</span></span><br><span class="line">    <span class="comment"># <span class="doctag">TODO:</span> Implement the affine forward pass. Store the result in out. You   #</span></span><br><span class="line">    <span class="comment"># will need to reshape the input into rows.                               #</span></span><br><span class="line">    <span class="comment">###########################################################################</span></span><br><span class="line">    N = x.shape[<span class="number">0</span>]</span><br><span class="line">    x_flatten = x.reshape(N, -<span class="number">1</span>)</span><br><span class="line">    out = np.dot(x_flatten, w) + b</span><br><span class="line">    <span class="comment">###########################################################################</span></span><br><span class="line">    <span class="comment">#                             END OF YOUR CODE                            #</span></span><br><span class="line">    <span class="comment">###########################################################################</span></span><br><span class="line">    cache = (x, w, b)</span><br><span class="line">    <span class="keyword">return</span> out, cache</span><br></pre></td></tr></table></figure>
+
+<h1 id="反向传播"><a href="#反向传播" class="headerlink" title="反向传播"></a>反向传播</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">affine_backward</span>(<span class="params">dout, cache</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Computes the backward pass for an affine layer.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Inputs:</span></span><br><span class="line"><span class="string">    - dout: Upstream derivative, of shape (N, M)</span></span><br><span class="line"><span class="string">    - cache: Tuple of:</span></span><br><span class="line"><span class="string">      - x: Input data, of shape (N, d_1, ... d_k)</span></span><br><span class="line"><span class="string">      - w: Weights, of shape (D, M)</span></span><br><span class="line"><span class="string">      - b: Biases, of shape (M,)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns a tuple of:</span></span><br><span class="line"><span class="string">    - dx: Gradient with respect to x, of shape (N, d1, ..., d_k)</span></span><br><span class="line"><span class="string">    - dw: Gradient with respect to w, of shape (D, M)</span></span><br><span class="line"><span class="string">    - db: Gradient with respect to b, of shape (M,)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    x, w, b = cache</span><br><span class="line">    dx, dw, db = <span class="literal">None</span>, <span class="literal">None</span>, <span class="literal">None</span></span><br><span class="line">    N = x.shape[<span class="number">0</span>]</span><br><span class="line">    x_new = x.reshape(N,-<span class="number">1</span>)</span><br><span class="line">    dx = np.dot(dout, w.T)</span><br><span class="line">    dx.reshape(x.shape)</span><br><span class="line"></span><br><span class="line">    dw = np.dot(x_new.T, dout)</span><br><span class="line">    </span><br><span class="line">    db = np.<span class="built_in">sum</span>(dout, axis = <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">###########################################################################</span></span><br><span class="line">    <span class="comment"># <span class="doctag">TODO:</span> Implement the affine backward pass.                               #</span></span><br><span class="line">    <span class="comment">###########################################################################</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">###########################################################################</span></span><br><span class="line">    <span class="comment">#                             END OF YOUR CODE                            #</span></span><br><span class="line">    <span class="comment">###########################################################################</span></span><br><span class="line">    <span class="keyword">return</span> dx, dw, db</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/07/13/CS231n/%E5%89%8D%E5%90%91%E4%BC%A0%E6%92%AD%E5%92%8C%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E4%BB%A3%E7%A0%81/" data-id="cmrivkvp1000a6stlckfn4cse" data-title="前向传播和反向传播代码" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CS231n/" rel="tag">CS231n</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-CS231n/Softmax_Classifier" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2026/07/12/CS231n/Softmax_Classifier/" class="article-date">
@@ -106,7 +149,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/12/CS231n/Softmax_Classifier/" data-id="cmrhiy8ko0000a0tl0ck23jz8" data-title="softmax_classiefier的向量化表示" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/12/CS231n/Softmax_Classifier/" data-id="cmrivkvoz00056stlbldad6qy" data-title="softmax_classiefier的向量化表示" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -152,7 +195,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/12/leetcode/%E4%BA%8C%E5%88%86%E6%B3%95/" data-id="cmrh82mlu00002ktlfa1o0es2" data-title="二分法特辑" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/12/leetcode/%E4%BA%8C%E5%88%86%E6%B3%95/" data-id="cmrivkvp900386stl98xl8sr3" data-title="二分法特辑" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -208,7 +251,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/12/leetcode/300.%20%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E5%BA%8F%E5%88%97/" data-id="cmrh6uo5400001stl3npnc6gl" data-title="300. 最长递增子序列" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/12/leetcode/300.%20%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E5%BA%8F%E5%88%97/" data-id="cmrivkvp2000h6stlbk9x6px0" data-title="300. 最长递增子序列" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -347,7 +390,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/11/CS231n/6_CNNArchitectures/" data-id="cmrg95nck0008ngtlfz4wexnx" data-title="Lecture 6: CNN Architectures" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/11/CS231n/6_CNNArchitectures/" data-id="cmrivkvox00016stlfn5727m7" data-title="Lecture 6: CNN Architectures" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -396,7 +439,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/11/leetcode/279.%20%E5%AE%8C%E5%85%A8%E5%B9%B3%E6%96%B9%E6%95%B0/" data-id="cmrg95ncq001vngtldr9edggx" data-title="279. 完全平方数" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/11/leetcode/279.%20%E5%AE%8C%E5%85%A8%E5%B9%B3%E6%96%B9%E6%95%B0/" data-id="cmrivkvp3000k6stlf8dib6s3" data-title="279. 完全平方数" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -450,7 +493,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/11/leetcode/438.%20%E6%89%BE%E5%88%B0%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%AD%E6%89%80%E6%9C%89%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D/" data-id="cmrg95ncr0022ngtl0tdx7ekt" data-title="438. 找到字符串中所有字母异位词" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/11/leetcode/438.%20%E6%89%BE%E5%88%B0%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%AD%E6%89%80%E6%9C%89%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D/" data-id="cmrivkvp3000l6stl6pxocidz" data-title="438. 找到字符串中所有字母异位词" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -498,7 +541,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/10/leetcode/84.%20%E6%9F%B1%E7%8A%B6%E5%9B%BE%E4%B8%AD%E6%9C%80%E5%A4%A7%E7%9A%84%E7%9F%A9%E5%BD%A2/" data-id="cmrg95nct002rngtlefjh50c2" data-title="84. 柱状图中最大的矩形" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/10/leetcode/84.%20%E6%9F%B1%E7%8A%B6%E5%9B%BE%E4%B8%AD%E6%9C%80%E5%A4%A7%E7%9A%84%E7%9F%A9%E5%BD%A2/" data-id="cmrivkvp900376stlg4at6exy" data-title="84. 柱状图中最大的矩形" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -545,7 +588,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/10/leetcode/739.%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6/" data-id="cmrg95nct002qngtl0rti5l39" data-title="739.每日温度" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/10/leetcode/739.%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6/" data-id="cmrivkvp4000s6stlh8x26tez" data-title="739.每日温度" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -649,7 +692,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/09/CS231n/CNN/" data-id="cmrg95ncj0005ngtl8c530710" data-title="CNN" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/09/CS231n/CNN/" data-id="cmrivkvoz00036stlbz220zuk" data-title="CNN" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -663,83 +706,11 @@
 
 
   
-    <article id="post-CS231n/3_NN_BackPropagation" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2026/07/06/CS231n/3_NN_BackPropagation/" class="article-date">
-  <time class="dt-published" datetime="2026-07-06T07:26:50.000Z" itemprop="datePublished">2026-07-06</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2026/07/06/CS231n/3_NN_BackPropagation/">3_NN_BackPropagation</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="Neural-Networks"><a href="#Neural-Networks" class="headerlink" title="Neural Networks"></a>Neural Networks</h2><figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">x - [D]</span><br><span class="line">W1 - [H * D]</span><br><span class="line">W2 - [C * D]</span><br><span class="line">C - 分类数</span><br><span class="line">f = Wx</span><br><span class="line">f = W2max(W1x,0)</span><br></pre></td></tr></table></figure>
-
-<p><font color = 'black'> 每个第二层的可以成为一个被共享所有类共享的模板</p>
-<p>max(W1x,0) -&gt; 一个简单的激活函数</p>
-<blockquote>
-<p>如果没有激活函数，就是linear的，W &#x3D; W1 * W2</p>
-</blockquote>
-<p><font color = 'blue'>max(W1,0)被称为 Relu</p>
-<p>合适的零中心值 和 平滑度 可以获得更快的收敛速度 </p>
-<blockquote>
-<p>缺点:可能创造死的神经元</p>
-</blockquote>
-<font color = 'black'> 
-Sigmoid: 1/1+e^x
-SiLU x* sigmoid(x)
-
-<blockquote>
-<p>缺点:会把数值压缩在一个较窄的范围内，又是会让梯度消失，所以我们不会把他们用在NN的中间层</p>
-</blockquote>
-<h3 id="3layers-FULLY-CONNECTED"><a href="#3layers-FULLY-CONNECTED" class="headerlink" title="3layers - FULLY CONNECTED"></a>3layers - FULLY CONNECTED</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">f = <span class="keyword">lambda</span> x: <span class="number">1.0</span>/(<span class="number">1.0</span> + np.exp(-x)) <span class="comment">#用lambda定义sigmoid函数</span></span><br><span class="line">x = np.random.randn(<span class="number">3</span>, <span class="number">1</span>) </span><br><span class="line">h1 = f(np.dot(W1, x) + b1) <span class="comment">#hidden layer 1</span></span><br><span class="line">h2 = f(np.dot(W2, h1) + b2) <span class="comment"># hidden layer 2</span></span><br><span class="line">out = np.dot(W3, h2) +b3 <span class="comment"># output layer</span></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>我们选择正则化项而不是减少神经网络层数来防止过拟合</p>
-</blockquote>
-<p>原因：我们要先确保神经网络理解我们的数据，确保表达能力</p>
-<p>如L2 -&gt;  不让W参数过大</p>
-<h2 id="Backpropagation"><a href="#Backpropagation" class="headerlink" title="Backpropagation"></a>Backpropagation</h2><p>we should know how to compute dL&#x2F;dW1 dL&#x2F;dW2 </p>
-<p>![“”,&#x2F;]</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> (<span class="number">1</span> / (<span class="number">1</span> + std::exp((-a))))</span><br></pre></td></tr></table></figure>
-
-<p>sparse jacobian matrix xxxxxxx</p>
-<p>jacobian matrix 当维数大的时候太耗费计算资源：</p>
-<img src="/2026/07/06/CS231n/3_NN_BackPropagation/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20260709201458_206_39.jpg" class="" title="alt text">
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/06/CS231n/3_NN_BackPropagation/" data-id="cmrg95nci0004ngtldnew1usb" data-title="3_NN_BackPropagation" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/BackPropagation/" rel="tag">BackPropagation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CS231n/" rel="tag">CS231n</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NN/" rel="tag">NN</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -785,6 +756,10 @@ SiLU x* sigmoid(x)
       <ul>
         
           <li>
+            <a href="/2026/07/13/CS231n/%E5%89%8D%E5%90%91%E4%BC%A0%E6%92%AD%E5%92%8C%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E4%BB%A3%E7%A0%81/">前向传播和反向传播代码</a>
+          </li>
+        
+          <li>
             <a href="/2026/07/12/CS231n/Softmax_Classifier/">softmax_classiefier的向量化表示</a>
           </li>
         
@@ -798,10 +773,6 @@ SiLU x* sigmoid(x)
         
           <li>
             <a href="/2026/07/11/CS231n/6_CNNArchitectures/">Lecture 6: CNN Architectures</a>
-          </li>
-        
-          <li>
-            <a href="/2026/07/11/leetcode/279.%20%E5%AE%8C%E5%85%A8%E5%B9%B3%E6%96%B9%E6%95%B0/">279. 完全平方数</a>
           </li>
         
       </ul>
