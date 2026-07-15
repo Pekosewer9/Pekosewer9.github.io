@@ -71,6 +71,110 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-CS231n/CNN" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/07/09/CS231n/CNN/" class="article-date">
+  <time class="dt-published" datetime="2026-07-09T07:32:06.000Z" itemprop="datePublished">2026-07-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/07/09/CS231n/CNN/">CNN</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>ReLu:   Max(0,Wx)</p>
+<h2 id="CNN"><a href="#CNN" class="headerlink" title="CNN"></a>CNN</h2><p><font color = 'black'>Perceiving and Understanding the virtual world</p>
+<blockquote>
+<p>Convolution Layer || Pooling layer</p>
+</blockquote>
+<p>之前的工作：<br>raw picture -&gt; feature representation -&gt; Neural Network -&gt; label output</p>
+<p>怎么把feature representation输入NN：</p>
+<ol>
+<li>把feature的向量全部连接在一起</li>
+</ol>
+<h4 id="直接NN-VS-feature后NN"><a href="#直接NN-VS-feature后NN" class="headerlink" title="直接NN VS feature后NN"></a>直接NN VS feature后NN</h4><p>一般来说，用直接NN会更好</p>
+<blockquote>
+<p>但是我们还需要人工设计design计算图-&gt;layer的连接样式</p>
+</blockquote>
+<p>CNN结构</p>
+<img src="/2026/07/09/CS231n/CNN/image-12.png" class="" title="alt text">
+
+<p>用途：几乎所有视觉问题，包括TEXT2IMG IMG2TEXT , 视觉分割</p>
+<p>Fully Connected layer: templates , 拉伸</p>
+<p>Convolution layer: 不拉伸 , filter: pixel image , </p>
+<img src="/2026/07/09/CS231n/CNN/image-13.png" class="" title="alt text">
+
+
+<h3 id="Exp"><a href="#Exp" class="headerlink" title="Exp:"></a>Exp:</h3><p>32 * 32 * 3 image — 5 * 5 * 3 filter -&gt; 28 * 28  * 1 result</p>
+<p>用 6 个 filter</p>
+<p>3* 32 * 32  image — 6 * 3 * 5 * 5 -&gt; 6 * 28 * 28 + bias (6 维)[每个filter公用一个bias，这个bias在一个filter中是一个标量，所以bias总共是6维的] -&gt; 6* 28 * 28 result</p>
+<blockquote>
+<p>bias 和 6-d的filter都是通过梯度下降得到的</p>
+</blockquote>
+<p>Filter size:<br><font color = 'blue'> cout * cin * Kw * Kh </p>
+<p><font colot = 'black'>在Convolution layer中间，我们需要加入Relu等其他激活函数-&gt;不然就会退化成一层convolution layer</p>
+<p>第一层filter最终学习到的样式：</p>
+<ol>
+<li>对比色 （如pink &amp;&amp; green）</li>
+<li>边缘检测</li>
+</ol>
+<blockquote>
+<p>Q:为什么滤波器会不同<br>A:因为随机初始化不同，所以随机的初始时很重要的</p>
+</blockquote>
+<p>后面的filter不能直接看出来，要看对哪些图像响应明显</p>
+<p>Input : x * x</p>
+<p>Filter y * y</p>
+<p>Output (x-y+1) * (x - y + 1)</p>
+<h3 id="想要让OUTPUT也保持x-x"><a href="#想要让OUTPUT也保持x-x" class="headerlink" title="想要让OUTPUT也保持x * x"></a>想要让OUTPUT也保持x * x</h3><ol>
+<li>paddle ，在外面一圈加入额外的数字 0</li>
+</ol>
+<h3 id="感受野"><a href="#感受野" class="headerlink" title="感受野"></a>感受野</h3><p>越到后面，每一个pixel表示的感受野越大</p>
+<p>但是我们想让感受野变大变得更快</p>
+<ol>
+<li>stride</li>
+<li>pooling</li>
+</ol>
+<h3 id="stride-每一次filter跳的步数"><a href="#stride-每一次filter跳的步数" class="headerlink" title="stride , 每一次filter跳的步数"></a>stride , 每一次filter跳的步数</h3><blockquote>
+<p>input W  filter K padding P Stride S<br>output &#x3D; (W-K+2P)&#x2F;S + 1 &#x3D; (W&#x2F;S) + 1</p>
+</blockquote>
+<h2 id="Pooling"><a href="#Pooling" class="headerlink" title="Pooling"></a>Pooling</h2><p>Exp:</p>
+<p>64 * 224 * 224 -pool-&gt; 64* 112 * 112</p>
+<p>一般使用stride &#x3D; 2 || 4</p>
+<h3 id="downsampling-method"><a href="#downsampling-method" class="headerlink" title="downsampling method:"></a>downsampling method:</h3><ol>
+<li>maxpooling</li>
+<li>meanpooling</li>
+</ol>
+<h3 id="平移不变性"><a href="#平移不变性" class="headerlink" title="平移不变性"></a>平移不变性</h3><p>先平移再卷积和先卷积再平移得到的结果一样</p>
+<p>所以CNN是尊重空间结构的</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/07/09/CS231n/CNN/" data-id="cmrivkvoz00036stlbz220zuk" data-title="CNN" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CNN/" rel="tag">CNN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CS231n/" rel="tag">CS231n</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-CS231n/3_NN_BackPropagation" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2026/07/06/CS231n/3_NN_BackPropagation/" class="article-date">
@@ -701,52 +805,6 @@ SiLU x* sigmoid(x)
 
 
   
-    <article id="post-leetcode/283._移动零" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2026/07/03/leetcode/283._%E7%A7%BB%E5%8A%A8%E9%9B%B6/" class="article-date">
-  <time class="dt-published" datetime="2026-07-03T01:49:24.000Z" itemprop="datePublished">2026-07-03</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2026/07/03/leetcode/283._%E7%A7%BB%E5%8A%A8%E9%9B%B6/">283移动零</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="移动零"><a href="#移动零" class="headerlink" title="移动零"></a>移动零</h1><h3 id="双指针做法"><a href="#双指针做法" class="headerlink" title="双指针做法"></a>双指针做法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">moveZeroes</span>(<span class="params">self, nums</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :type nums: List[int]</span></span><br><span class="line"><span class="string">        :rtype: None Do not return anything, modify nums in-place instead.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        n = <span class="built_in">len</span>(nums)</span><br><span class="line">        left_index = <span class="number">0</span></span><br><span class="line">        right_index = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> right_index &lt; n:</span><br><span class="line">            <span class="keyword">if</span> nums[right_index] != <span class="number">0</span>:</span><br><span class="line">                nums[left_index], nums[right_index] = nums[right_index], nums[left_index]</span><br><span class="line">                left_index += <span class="number">1</span></span><br><span class="line">            right_index += <span class="number">1</span></span><br></pre></td></tr></table></figure>
-
-<p>解释:<br>我们只考虑不为0的序列<br>left_index 作用于已经处理的尾部 + 1<br>right_index作用于已经未处理的序列头部<br>这两个之间夹着一堆 0 ，处理后一定会被交换到队列尾部</p>
-<h3 id="原地栈做法"><a href="#原地栈做法" class="headerlink" title="原地栈做法"></a>原地栈做法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">moveZeroes</span>(<span class="params">self, nums</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :type nums: List[int]</span></span><br><span class="line"><span class="string">        :rtype: None Do not return anything, modify nums in-place instead.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        n = <span class="built_in">len</span>(nums)</span><br><span class="line">        stack_size = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> ele <span class="keyword">in</span> nums:</span><br><span class="line">            <span class="keyword">if</span> ele != <span class="number">0</span>:</span><br><span class="line">                nums[stack_size] = ele</span><br><span class="line">                stack_size += <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(stack_size , n ): <span class="comment"># [stack_size , n]</span></span><br><span class="line">            nums[i] = <span class="number">0</span></span><br></pre></td></tr></table></figure>
-
-<p>解释：<br>原地栈，因为stack大小一定小于等于处理过的大小<br>后面补0</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/leetcode/283._%E7%A7%BB%E5%8A%A8%E9%9B%B6/" data-id="cmrivkvp2000e6stl3831fdqo" data-title="283移动零" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E7%BB%84/" rel="tag">数组</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%A0%88/" rel="tag">栈</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -797,6 +855,10 @@ SiLU x* sigmoid(x)
       <ul>
         
           <li>
+            <a href="/2026/07/15/leetcode/152.%20%E4%B9%98%E7%A7%AF%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84/">152. 乘积最大子数组</a>
+          </li>
+        
+          <li>
             <a href="/2026/07/13/CS231n/%E5%89%8D%E5%90%91%E4%BC%A0%E6%92%AD%E5%92%8C%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E4%BB%A3%E7%A0%81/">前向传播和反向传播代码</a>
           </li>
         
@@ -810,10 +872,6 @@ SiLU x* sigmoid(x)
         
           <li>
             <a href="/2026/07/12/leetcode/300.%20%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E5%BA%8F%E5%88%97/">300. 最长递增子序列</a>
-          </li>
-        
-          <li>
-            <a href="/2026/07/11/CS231n/6_CNNArchitectures/">Lecture 6: CNN Architectures</a>
           </li>
         
       </ul>
