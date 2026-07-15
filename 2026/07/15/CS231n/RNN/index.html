@@ -4,22 +4,25 @@
   <meta charset="utf-8">
   
   
-  <title>84. 柱状图中最大的矩形 | Hexo</title>
+  <title>RNN | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="给定 n 个非负整数，用来表示柱状图中各个柱子的高度。每个柱子彼此相邻，且宽度为 1 。 求在该柱状图中，能够勾勒出来的矩形的最大面积。 输入：heights &#x3D; [2,1,5,6,2,3]输出：10解释：最大的矩形为图中红色区域，面积为 10 单调栈12345678910111213141516171819class Solution:    def largestRectangleA">
+  <meta name="description" content="Recurrent Neural Network 普通的NN 一个输入对应一个输出 一对多 ： 如image - &gt; sequcence of words(图片对应一句话描述) 多对一 : 如视频识别标签 多对多 ：视频描述   RNN的内部状态(隐藏状态) 在每一次输入都进行更新   h_t(new_state) &#x3D; fW(h_t-1, x_t)y_t &#x3D; fW_hy(">
 <meta property="og:type" content="article">
-<meta property="og:title" content="84. 柱状图中最大的矩形">
-<meta property="og:url" content="http://example.com/2026/07/10/leetcode/84.%20%E6%9F%B1%E7%8A%B6%E5%9B%BE%E4%B8%AD%E6%9C%80%E5%A4%A7%E7%9A%84%E7%9F%A9%E5%BD%A2/index.html">
+<meta property="og:title" content="RNN">
+<meta property="og:url" content="http://example.com/2026/07/15/CS231n/RNN/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="给定 n 个非负整数，用来表示柱状图中各个柱子的高度。每个柱子彼此相邻，且宽度为 1 。 求在该柱状图中，能够勾勒出来的矩形的最大面积。 输入：heights &#x3D; [2,1,5,6,2,3]输出：10解释：最大的矩形为图中红色区域，面积为 10 单调栈12345678910111213141516171819class Solution:    def largestRectangleA">
+<meta property="og:description" content="Recurrent Neural Network 普通的NN 一个输入对应一个输出 一对多 ： 如image - &gt; sequcence of words(图片对应一句话描述) 多对一 : 如视频识别标签 多对多 ：视频描述   RNN的内部状态(隐藏状态) 在每一次输入都进行更新   h_t(new_state) &#x3D; fW(h_t-1, x_t)y_t &#x3D; fW_hy(">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-07-10T07:56:22.000Z">
-<meta property="article:modified_time" content="2026-07-10T09:10:41.916Z">
+<meta property="og:image" content="http://example.com/2026/07/15/CS231n/RNN/1.png">
+<meta property="og:image" content="http://example.com/2026/07/15/CS231n/RNN/1.png">
+<meta property="article:published_time" content="2026-07-15T06:47:27.000Z">
+<meta property="article:modified_time" content="2026-07-15T07:47:08.127Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="动态规划">
-<meta property="article:tag" content="单调栈">
-<meta property="article:tag" content="dp">
+<meta property="article:tag" content="RNN">
+<meta property="article:tag" content="sequence modeling">
+<meta property="article:tag" content="序列建模">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2026/07/15/CS231n/RNN/1.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -76,10 +79,10 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-leetcode/84. 柱状图中最大的矩形" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-CS231n/RNN" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2026/07/10/leetcode/84.%20%E6%9F%B1%E7%8A%B6%E5%9B%BE%E4%B8%AD%E6%9C%80%E5%A4%A7%E7%9A%84%E7%9F%A9%E5%BD%A2/" class="article-date">
-  <time class="dt-published" datetime="2026-07-10T07:56:22.000Z" itemprop="datePublished">2026-07-10</time>
+    <a href="/2026/07/15/CS231n/RNN/" class="article-date">
+  <time class="dt-published" datetime="2026-07-15T06:47:27.000Z" itemprop="datePublished">2026-07-15</time>
 </a>
     
   </div>
@@ -90,7 +93,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      84. 柱状图中最大的矩形
+      RNN
     </h1>
   
 
@@ -98,23 +101,47 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>给定 n 个非负整数，用来表示柱状图中各个柱子的高度。每个柱子彼此相邻，且宽度为 1 。</p>
-<p>求在该柱状图中，能够勾勒出来的矩形的最大面积。</p>
-<p>输入：heights &#x3D; [2,1,5,6,2,3]<br>输出：10<br>解释：最大的矩形为图中红色区域，面积为 10</p>
-<h2 id="单调栈"><a href="#单调栈" class="headerlink" title="单调栈"></a>单调栈</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">largestRectangleArea</span>(<span class="params">self, heights: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># 维护一个单调递增的单调栈</span></span><br><span class="line">        stack = <span class="built_in">list</span>()</span><br><span class="line">        n = <span class="built_in">len</span>(heights)</span><br><span class="line">        dp = [<span class="number">1</span>] * n</span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        stack.append([-<span class="number">1</span>, -<span class="number">1</span>])</span><br><span class="line">        heights.append(-<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">for</span> index, ele <span class="keyword">in</span> <span class="built_in">enumerate</span>(heights):</span><br><span class="line">            <span class="keyword">while</span>  ele &lt; stack[-<span class="number">1</span>][<span class="number">1</span>]:</span><br><span class="line">                j = stack[-<span class="number">1</span>][<span class="number">0</span>]</span><br><span class="line">                dp[j] = index - stack[-<span class="number">2</span>][<span class="number">0</span>] - <span class="number">1</span></span><br><span class="line">                stack.pop()</span><br><span class="line">            stack.append([index, ele])</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            ans = <span class="built_in">max</span>(ans, heights[i] * dp[i])</span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+        <h2 id="Recurrent-Neural-Network"><a href="#Recurrent-Neural-Network" class="headerlink" title="Recurrent Neural Network"></a>Recurrent Neural Network</h2><ol>
+<li>普通的NN 一个输入对应一个输出</li>
+<li>一对多 ： 如image - &gt; sequcence of words(图片对应一句话描述)</li>
+<li>多对一 : 如视频识别标签</li>
+<li>多对多 ：视频描述</li>
+</ol>
+<blockquote>
+<p>RNN的内部状态(隐藏状态) 在每一次输入都进行更新</p>
+</blockquote>
+<blockquote>
+<p>h_t(new_state) &#x3D; fW(h_t-1, x_t)<br>y_t &#x3D; fW_hy(h_t) fW_hy-&gt; 将hidden state转化为输出的output</p>
+</blockquote>
+<font color = 'black'>
+更新的fW 和 转化的fW_hy 都用一致的函数
+
+<h2 id="Vanilla（普通）RNN"><a href="#Vanilla（普通）RNN" class="headerlink" title="Vanilla（普通）RNN"></a>Vanilla（普通）RNN</h2><img src="/2026/07/15/CS231n/RNN/1.png" class="" title="alt text">
+
+<p><font color = 'green'> 用tanh的好处是可以吧ht的值压在(-1,1)之间</p>
+<font color = 'black'>
+
+
+<h2 id="RNN-的-计算图-computational-graph"><a href="#RNN-的-计算图-computational-graph" class="headerlink" title="RNN 的 计算图(computational graph)"></a>RNN 的 计算图(computational graph)</h2><img src="/2026/07/15/CS231n/RNN/1.png" class="" title="coumpute graph">
 
 <blockquote>
-<p>用dp[i]记录每一个index &#x3D; i的可以像左右延申多少，用单调递增的单调栈实现dp[i]的计算</p>
+<p>每一步的Loss 相加得到总Loss，对每个时间步Loss都能得到对W的梯度</p>
 </blockquote>
+<p>对于多对一，可能只对最后的hidden state相关，所以只用考虑最后的Loss</p>
+<p>$$\delta_t &#x3D; \frac{\partial L_t}{\partial s_t} + \frac{\partial s_{t+1}}{\partial s_t} \delta_{t+1}$$</p>
+<p>用这条公式可以计算所有的L，其中$\delta_t$是总L 对 s_t的导数</p>
+<h4 id="问题-当时间序列长的时候，每一个时间步的反向传播都异常艰难"><a href="#问题-当时间序列长的时候，每一个时间步的反向传播都异常艰难" class="headerlink" title="问题:当时间序列长的时候，每一个时间步的反向传播都异常艰难"></a>问题:当时间序列长的时候，每一个时间步的反向传播都异常艰难</h4><p>解决:随时间反向传播</p>
+<p>我们分割时间窗，然后只看这个时间窗里面的Loss，之前的只看成为h_0</p>
+<p>如果每层W的不一样 -&gt; 失去递推性，相当于一个普通的NN了</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/10/leetcode/84.%20%E6%9F%B1%E7%8A%B6%E5%9B%BE%E4%B8%AD%E6%9C%80%E5%A4%A7%E7%9A%84%E7%9F%A9%E5%BD%A2/" data-id="cmrls1uqi002r3stl7qneb4hf" data-title="84. 柱状图中最大的矩形" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/15/CS231n/RNN/" data-id="cmrls1uq700053stl62uwe628" data-title="RNN" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dp/" rel="tag">dp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" rel="tag">单调栈</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RNN/" rel="tag">RNN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sequence-modeling/" rel="tag">sequence modeling</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1/" rel="tag">序列建模</a></li></ul>
 
     </footer>
   </div>
@@ -122,19 +149,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2026/07/11/leetcode/438.%20%E6%89%BE%E5%88%B0%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%AD%E6%89%80%E6%9C%89%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          438. 找到字符串中所有字母异位词
-        
-      </div>
-    </a>
   
-  
-    <a href="/2026/07/10/leetcode/739.%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2026/07/15/leetcode/152.%20%E4%B9%98%E7%A7%AF%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84-1/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">739.每日温度</div>
+      <div class="article-nav-title">152. 乘积最大子数组</div>
     </a>
   
 </nav>
