@@ -71,6 +71,57 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-leetcode/152. 乘积最大子数组-1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/07/15/leetcode/152.%20%E4%B9%98%E7%A7%AF%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84-1/" class="article-date">
+  <time class="dt-published" datetime="2026-07-15T04:18:41.000Z" itemprop="datePublished">2026-07-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/07/15/leetcode/152.%20%E4%B9%98%E7%A7%AF%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84-1/">152. 乘积最大子数组</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>给你一个整数数组 nums ，请你找出数组中乘积最大的非空连续 子数组（该子数组中至少包含一个数字），并返回该子数组所对应的乘积。</p>
+<p>测试用例的答案是一个 32-位 整数。</p>
+<p>请注意，一个只包含一个元素的数组的乘积是这个元素的值。</p>
+<p>示例 1:</p>
+<p>输入: nums &#x3D; [2,3,-2,4]<br>输出: 6<br>解释: 子数组 [2,3] 有最大乘积 6。<br>示例 2:</p>
+<p>输入: nums &#x3D; [-2,0,-1]<br>输出: 0<br>解释: 结果不能为 2, 因为 [-2,-1] 不是子数组。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">maxProduct</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># dp[i]</span></span><br><span class="line">        N = <span class="built_in">len</span>(nums)</span><br><span class="line">        dp = [<span class="number">0</span>] * N</span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        zeros = []</span><br><span class="line">        zeros.append(-<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">for</span> index, num <span class="keyword">in</span> <span class="built_in">enumerate</span>(nums):</span><br><span class="line">            <span class="keyword">if</span> num == <span class="number">0</span>:</span><br><span class="line">                zeros.append(index)</span><br><span class="line"></span><br><span class="line">        zeros.append(N)</span><br><span class="line">        <span class="keyword">if</span> N == <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> nums[<span class="number">0</span>]</span><br><span class="line">        M = <span class="built_in">len</span>(zeros)</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(M - <span class="number">1</span>):</span><br><span class="line">            flag = <span class="number">0</span></span><br><span class="line">            left =  zeros[j] + <span class="number">1</span></span><br><span class="line">            right = zeros[j + <span class="number">1</span>] - <span class="number">1</span></span><br><span class="line">            mul = <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> left &gt;= right:</span><br><span class="line">                    ans = <span class="built_in">max</span>(ans,nums[right])</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">for</span> num <span class="keyword">in</span> nums[left: right + <span class="number">1</span>]:</span><br><span class="line">                <span class="keyword">if</span> num &lt; <span class="number">0</span>:</span><br><span class="line">                    flag += <span class="number">1</span></span><br><span class="line">                mul *= num</span><br><span class="line">            <span class="keyword">if</span> flag % <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line">                ans = <span class="built_in">max</span>(ans, mul)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                cal = mul</span><br><span class="line">                <span class="keyword">while</span> nums[left] &gt; <span class="number">0</span>:</span><br><span class="line">                    cal /= nums[left]</span><br><span class="line">                    left += <span class="number">1</span></span><br><span class="line">                cal /= nums[left]</span><br><span class="line">                ans = <span class="built_in">max</span>(ans,cal)</span><br><span class="line">                cal = mul</span><br><span class="line">                <span class="keyword">while</span> nums[right] &gt; <span class="number">0</span>:</span><br><span class="line">                    cal /= nums[right]</span><br><span class="line">                    right -= <span class="number">1</span></span><br><span class="line">                cal /= nums[right]</span><br><span class="line">                ans = <span class="built_in">max</span>(ans,cal)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">int</span>(ans)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>以0为间隔，左右双指针找到最近的负数</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/07/15/leetcode/152.%20%E4%B9%98%E7%A7%AF%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84-1/" data-id="cmrlkndfz0000o8tldr8n0ka7" data-title="152. 乘积最大子数组" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-leetcode/152. 乘积最大子数组" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2026/07/15/leetcode/152.%20%E4%B9%98%E7%A7%AF%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84/" class="article-date">
@@ -650,53 +701,6 @@
 
 
   
-    <article id="post-leetcode/739.每日温度" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2026/07/10/leetcode/739.%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6/" class="article-date">
-  <time class="dt-published" datetime="2026-07-10T06:49:47.000Z" itemprop="datePublished">2026-07-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2026/07/10/leetcode/739.%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6/">739.每日温度</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>题目描述：<br>根据每日 气温 列表，请重新生成一个列表，对应位置的输入是你需要再等待多久温度才会升高超过该日的天数。如果之后都不会升高，请在该位置用 0 来代替。</p>
-<p>例如，给定一个列表 temperatures &#x3D; [73, 74, 75, 71, 69, 72, 76, 73]，你的输出应该是 [1, 1, 4, 2, 1, 1, 0, 0]。</p>
-<p>提示：气温 列表长度的范围是 [1, 30000]。每个气温的值的均为华氏度，都是在 [30, 100] 范围内的整数。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">dailyTemperatures</span>(<span class="params">self, temperatures: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="type">List</span>[<span class="built_in">int</span>]:</span><br><span class="line">        <span class="comment"># ele = [temper, index]</span></span><br><span class="line">        stack = <span class="built_in">list</span>()</span><br><span class="line">        ans = <span class="built_in">list</span>()</span><br><span class="line">        n = <span class="built_in">len</span>(temperatures)</span><br><span class="line">        ans = [<span class="number">0</span>] * n</span><br><span class="line">        <span class="keyword">for</span> index, ele <span class="keyword">in</span> <span class="built_in">enumerate</span>(temperatures):</span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> stack:</span><br><span class="line">                    stack.append([ele, index])</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">if</span> ele &gt; stack[-<span class="number">1</span>][<span class="number">0</span>]:</span><br><span class="line">                    <span class="keyword">while</span> stack <span class="keyword">and</span> (ele &gt; stack[-<span class="number">1</span>][<span class="number">0</span>]):</span><br><span class="line">                        j = stack[-<span class="number">1</span>][<span class="number">1</span>]</span><br><span class="line">                        ans[j] = index - j</span><br><span class="line">                        stack.pop()</span><br><span class="line">                stack.append([ele, index])</span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>单调栈</p>
-</blockquote>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/10/leetcode/739.%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6/" data-id="cmrivkvp4000s6stlh8x26tez" data-title="739.每日温度" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" rel="tag">单调栈</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -747,6 +751,10 @@
       <ul>
         
           <li>
+            <a href="/2026/07/15/leetcode/152.%20%E4%B9%98%E7%A7%AF%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84-1/">152. 乘积最大子数组</a>
+          </li>
+        
+          <li>
             <a href="/2026/07/15/leetcode/152.%20%E4%B9%98%E7%A7%AF%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84/">152. 乘积最大子数组</a>
           </li>
         
@@ -760,10 +768,6 @@
         
           <li>
             <a href="/2026/07/12/leetcode/%E4%BA%8C%E5%88%86%E6%B3%95/">二分法特辑</a>
-          </li>
-        
-          <li>
-            <a href="/2026/07/12/leetcode/300.%20%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E5%BA%8F%E5%88%97/">300. 最长递增子序列</a>
           </li>
         
       </ul>
