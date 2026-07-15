@@ -17,8 +17,10 @@
 <meta property="og:image" content="http://example.com/2026/07/15/CS231n/RNN/2.png">
 <meta property="og:image" content="http://example.com/2026/07/15/CS231n/RNN/3.png">
 <meta property="og:image" content="http://example.com/2026/07/15/CS231n/RNN/4.png">
+<meta property="og:image" content="http://example.com/2026/07/15/CS231n/RNN/5.png">
+<meta property="og:image" content="http://example.com/2026/07/15/CS231n/RNN/6.png">
 <meta property="article:published_time" content="2026-07-15T06:47:27.000Z">
-<meta property="article:modified_time" content="2026-07-15T08:45:23.490Z">
+<meta property="article:modified_time" content="2026-07-15T09:11:58.011Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="RNN">
 <meta property="article:tag" content="sequence modeling">
@@ -159,11 +161,37 @@
 <img src="/2026/07/15/CS231n/RNN/4.png" class="" title="alt text">
 
 
-<h2 id="LSTM"><a href="#LSTM" class="headerlink" title="LSTM"></a>LSTM</h2>
+<h2 id="LSTM"><a href="#LSTM" class="headerlink" title="LSTM"></a>LSTM</h2><p>RNN梯度计算 -&gt; </p>
+<img src="/2026/07/15/CS231n/RNN/5.png" class="" title="coumpute graph">
+
+<img src="/2026/07/15/CS231n/RNN/6.png" class="" title="coumpute graph">
+
+<blockquote>
+<p>十分容易出现梯度消失，所以我们用LSTM</p>
+</blockquote>
+<p>LSTM : (i, f, o, g) (sigmoid, sigmoid, sigmoid ,tanh) W(ht_1, x)</p>
+<p>每个门都有自己独立的一套权重矩阵 $W$ 和偏置 $b$。它们的计算公式高度一致，只有激活函数和物理意义不同。</p>
+<p>i,f,o由于是sigmoid，输出在(0, 1 )之间</p>
+<p>$$C_t &#x3D; f_t \odot C_{t-1} + i_t \odot \tilde{C}_t$$</p>
+<blockquote>
+<p>f 控制之前的状态有多少要被记住， i控制新状态多少要被输入</p>
+</blockquote>
+<p>$$h_t &#x3D; o_t \odot \tanh(C_t)$$</p>
+<blockquote>
+<p>o控制输出的状态和原来状态的关系</p>
+</blockquote>
+<p>由于C_t 到 C_t-1 之间不经过tanh函数，所以我们不用担心梯度消失</p>
+<p><font color = 'green'> 和ResNet的思想很相似,跳过一些层</p>
+<p><font color = 'black'>Modern RNNs(MAMBA)</p>
+<ol>
+<li>上下文没有限制 (相比Transformer的优势)</li>
+<li>前向传播的计算增长是线性的， 不需要遍历整个序列</li>
+</ol>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/15/CS231n/RNN/" data-id="cmrlu4xev001knwtlhtpu2w2c" data-title="RNN" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/15/CS231n/RNN/" data-id="cmrlv2ts20007n8tl1o9rg2f4" data-title="RNN" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
