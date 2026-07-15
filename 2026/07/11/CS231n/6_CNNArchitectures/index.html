@@ -6,12 +6,12 @@
   
   <title>Lecture 6: CNN Architectures | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="CNN ArchitecturesNormalization Layers根据学习到参数的均值和标准差来缩放和平移我们的input data(输入数据) 问题：怎么计算均值和标准差 x : N * D 从D方向上：计算μ，σ ： N * 1 (per batch) scale因子 : 从N方向计算 ： 1 * D  不同的Norm形式    Batch Normalization (BatchNo">
+  <meta name="description" content="CNN Architectures Normalization Layers 根据学习到参数的均值和标准差来缩放和平移我们的input data(输入数据) 问题：怎么计算均值和标准差 x : N * D 从D方向上：计算μ，σ ： N * 1 (per batch) scale因子 : 从N方向计算 ： 1 * D  不同的Norm形式   Batch Normalization (BatchN">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Lecture 6: CNN Architectures">
 <meta property="og:url" content="http://example.com/2026/07/11/CS231n/6_CNNArchitectures/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="CNN ArchitecturesNormalization Layers根据学习到参数的均值和标准差来缩放和平移我们的input data(输入数据) 问题：怎么计算均值和标准差 x : N * D 从D方向上：计算μ，σ ： N * 1 (per batch) scale因子 : 从N方向计算 ： 1 * D  不同的Norm形式    Batch Normalization (BatchNo">
+<meta property="og:description" content="CNN Architectures Normalization Layers 根据学习到参数的均值和标准差来缩放和平移我们的input data(输入数据) 问题：怎么计算均值和标准差 x : N * D 从D方向上：计算μ，σ ： N * 1 (per batch) scale因子 : 从N方向计算 ： 1 * D  不同的Norm形式   Batch Normalization (BatchN">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2026/07/11/CS231n/6_CNNArchitectures/2.png">
 <meta property="og:image" content="http://example.com/2026/07/11/CS231n/6_CNNArchitectures/3.png">
@@ -110,7 +110,9 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="CNN-Architectures"><a href="#CNN-Architectures" class="headerlink" title="CNN Architectures"></a>CNN Architectures</h2><h3 id="Normalization-Layers"><a href="#Normalization-Layers" class="headerlink" title="Normalization Layers"></a>Normalization Layers</h3><p><font color = 'blue'>根据学习到参数的均值和标准差来缩放和平移我们的input data(输入数据)</p>
+        <h2 id="CNN-Architectures">CNN Architectures</h2>
+<h3 id="Normalization-Layers">Normalization Layers</h3>
+<p><font color = 'blue'>根据学习到参数的均值和标准差来缩放和平移我们的input data(输入数据)</p>
 <p><font color = 'black'>问题：怎么计算均值和标准差</p>
 <p>x : N * D</p>
 <p>从D方向上：计算μ，σ ： N * 1 (per batch)</p>
@@ -119,14 +121,17 @@
 <p>不同的Norm形式</p>
 </blockquote>
 <img src="/2026/07/11/CS231n/6_CNNArchitectures/2.png" class="" title="alt text">
-
-<h4 id="Batch-Normalization-BatchNorm"><a href="#Batch-Normalization-BatchNorm" class="headerlink" title="Batch Normalization (BatchNorm)"></a>Batch Normalization (BatchNorm)</h4><p>核心操作： 跨样本（Batch）做归一化。</p>
+<h4 id="Batch-Normalization-BatchNorm">Batch Normalization (BatchNorm)</h4>
+<p>核心操作： 跨样本（Batch）做归一化。</p>
 <p>具体做法： 对于同一个特征通道（Channel），它会把当前 Batch 里所有样本的特征值凑在一起，计算出均值和方差，然后进行缩放。结果是(1 * D)</p>
-<h4 id="Layer-Normalization-LayerNorm"><a href="#Layer-Normalization-LayerNorm" class="headerlink" title="Layer Normalization (LayerNorm)"></a>Layer Normalization (LayerNorm)</h4><p>核心操作： 样本内（Layer&#x2F;Feature）做归一化。</p>
+<h4 id="Layer-Normalization-LayerNorm">Layer Normalization (LayerNorm)</h4>
+<p>核心操作： 样本内（Layer/Feature）做归一化。</p>
 <p>具体做法： 彻底切断样本之间的联系。对于某一个特定样本，它把该样本当前层的所有特征通道（Channel）凑在一起，计算这个单一样本自身的均值和方差。结果是(N * 1)</p>
 <p>我们减去μ 除以σ,(归一化)</p>
-<h4 id="Group-Norm-Instance-Norm"><a href="#Group-Norm-Instance-Norm" class="headerlink" title="Group Norm, Instance Norm"></a>Group Norm, Instance Norm</h4><p>对一个样本内不同的一个或者几个样本通道做归一化</p>
-<h3 id="Dropout"><a href="#Dropout" class="headerlink" title="Dropout"></a>Dropout</h3><p>在每次反向传播中，我们会将某些激活函数置零，让某些点对最后结果不起作用</p>
+<h4 id="Group-Norm-Instance-Norm">Group Norm, Instance Norm</h4>
+<p>对一个样本内不同的一个或者几个样本通道做归一化</p>
+<h3 id="Dropout">Dropout</h3>
+<p>在每次反向传播中，我们会将某些激活函数置零，让某些点对最后结果不起作用</p>
 <p>redundent representation : 让分类器不会过度依赖某一个特征，让它泛化在更多特征上</p>
 <p>丢弃率: 50% || 25%</p>
 <p>会让train时间 longer , test 更准确</p>
@@ -135,46 +140,45 @@
 </blockquote>
 <p>反向传播： 将上游梯度0 传入，这些数据不会被更新</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## test time</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">predict</span>():</span><br><span class="line">    H1 = np.maximum(<span class="number">0</span>, np.dot(W1, X) +b1) * p</span><br><span class="line">    H2 = np.maximum(<span class="number">0</span>,np.dot(W2, H1) + b2) *p</span><br><span class="line">    out = np.dot(W3, H2) + b3</span><br></pre></td></tr></table></figure>
-
 <blockquote>
 <p>或者训练时间不变，predict的时候乘以dropout率 p</p>
 </blockquote>
-<h3 id="激活函数"><a href="#激活函数" class="headerlink" title="激活函数"></a>激活函数</h3><p>sigmoid : 不再用了</p>
+<h3 id="激活函数">激活函数</h3>
+<p>sigmoid : 不再用了</p>
 <p>sigmoid两端的gradient非常小</p>
 <p>原因 : 多层的sigmoid会让梯度越来越小， 最后近乎没有</p>
 <p>ReLu: Rectified Linear Unit: 计算方便， 梯度为1不会造成梯度快速下降</p>
-<p>问题：在 x &#x3D; 0接近处不平滑</p>
+<p>问题：在 x = 0接近处不平滑</p>
 <p>GELU： 在中间更加平滑 x * N(x) -&gt; x 乘以正态分布</p>
 <img src="/2026/07/11/CS231n/6_CNNArchitectures/3.png" class="" title="alt text">
-
-
-<p>同时还有SiLU &#x2F; ELU &#x2F;Leaky ReLu &#x2F; </p>
+<p>同时还有SiLU / ELU /Leaky ReLu /</p>
 <blockquote>
 <p>Activation Function的位置：线性层后面：全连接层，卷积层</p>
 </blockquote>
-<h2 id="CNN-Archetectures"><a href="#CNN-Archetectures" class="headerlink" title="CNN Archetectures"></a>CNN Archetectures</h2><img src="/2026/07/11/CS231n/6_CNNArchitectures/4.png" class="" title="alt text">
-
+<h2 id="CNN-Archetectures">CNN Archetectures</h2>
+<img src="/2026/07/11/CS231n/6_CNNArchitectures/4.png" class="" title="alt text">
 <p>最后的FC 1000 -&gt; ImageNet有1000个类别</p>
-<p><font color = 'red' > why 3 * 3 Conv(stride &#x3D; 1, pad &#x3D; 1) : 在每一层都可以将感受野边长加长 2 ， 3个3 * 3 Conv -&gt; 7 * 7 感受野，且 3个 3 * 3有更少的 参数，且多个3*3有更多非线性的激活函数</p>
+<p><font color = 'red' > why 3 * 3 Conv(stride = 1, pad = 1) : 在每一层都可以将感受野边长加长 2 ， 3个3 * 3 Conv -&gt; 7 * 7 感受野，且 3个 3 * 3有更少的 参数，且多个3*3有更多非线性的激活函数</p>
 <font color = 'black'>
-
-<h3 id="RestNet"><a href="#RestNet" class="headerlink" title="RestNet"></a>RestNet</h3><p>更深层模型为什么表示能力反而变差了：更难优化！(局部最小化)</p>
+<h3 id="RestNet">RestNet</h3>
+<p>更深层模型为什么表示能力反而变差了：更难优化！(局部最小化)</p>
 <p>我们至少想让深层模型和浅层模型一样的表示能看里</p>
-<p>所以我们让 H(x)  &#x3D; F(x)(deep layer的接受x后的输出) + x(shallow layer的输出) 这就是Restnet</p>
+<p>所以我们让 H(x)  = F(x)(deep layer的接受x后的输出) + x(shallow layer的输出) 这就是Restnet</p>
 <p>用了RestNet后 ： 更大层数带来了更好的性能，一直到100-152层之后就没有很大变化</p>
-<p>在极深的网络中，反向传播时梯度非常容易在倒退回前几层时“干涸”（梯度消失）。而右边的 Identity 相当于铺设了一条梯度高速公路。在反向传播计算导数时，$\frac{d(F(X)+X)}{dX} &#x3D; \frac{dF(X)}{dX} + 1$。即使主干部分的梯度 $\frac{dF(X)}{dX}$ 趋近于 $0$，后面那个恒稳的 $+1$ 也能保证梯度毫无损耗地传回前一层，从而彻底解决了网络堆叠太深时无法训练的问题。</p>
+<p>在极深的网络中，反向传播时梯度非常容易在倒退回前几层时“干涸”（梯度消失）。而右边的 Identity 相当于铺设了一条梯度高速公路。在反向传播计算导数时，$\frac{d(F(X)+X)}{dX} = \frac{dF(X)}{dX} + 1$。即使主干部分的梯度 $\frac{dF(X)}{dX}$ 趋近于 $0$，后面那个恒稳的 $+1$ 也能保证梯度毫无损耗地传回前一层，从而彻底解决了网络堆叠太深时无法训练的问题。</p>
 <img src="/2026/07/11/CS231n/6_CNNArchitectures/5.png" class="" title="alt text">
-
-
-<h2 id="Weight-Initialization"><a href="#Weight-Initialization" class="headerlink" title="Weight Initialization"></a>Weight Initialization</h2><p>kai ming initialize : </p>
+<h2 id="Weight-Initialization">Weight Initialization</h2>
+<p>kai ming initialize :</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">W = np.random.randomn(Din, Dout) * np.sqrt(<span class="number">2</span>/ Din)</span><br><span class="line"><span class="comment"># Din 维度越大 ， W需要越小的lamda</span></span><br></pre></td></tr></table></figure>
-
 <p>Normlization:可能会难以优化</p>
-<h2 id="Data-Preprocessing"><a href="#Data-Preprocessing" class="headerlink" title="Data Preprocessing"></a>Data Preprocessing</h2><p>数据预处理</p>
+<h2 id="Data-Preprocessing">Data Preprocessing</h2>
+<p>数据预处理</p>
 <ol>
-<li>img : 在不同的通道上归一化<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">norm_pixel[i, j, c] = (pixel[i, j, c] - np.mean(pixel[:,:,c]))/ np.std(pixel[:,:,c])</span><br></pre></td></tr></table></figure></li>
+<li>img : 在不同的通道上归一化</li>
 </ol>
-<h2 id="Data-augmentation"><a href="#Data-augmentation" class="headerlink" title="Data augmentation"></a>Data augmentation</h2><p>Data Augmentation（数据增强） 是机器学习和深度学习中的一项关键技术，指的是在不增加真实数据的情况下，通过对现有数据进行各种变换，人工生成更多样的训练样本。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">norm_pixel[i, j, c] = (pixel[i, j, c] - np.mean(pixel[:,:,c]))/ np.std(pixel[:,:,c])</span><br></pre></td></tr></table></figure>
+<h2 id="Data-augmentation">Data augmentation</h2>
+<p>Data Augmentation（数据增强） 是机器学习和深度学习中的一项关键技术，指的是在不增加真实数据的情况下，通过对现有数据进行各种变换，人工生成更多样的训练样本。</p>
 <ol>
 <li>水平|垂直翻转，旋转(CV)</li>
 <li>调整大小|裁剪 先随机裁剪，再随机reshape成需要的大小(CV)</li>
@@ -182,7 +186,8 @@
 <li>Cutout 在图片的某个部分加上灰框(模拟遮挡)</li>
 </ol>
 <p>If we dont have a lot of data,Can u still train CNNs?</p>
-<h2 id="Transfer-Learning"><a href="#Transfer-Learning" class="headerlink" title="Transfer Learning"></a>Transfer Learning</h2><p>把模型最后一层看成一个KNN 或者 Linear layer,只不过对象不是像素，而是各种被提取出来的特征</p>
+<h2 id="Transfer-Learning">Transfer Learning</h2>
+<p>把模型最后一层看成一个KNN 或者 Linear layer,只不过对象不是像素，而是各种被提取出来的特征</p>
 <blockquote>
 <p>小数据集</p>
 </blockquote>
@@ -204,7 +209,8 @@
 <li>LoRa</li>
 <li>一些迁移方法</li>
 </ol>
-<h3 id="超参数选择"><a href="#超参数选择" class="headerlink" title="超参数选择"></a>超参数选择</h3><ol>
+<h3 id="超参数选择">超参数选择</h3>
+<ol>
 <li>Overfit a small sample</li>
 <li>grid search</li>
 <li>Find Accuracy Curves</li>
@@ -213,7 +219,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/11/CS231n/6_CNNArchitectures/" data-id="cmrlv6mls00040ktlaszvebp2" data-title="Lecture 6: CNN Architectures" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/11/CS231n/6_CNNArchitectures/" data-id="cmrlv9k0c0004xktlfatth9n7" data-title="Lecture 6: CNN Architectures" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       

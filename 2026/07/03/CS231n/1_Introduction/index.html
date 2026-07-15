@@ -6,33 +6,33 @@
   
   <title>1.Introduction | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="图像分类· 给出labels的集合  · 给图片赋予一个label’ 123def classify_image(image):        return class_label   图像由数据矩阵定义，每个像素值[0,255]RGB -&gt; 3个颜色通道800 * 600 * 3矩阵 不同角度\光照 -&gt; 图像像素完全不一样  Challenges: zoom in &amp; ou">
+  <meta name="description" content="图像分类 · 给出labels的集合 · 给图片赋予一个label’ 123def classify_image(image):        return class_label  图像 由数据矩阵定义，每个像素值[0,255] RGB -&gt; 3个颜色通道 800 * 600 * 3矩阵 不同角度\光照 -&gt; 图像像素完全不一样  Challenges: zoom in &amp;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="1.Introduction">
 <meta property="og:url" content="http://example.com/2026/07/03/CS231n/1_Introduction/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="图像分类· 给出labels的集合  · 给图片赋予一个label’ 123def classify_image(image):        return class_label   图像由数据矩阵定义，每个像素值[0,255]RGB -&gt; 3个颜色通道800 * 600 * 3矩阵 不同角度\光照 -&gt; 图像像素完全不一样  Challenges: zoom in &amp; ou">
+<meta property="og:description" content="图像分类 · 给出labels的集合 · 给图片赋予一个label’ 123def classify_image(image):        return class_label  图像 由数据矩阵定义，每个像素值[0,255] RGB -&gt; 3个颜色通道 800 * 600 * 3矩阵 不同角度\光照 -&gt; 图像像素完全不一样  Challenges: zoom in &amp;">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/image-2.png">
-<meta property="og:image" content="http://example.com/image.png">
-<meta property="og:image" content="http://example.com/image-1.png">
-<meta property="og:image" content="http://example.com/image-4.png">
-<meta property="og:image" content="http://example.com/image-5.png">
-<meta property="og:image" content="http://example.com/image-6.png">
-<meta property="og:image" content="http://example.com/image-7.png">
-<meta property="og:image" content="http://example.com/image-8.png">
-<meta property="og:image" content="http://example.com/image-9.png">
+<meta property="og:image" content="http://example.com/2026/07/03/CS231n/1_Introduction/image-2.png">
+<meta property="og:image" content="http://example.com/2026/07/03/CS231n/1_Introduction/image.png">
+<meta property="og:image" content="http://example.com/2026/07/03/CS231n/1_Introduction/image-1.png">
+<meta property="og:image" content="http://example.com/2026/07/03/CS231n/1_Introduction/image-4.png">
+<meta property="og:image" content="http://example.com/2026/07/03/CS231n/1_Introduction/image-5.png">
+<meta property="og:image" content="http://example.com/2026/07/03/CS231n/1_Introduction/image-6.png">
+<meta property="og:image" content="http://example.com/2026/07/03/CS231n/1_Introduction/image-7.png">
+<meta property="og:image" content="http://example.com/2026/07/03/CS231n/1_Introduction/image-8.png">
+<meta property="og:image" content="http://example.com/2026/07/03/CS231n/1_Introduction/image-9.png">
 <meta property="article:published_time" content="2026-07-03T07:22:42.000Z">
 <meta property="article:modified_time" content="2026-07-11T06:26:31.799Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="CS231n">
 <meta property="article:tag" content="Data drivern approaches">
 <meta property="article:tag" content="Linear Classification">
 <meta property="article:tag" content="K-Nearest Neighbor">
 <meta property="article:tag" content="线性分类">
 <meta property="article:tag" content="K最近邻居算法">
-<meta property="article:tag" content="CS231n">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/image-2.png">
+<meta name="twitter:image" content="http://example.com/2026/07/03/CS231n/1_Introduction/image-2.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -111,21 +111,27 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="图像分类"><a href="#图像分类" class="headerlink" title="图像分类"></a>图像分类</h2><p>· 给出labels的集合 </p>
+        <h2 id="图像分类">图像分类</h2>
+<p>· 给出labels的集合</p>
 <p>· 给图片赋予一个label’</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">classify_image</span>(<span class="params">image</span>):</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> class_label</span><br></pre></td></tr></table></figure>
-
 <hr>
-<h3 id="图像"><a href="#图像" class="headerlink" title="图像"></a>图像</h3><p>由数据矩阵定义，每个像素值[0,255]<br>RGB -&gt; 3个颜色通道<br>800 * 600 * 3矩阵</p>
+<h3 id="图像">图像</h3>
+<p>由数据矩阵定义，每个像素值[0,255]<br>
+RGB -&gt; 3个颜色通道<br>
+800 * 600 * 3矩阵</p>
 <p>不同角度\光照 -&gt; 图像像素完全不一样</p>
 <blockquote>
 <p>Challenges: zoom in &amp; out , illuminations , angles , background , occulusion(遮挡), deformation(可塑性),context</p>
 </blockquote>
-<h3 id="Attempts"><a href="#Attempts" class="headerlink" title="Attempts"></a>Attempts</h3><h4 id="hardcodes"><a href="#hardcodes" class="headerlink" title="hardcodes"></a>hardcodes</h4><p>Find edges -&gt; find corners -&gt; maps the features around the corners &#x2F; find the nums of the corners -&gt; labels</p>
+<h3 id="Attempts">Attempts</h3>
+<h4 id="hardcodes">hardcodes</h4>
+<p>Find edges -&gt; find corners -&gt; maps the features around the corners / find the nums of the corners -&gt; labels</p>
 <blockquote>
 <p>很难扩展</p>
 </blockquote>
-<h4 id="machine-learning"><a href="#machine-learning" class="headerlink" title="machine learning"></a>machine learning</h4><blockquote>
+<h4 id="machine-learning">machine learning</h4>
+<blockquote>
 <p>由数据驱动</p>
 </blockquote>
 <ol>
@@ -133,105 +139,117 @@
 <li>using machine learning algorithms to train a classifier</li>
 </ol>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">dataset[image,labels]</span>):</span><br><span class="line">    <span class="comment">#machine learning</span></span><br><span class="line">    <span class="keyword">return</span> classifer</span><br></pre></td></tr></table></figure>
-
 <ol start="3">
 <li>eva the classifier on  images</li>
 </ol>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">predict</span>(<span class="params">model, test_images</span>):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> test_labels</span><br></pre></td></tr></table></figure>
-
-<h3 id="最近邻居分类-Nearest-Neighbors-Classifacation"><a href="#最近邻居分类-Nearest-Neighbors-Classifacation" class="headerlink" title="最近邻居分类(Nearest Neighbors Classifacation)"></a>最近邻居分类(Nearest Neighbors Classifacation)</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">dataset[image,labels]</span>):</span><br><span class="line">    <span class="comment"># 将所有data和labels都存储起来(memorize)</span></span><br><span class="line">    <span class="keyword">return</span> classifer</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">predict</span>(<span class="params">model, test_images</span>):</span><br><span class="line">    <span class="comment"># 找到最相似的图片，输出它的labels</span></span><br><span class="line">    <span class="keyword">return</span> test_labels</span><br></pre></td></tr></table></figure>
-
+<h3 id="最近邻居分类-Nearest-Neighbors-Classifacation">最近邻居分类(Nearest Neighbors Classifacation)</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">dataset[image,labels]</span>):</span><br><span class="line">    <span class="comment"># 将所有data和labels都存储起来(memorize)</span></span><br><span class="line">    <span class="keyword">return</span> classifer</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">predict</span>(<span class="params">model, test_images</span>):</span><br><span class="line">    <span class="comment"># 找到最相似的图片，输出它的labels</span></span><br><span class="line">    <span class="keyword">return</span> test_labels</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>计算距离，我们需要一个Distanc Metric(pic1, pic2)</p>
 </blockquote>
 <p>L1 distance -&gt; 逐像素相减取绝对值</p>
 <p>L2 distance</p>
-<p><img src="/image-2.png" alt="alt text"></p>
+<p><img src="image-2.png" alt="alt text"></p>
 <p>最简单的实现L1</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">NearestNeighbor</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">self, X, y</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot; X is N x D where each row is an example. Y is 1-dimension of size N &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># the nearest neighbor classifier simply remembers all the training data</span></span><br><span class="line">    <span class="variable language_">self</span>.Xtr = X</span><br><span class="line">    <span class="variable language_">self</span>.ytr = y</span><br><span class="line"></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">predict</span>(<span class="params">self, X</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot; X is N x D where each row is an example we wish to predict label for &quot;&quot;&quot;</span></span><br><span class="line">    num_test = X.shape[<span class="number">0</span>]</span><br><span class="line">    <span class="comment"># lets make sure that the output type matches the input type</span></span><br><span class="line">    Ypred = np.zeros(num_test, dtype = <span class="variable language_">self</span>.ytr.dtype) <span class="comment"># 归零</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># loop over all test rows</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num_test):</span><br><span class="line">      <span class="comment"># find the nearest training image to the i&#x27;th test image</span></span><br><span class="line">      <span class="comment"># using the L1 distance (sum of absolute value differences)</span></span><br><span class="line">      distances = np.<span class="built_in">sum</span>(np.<span class="built_in">abs</span>(<span class="variable language_">self</span>.Xtr - X[i,:]), axis = <span class="number">1</span>)</span><br><span class="line">      min_index = np.argmin(distances) <span class="comment"># get the index with smallest distance</span></span><br><span class="line">      Ypred[i] = <span class="variable language_">self</span>.ytr[min_index] <span class="comment"># predict the label of the nearest example</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> Ypred</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
 <blockquote>
-<p>张量变换<br>self.Xtr &#x3D; [N,D] N-数量 D-特征量</p>
+<p>张量变换<br>
+self.Xtr = [N,D] N-数量 D-特征量</p>
 </blockquote>
 <p><font color = 'black'>  可以为[x_size, y_size, channels] 展平后的 [x_size * y_size * channels]的一维</p>
-<p>self.Ytr &#x3D; [N,]</p>
-<p>X &#x3D; [N,D]</p>
-<p>X[i,:] &#x3D; [D,]</p>
+<p>self.Ytr = [N,]</p>
+<p>X = [N,D]</p>
+<p>X[i,:] = [D,]</p>
 <blockquote>
-<p>Xtr - X[i,:] &#x3D; [N,D] - [D,] 广播后为 [N,D] - N * [,D] &#x3D; [N,D]</p>
+<p>Xtr - X[i,:] = [N,D] - [D,] 广播后为 [N,D] - N * [,D] = [N,D]</p>
 </blockquote>
-<p>np.sum(axis &#x3D; 1) &#x3D; [N,D] (axis &#x3D; 0,axis &#x3D; 1) &#x3D; [N,]</p>
-<p>distance &#x3D; [N,]</p>
+<p>np.sum(axis = 1) = [N,D] (axis = 0,axis = 1) = [N,]</p>
+<p>distance = [N,]</p>
 <blockquote>
-<p>时间复杂度<br>TRAIN O(1)</p>
+<p>时间复杂度<br>
+TRAIN O(1)</p>
 </blockquote>
-<h2 id="PREDICT-O-N-预测一个样本的复杂度"><a href="#PREDICT-O-N-预测一个样本的复杂度" class="headerlink" title="PREDICT O(N) # 预测一个样本的复杂度"></a>PREDICT O(N) # 预测一个样本的复杂度</h2><h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><blockquote>
+<h2 id="PREDICT-O-N-预测一个样本的复杂度">PREDICT O(N) # 预测一个样本的复杂度</h2>
+<h3 id="问题">问题</h3>
+<blockquote>
 <p>我们需要在Predict降低复杂度，Train复杂度升高是OK的</p>
 </blockquote>
-<h3 id="1-nearest-neighbors"><a href="#1-nearest-neighbors" class="headerlink" title="1-nearest neighbors"></a>1-nearest neighbors</h3><p><img src="/image.png" alt="alt text"></p>
+<h3 id="1-nearest-neighbors">1-nearest neighbors</h3>
+<p><img src="image.png" alt="alt text"></p>
 <blockquote>
 <p>会出现噪点 ， 比如前面的黄色</p>
 </blockquote>
 <p>所以我们用K-Nearest Neighbors</p>
-<h2 id="KNN"><a href="#KNN" class="headerlink" title="KNN"></a>KNN</h2><p><img src="/image-1.png" alt="alt text"></p>
+<h2 id="KNN">KNN</h2>
+<p><img src="image-1.png" alt="alt text"></p>
 <p>根据这个划分空间，白色区域是相等可能的区域，可能属于不同的labels</p>
 <p><font color = 'blue'>特征有特定的意义,我们想要保存这个特征：L1更好(对特征值的选取更敏感)</p>
 <p>特征是任意的，可以旋转：L2更好(划分边缘更平滑)</p>
-<h3 id="hyperparameters-（超参数）"><a href="#hyperparameters-（超参数）" class="headerlink" title="hyperparameters （超参数）"></a>hyperparameters （超参数）</h3><font color = 'black'>
+<h3 id="hyperparameters-（超参数）">hyperparameters （超参数）</h3>
+<font color = 'black'>
 比如 KNN 中的 K 和 distance function
-
 <blockquote>
 <p>我们需要找到最佳参数 (tuning) 调参</p>
 </blockquote>
 <ol>
-<li>选择对training data最好的参数 (x)<blockquote>
-<p>K &#x3D; 1 永远是最佳的</p>
+<li>选择对training data最好的参数 (x)</li>
+</ol>
+<blockquote>
+<p>K = 1 永远是最佳的</p>
 </blockquote>
-</li>
-<li>选择对test data最好的参数 (x)<blockquote>
+<ol start="2">
+<li>选择对test data最好的参数 (x)</li>
+</ol>
+<blockquote>
 <p>可能只对测试集有用</p>
 </blockquote>
-</li>
+<ol start="3">
 <li>将training data 一部分改为validation验证data，用train训练，来后在validation上找到最好的参数，最后test，不要用test data 调参</li>
 <li>交叉验证(每个fold都验证一遍)</li>
 </ol>
 <blockquote>
 <p>在大型数据集上太难了，在论文中会用，但是工程上很难</p>
 </blockquote>
-<h2 id="Linear-Classifier-线性分类-Linear-layer-线性层"><a href="#Linear-Classifier-线性分类-Linear-layer-线性层" class="headerlink" title="Linear Classifier (线性分类) &#x3D; Linear layer(线性层)"></a>Linear Classifier (线性分类) &#x3D; Linear layer(线性层)</h2><p>image-x 32 * 32 * 3 &#x3D; 3072</p>
-<p>labels &#x3D; [10, ]</p>
-<p>x &#x3D; [3072, 1]</p>
-<p>W &#x3D; [10, 3072]</p>
-<p>F(x,W) &#x3D; Wx + b[10, 1] &#x3D; [10, 1]</p>
+<h2 id="Linear-Classifier-线性分类-Linear-layer-线性层">Linear Classifier (线性分类) = Linear layer(线性层)</h2>
+<p>image-x 32 * 32 * 3 = 3072</p>
+<p>labels = [10, ]</p>
+<p>x = [3072, 1]</p>
+<p>W = [10, 3072]</p>
+<p>F(x,W) = Wx + b[10, 1] = [10, 1]</p>
 <p>选出可行度最大的</p>
 <blockquote>
-<p>N * N Linear Classifier &#x3D; NN</p>
+<p>N * N Linear Classifier = NN</p>
 </blockquote>
-<p><img src="/image-4.png" alt="alt text"></p>
+<p><img src="image-4.png" alt="alt text"></p>
 <p>相同颜色的就是对于不同的labels的模板的分数权值(templates)</p>
-<p><img src="/image-5.png" alt="alt text"></p>
+<p><img src="image-5.png" alt="alt text"></p>
 <p>linear classifier 对于空间分类的是直线的分类边界</p>
 <blockquote>
 <p>可以看出，b的存在让划分线更加灵活</p>
 </blockquote>
-<h3 id="choose-W"><a href="#choose-W" class="headerlink" title="choose W"></a>choose W</h3><ol>
+<h3 id="choose-W">choose W</h3>
+<ol>
 <li>用loss function: 量化分类器有多坏</li>
 <li>optimiztions</li>
 </ol>
-<p>Loss Function:<br><img src="/image-6.png" alt="alt text"></p>
-<h2 id="Softmax-Classifier"><a href="#Softmax-Classifier" class="headerlink" title="Softmax Classifier"></a>Softmax Classifier</h2><p><img src="/image-7.png" alt="alt text"></p>
+<p>Loss Function:<br>
+<img src="image-6.png" alt="alt text"></p>
+<h2 id="Softmax-Classifier">Softmax Classifier</h2>
+<p><img src="image-7.png" alt="alt text"></p>
 <blockquote>
 <p>将有正有负的评分转化为percent</p>
 </blockquote>
-<p>我们得到了这些概率，我们可以让正确的labels最大，所以我们设计Loss Function如下：<br><img src="/image-8.png" alt="alt text"></p>
+<p>我们得到了这些概率，我们可以让正确的labels最大，所以我们设计Loss Function如下：<br>
+<img src="image-8.png" alt="alt text"></p>
 <p>或者我们可以用KL散度</p>
-<p><img src="/image-9.png" alt="alt text"></p>
+<p><img src="image-9.png" alt="alt text"></p>
 <p>或者交叉熵</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/CS231n/1_Introduction/" data-id="cmrlv6mlo00000ktlau3z4dql" data-title="1.Introduction" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/CS231n/1_Introduction/" data-id="cmrlv9k0b0003xktl2erg72ty" data-title="1.Introduction" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       

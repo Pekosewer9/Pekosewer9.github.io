@@ -6,12 +6,12 @@
   
   <title>CNN | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="ReLu:   Max(0,Wx) CNNPerceiving and Understanding the virtual world  Convolution Layer || Pooling layer  之前的工作：raw picture -&gt; feature representation -&gt; Neural Network -&gt; label output 怎么把featu">
+  <meta name="description" content="ReLu:   Max(0,Wx) CNN Perceiving and Understanding the virtual world  Convolution Layer || Pooling layer  之前的工作： raw picture -&gt; feature representation -&gt; Neural Network -&gt; label output 怎么把fea">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CNN">
 <meta property="og:url" content="http://example.com/2026/07/09/CS231n/CNN/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="ReLu:   Max(0,Wx) CNNPerceiving and Understanding the virtual world  Convolution Layer || Pooling layer  之前的工作：raw picture -&gt; feature representation -&gt; Neural Network -&gt; label output 怎么把featu">
+<meta property="og:description" content="ReLu:   Max(0,Wx) CNN Perceiving and Understanding the virtual world  Convolution Layer || Pooling layer  之前的工作： raw picture -&gt; feature representation -&gt; Neural Network -&gt; label output 怎么把fea">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2026/07/09/CS231n/CNN/image-12.png">
 <meta property="og:image" content="http://example.com/2026/07/09/CS231n/CNN/image-13.png">
@@ -101,35 +101,37 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <p>ReLu:   Max(0,Wx)</p>
-<h2 id="CNN"><a href="#CNN" class="headerlink" title="CNN"></a>CNN</h2><p><font color = 'black'>Perceiving and Understanding the virtual world</p>
+<h2 id="CNN">CNN</h2>
+<p><font color = 'black'>Perceiving and Understanding the virtual world</p>
 <blockquote>
 <p>Convolution Layer || Pooling layer</p>
 </blockquote>
-<p>之前的工作：<br>raw picture -&gt; feature representation -&gt; Neural Network -&gt; label output</p>
+<p>之前的工作：<br>
+raw picture -&gt; feature representation -&gt; Neural Network -&gt; label output</p>
 <p>怎么把feature representation输入NN：</p>
 <ol>
 <li>把feature的向量全部连接在一起</li>
 </ol>
-<h4 id="直接NN-VS-feature后NN"><a href="#直接NN-VS-feature后NN" class="headerlink" title="直接NN VS feature后NN"></a>直接NN VS feature后NN</h4><p>一般来说，用直接NN会更好</p>
+<h4 id="直接NN-VS-feature后NN">直接NN VS feature后NN</h4>
+<p>一般来说，用直接NN会更好</p>
 <blockquote>
 <p>但是我们还需要人工设计design计算图-&gt;layer的连接样式</p>
 </blockquote>
 <p>CNN结构</p>
 <img src="/2026/07/09/CS231n/CNN/image-12.png" class="" title="alt text">
-
 <p>用途：几乎所有视觉问题，包括TEXT2IMG IMG2TEXT , 视觉分割</p>
 <p>Fully Connected layer: templates , 拉伸</p>
-<p>Convolution layer: 不拉伸 , filter: pixel image , </p>
+<p>Convolution layer: 不拉伸 , filter: pixel image ,</p>
 <img src="/2026/07/09/CS231n/CNN/image-13.png" class="" title="alt text">
-
-
-<h3 id="Exp"><a href="#Exp" class="headerlink" title="Exp:"></a>Exp:</h3><p>32 * 32 * 3 image — 5 * 5 * 3 filter -&gt; 28 * 28  * 1 result</p>
+<h3 id="Exp">Exp:</h3>
+<p>32 * 32 * 3 image — 5 * 5 * 3 filter -&gt; 28 * 28  * 1 result</p>
 <p>用 6 个 filter</p>
 <p>3* 32 * 32  image — 6 * 3 * 5 * 5 -&gt; 6 * 28 * 28 + bias (6 维)[每个filter公用一个bias，这个bias在一个filter中是一个标量，所以bias总共是6维的] -&gt; 6* 28 * 28 result</p>
 <blockquote>
 <p>bias 和 6-d的filter都是通过梯度下降得到的</p>
 </blockquote>
-<p>Filter size:<br><font color = 'blue'> cout * cin * Kw * Kh </p>
+<p>Filter size:<br>
+<font color = 'blue'> cout * cin * Kw * Kh</p>
 <p><font colot = 'black'>在Convolution layer中间，我们需要加入Relu等其他激活函数-&gt;不然就会退化成一层convolution layer</p>
 <p>第一层filter最终学习到的样式：</p>
 <ol>
@@ -137,38 +139,46 @@
 <li>边缘检测</li>
 </ol>
 <blockquote>
-<p>Q:为什么滤波器会不同<br>A:因为随机初始化不同，所以随机的初始时很重要的</p>
+<p>Q:为什么滤波器会不同<br>
+A:因为随机初始化不同，所以随机的初始时很重要的</p>
 </blockquote>
 <p>后面的filter不能直接看出来，要看对哪些图像响应明显</p>
 <p>Input : x * x</p>
 <p>Filter y * y</p>
 <p>Output (x-y+1) * (x - y + 1)</p>
-<h3 id="想要让OUTPUT也保持x-x"><a href="#想要让OUTPUT也保持x-x" class="headerlink" title="想要让OUTPUT也保持x * x"></a>想要让OUTPUT也保持x * x</h3><ol>
+<h3 id="想要让OUTPUT也保持x-x">想要让OUTPUT也保持x * x</h3>
+<ol>
 <li>paddle ，在外面一圈加入额外的数字 0</li>
 </ol>
-<h3 id="感受野"><a href="#感受野" class="headerlink" title="感受野"></a>感受野</h3><p>越到后面，每一个pixel表示的感受野越大</p>
+<h3 id="感受野">感受野</h3>
+<p>越到后面，每一个pixel表示的感受野越大</p>
 <p>但是我们想让感受野变大变得更快</p>
 <ol>
 <li>stride</li>
 <li>pooling</li>
 </ol>
-<h3 id="stride-每一次filter跳的步数"><a href="#stride-每一次filter跳的步数" class="headerlink" title="stride , 每一次filter跳的步数"></a>stride , 每一次filter跳的步数</h3><blockquote>
-<p>input W  filter K padding P Stride S<br>output &#x3D; (W-K+2P)&#x2F;S + 1 &#x3D; (W&#x2F;S) + 1</p>
+<h3 id="stride-每一次filter跳的步数">stride , 每一次filter跳的步数</h3>
+<blockquote>
+<p>input W  filter K padding P Stride S<br>
+output = (W-K+2P)/S + 1 = (W/S) + 1</p>
 </blockquote>
-<h2 id="Pooling"><a href="#Pooling" class="headerlink" title="Pooling"></a>Pooling</h2><p>Exp:</p>
+<h2 id="Pooling">Pooling</h2>
+<p>Exp:</p>
 <p>64 * 224 * 224 -pool-&gt; 64* 112 * 112</p>
-<p>一般使用stride &#x3D; 2 || 4</p>
-<h3 id="downsampling-method"><a href="#downsampling-method" class="headerlink" title="downsampling method:"></a>downsampling method:</h3><ol>
+<p>一般使用stride = 2 || 4</p>
+<h3 id="downsampling-method">downsampling method:</h3>
+<ol>
 <li>maxpooling</li>
 <li>meanpooling</li>
 </ol>
-<h3 id="平移不变性"><a href="#平移不变性" class="headerlink" title="平移不变性"></a>平移不变性</h3><p>先平移再卷积和先卷积再平移得到的结果一样</p>
+<h3 id="平移不变性">平移不变性</h3>
+<p>先平移再卷积和先卷积再平移得到的结果一样</p>
 <p>所以CNN是尊重空间结构的</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/09/CS231n/CNN/" data-id="cmrlv6mlt00070ktlf2l1e6rv" data-title="CNN" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/09/CS231n/CNN/" data-id="cmrlv9k0c0005xktl1q9o7xhi" data-title="CNN" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       

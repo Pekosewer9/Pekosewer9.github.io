@@ -6,12 +6,12 @@
   
   <title>RNN | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Recurrent Neural Network 普通的NN 一个输入对应一个输出 一对多 ： 如image - &gt; sequcence of words(图片对应一句话描述) 多对一 : 如视频识别标签 多对多 ：视频描述   RNN的内部状态(隐藏状态) 在每一次输入都进行更新   h_t(new_state) &#x3D; fW(h_t-1, x_t)y_t &#x3D; fW_hy(">
+  <meta name="description" content="Recurrent Neural Network  普通的NN 一个输入对应一个输出 一对多 ： 如image - &gt; sequcence of words(图片对应一句话描述) 多对一 : 如视频识别标签 多对多 ：视频描述   RNN的内部状态(隐藏状态) 在每一次输入都进行更新   h_t(new_state) &#x3D; fW(h_t-1, x_t) y_t &#x3D; fW_hy(h_t) fW_">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RNN">
 <meta property="og:url" content="http://example.com/2026/07/15/CS231n/RNN/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Recurrent Neural Network 普通的NN 一个输入对应一个输出 一对多 ： 如image - &gt; sequcence of words(图片对应一句话描述) 多对一 : 如视频识别标签 多对多 ：视频描述   RNN的内部状态(隐藏状态) 在每一次输入都进行更新   h_t(new_state) &#x3D; fW(h_t-1, x_t)y_t &#x3D; fW_hy(">
+<meta property="og:description" content="Recurrent Neural Network  普通的NN 一个输入对应一个输出 一对多 ： 如image - &gt; sequcence of words(图片对应一句话描述) 多对一 : 如视频识别标签 多对多 ：视频描述   RNN的内部状态(隐藏状态) 在每一次输入都进行更新   h_t(new_state) &#x3D; fW(h_t-1, x_t) y_t &#x3D; fW_hy(h_t) fW_">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2026/07/15/CS231n/RNN/1.png">
 <meta property="og:image" content="http://example.com/2026/07/15/CS231n/RNN/2.png">
@@ -20,7 +20,7 @@
 <meta property="og:image" content="http://example.com/2026/07/15/CS231n/RNN/5.png">
 <meta property="og:image" content="http://example.com/2026/07/15/CS231n/RNN/6.png">
 <meta property="article:published_time" content="2026-07-15T06:47:27.000Z">
-<meta property="article:modified_time" content="2026-07-15T09:14:53.022Z">
+<meta property="article:modified_time" content="2026-07-15T09:16:58.274Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="RNN">
 <meta property="article:tag" content="sequence modeling">
@@ -106,7 +106,8 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="Recurrent-Neural-Network"><a href="#Recurrent-Neural-Network" class="headerlink" title="Recurrent Neural Network"></a>Recurrent Neural Network</h2><ol>
+        <h2 id="Recurrent-Neural-Network">Recurrent Neural Network</h2>
+<ol>
 <li>普通的NN 一个输入对应一个输出</li>
 <li>一对多 ： 如image - &gt; sequcence of words(图片对应一句话描述)</li>
 <li>多对一 : 如视频识别标签</li>
@@ -116,29 +117,26 @@
 <p>RNN的内部状态(隐藏状态) 在每一次输入都进行更新</p>
 </blockquote>
 <blockquote>
-<p>h_t(new_state) &#x3D; fW(h_t-1, x_t)<br>y_t &#x3D; fW_hy(h_t) fW_hy-&gt; 将hidden state转化为输出的output</p>
+<p>h_t(new_state) = fW(h_t-1, x_t)<br>
+y_t = fW_hy(h_t) fW_hy-&gt; 将hidden state转化为输出的output</p>
 </blockquote>
 <font color = 'black'>
 更新的fW 和 转化的fW_hy 都用一致的函数
-
-<h2 id="Vanilla（普通）RNN"><a href="#Vanilla（普通）RNN" class="headerlink" title="Vanilla（普通）RNN"></a>Vanilla（普通）RNN</h2><img src="/2026/07/15/CS231n/RNN/1.png" class="" title="alt text">
-
+<h2 id="Vanilla（普通）RNN">Vanilla（普通）RNN</h2>
+<img src="/2026/07/15/CS231n/RNN/1.png" class="" title="alt text">
 <p><font color = 'green'> 用tanh的好处是可以吧ht的值压在(-1,1)之间</p>
 <font color = 'black'>
-
-
-<h2 id="RNN-的-计算图-computational-graph"><a href="#RNN-的-计算图-computational-graph" class="headerlink" title="RNN 的 计算图(computational graph)"></a>RNN 的 计算图(computational graph)</h2><img src="/2026/07/15/CS231n/RNN/2.png" class="" title="coumpute graph">
-
+<h2 id="RNN-的-计算图-computational-graph">RNN 的 计算图(computational graph)</h2>
+<img src="/2026/07/15/CS231n/RNN/2.png" class="" title="coumpute graph">
 <blockquote>
 <p>每一步的Loss 相加得到总Loss，对每个时间步Loss都能得到对W的梯度</p>
 </blockquote>
 <p>对于多对一，可能只对最后的hidden state相关，所以只用考虑最后的Loss</p>
-
-$$\delta_t = \frac{\partial L_t}{\partial s_t} + \frac{\partial s_{t+1}}{\partial s_t} \delta_{t+1}$$
-
-
+<p>$$\delta_t = \frac{\partial L_t}{\partial s_t} + \frac{\partial s_{t+1}}{\partial s_t} \delta_{t+1}$$</p>
 <p>用这条公式可以计算所有的L，其中$\delta_t$是总L 对 s_t的导数</p>
-<h4 id="问题-当时间序列长的时候，每一个时间步的反向传播都异常艰难"><a href="#问题-当时间序列长的时候，每一个时间步的反向传播都异常艰难" class="headerlink" title="问题:当时间序列长的时候，每一个时间步的反向传播都异常艰难"></a>问题:当时间序列长的时候，每一个时间步的反向传播都异常艰难</h4><p>解决:随时间反向传播</p>
+<h4 id="问题-当时间序列长的时候，每一个时间步的反向传播都异常艰难">问题:当时间序列长的时候，每一个时间步的反向传播都异常艰难</h4>
+<p>loca<br>
+解决:随时间反向传播</p>
 <p>（多输出）我们分割时间窗，然后只看这个时间窗里面的Loss，之前的只看成为h_0</p>
 <p>（单输出） 前向传播和原来一样，反向传播从后往前分为不同的时间窗，每个时间窗给前面的只有Loss对x1和对前一个隐藏状态的导数</p>
 <p>如果每层W的不一样 -&gt; 失去递推性，相当于一个普通的NN了</p>
@@ -153,33 +151,32 @@ $$\delta_t = \frac{\partial L_t}{\partial s_t} + \frac{\partial s_{t+1}}{\partia
 <li>图片说明文字 h_0 为 CNN后的图片，序列输入为前一步预测的词元</li>
 </ol>
 <img src="/2026/07/15/CS231n/RNN/3.png" class="" title="coumpute graph">
-
 <ol start="2">
-<li>Visual Question Answering<br>…</li>
+<li>Visual Question Answering<br>
+…</li>
 </ol>
-<h3 id="Multilayer-RNN"><a href="#Multilayer-RNN" class="headerlink" title="Multilayer RNN"></a>Multilayer RNN</h3><p>每一层的RNN</p>
+<h3 id="Multilayer-RNN">Multilayer RNN</h3>
+<p>每一层的RNN</p>
 <blockquote>
-<p>hidden layer更新是基于每层独立<br>从层数来讲，上一层的输入是下一层的输出</p>
+<p>hidden layer更新是基于每层独立<br>
+从层数来讲，上一层的输入是下一层的输出</p>
 </blockquote>
 <img src="/2026/07/15/CS231n/RNN/4.png" class="" title="alt text">
-
-
-<h2 id="LSTM"><a href="#LSTM" class="headerlink" title="LSTM"></a>LSTM</h2><p>RNN梯度计算 -&gt; </p>
+<h2 id="LSTM">LSTM</h2>
+<p>RNN梯度计算 -&gt;</p>
 <img src="/2026/07/15/CS231n/RNN/5.png" class="" title="coumpute graph">
-
 <img src="/2026/07/15/CS231n/RNN/6.png" class="" title="coumpute graph">
-
 <blockquote>
 <p>十分容易出现梯度消失，所以我们用LSTM</p>
 </blockquote>
 <p>LSTM : (i, f, o, g) (sigmoid, sigmoid, sigmoid ,tanh) W(ht_1, x)</p>
 <p>每个门都有自己独立的一套权重矩阵 $W$ 和偏置 $b$。它们的计算公式高度一致，只有激活函数和物理意义不同。</p>
 <p>i,f,o由于是sigmoid，输出在(0, 1 )之间</p>
-<p>$$C_t &#x3D; f_t \odot C_{t-1} + i_t \odot \tilde{C}_t$$</p>
+<p>$$C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}_t$$</p>
 <blockquote>
 <p>f 控制之前的状态有多少要被记住， i控制新状态多少要被输入</p>
 </blockquote>
-<p>$$h_t &#x3D; o_t \odot \tanh(C_t)$$</p>
+<p>$$h_t = o_t \odot \tanh(C_t)$$</p>
 <blockquote>
 <p>o控制输出的状态和原来状态的关系</p>
 </blockquote>
@@ -194,7 +191,7 @@ $$\delta_t = \frac{\partial L_t}{\partial s_t} + \frac{\partial s_{t+1}}{\partia
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/15/CS231n/RNN/" data-id="cmrlv6mlt00080ktldllx3anz" data-title="RNN" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/15/CS231n/RNN/" data-id="cmrlv9k0d0008xktlc96la1qs" data-title="RNN" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       

@@ -6,12 +6,12 @@
   
   <title>二分法特辑 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="35. 搜索插入位置给定一个排序数组和一个目标值，在数组中找到目标值，并返回其索引。如果目标值不存在于数组中，返回它将会被按顺序插入的位置。 请必须使用时间复杂度为 O(log n) 的算法。 123456789101112131415161718class Solution:    def searchInsert(self, nums: List[int], target: int) -&amp;gt">
+  <meta name="description" content="35. 搜索插入位置 给定一个排序数组和一个目标值，在数组中找到目标值，并返回其索引。如果目标值不存在于数组中，返回它将会被按顺序插入的位置。 请必须使用时间复杂度为 O(log n) 的算法。 123456789101112131415161718class Solution:    def searchInsert(self, nums: List[int], target: int) -&amp;g">
 <meta property="og:type" content="article">
 <meta property="og:title" content="二分法特辑">
 <meta property="og:url" content="http://example.com/2026/07/12/leetcode/%E4%BA%8C%E5%88%86%E6%B3%95/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="35. 搜索插入位置给定一个排序数组和一个目标值，在数组中找到目标值，并返回其索引。如果目标值不存在于数组中，返回它将会被按顺序插入的位置。 请必须使用时间复杂度为 O(log n) 的算法。 123456789101112131415161718class Solution:    def searchInsert(self, nums: List[int], target: int) -&amp;gt">
+<meta property="og:description" content="35. 搜索插入位置 给定一个排序数组和一个目标值，在数组中找到目标值，并返回其索引。如果目标值不存在于数组中，返回它将会被按顺序插入的位置。 请必须使用时间复杂度为 O(log n) 的算法。 123456789101112131415161718class Solution:    def searchInsert(self, nums: List[int], target: int) -&amp;g">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2026-07-12T03:03:42.000Z">
 <meta property="article:modified_time" content="2026-07-15T03:25:02.718Z">
@@ -96,14 +96,16 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="35-搜索插入位置"><a href="#35-搜索插入位置" class="headerlink" title="35. 搜索插入位置"></a>35. 搜索插入位置</h2><p>给定一个排序数组和一个目标值，在数组中找到目标值，并返回其索引。如果目标值不存在于数组中，返回它将会被按顺序插入的位置。</p>
+        <h2 id="35-搜索插入位置">35. 搜索插入位置</h2>
+<p>给定一个排序数组和一个目标值，在数组中找到目标值，并返回其索引。如果目标值不存在于数组中，返回它将会被按顺序插入的位置。</p>
 <p>请必须使用时间复杂度为 O(log n) 的算法。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">searchInsert</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], target: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># 条件 dp[i] &lt;= nums[i] &lt; dp[i + 1]  返回 i</span></span><br><span class="line">        n = <span class="built_in">len</span>(nums)</span><br><span class="line">        l, r = <span class="number">0</span>, n - <span class="number">1</span></span><br><span class="line">        ans = n</span><br><span class="line">        <span class="keyword">while</span> l &lt;= r:</span><br><span class="line">            mid = (l + r) // <span class="number">2</span></span><br><span class="line">            <span class="keyword">if</span> nums[mid] &gt;= target:</span><br><span class="line">                ans = mid</span><br><span class="line">                r = mid - <span class="number">1</span></span><br><span class="line">                <span class="comment"># 这里让ans为 &gt;= target 的值</span></span><br><span class="line">                <span class="comment"># 如果没有 &gt;= target 的值 就 为 r 原初值 = n，插入最右边</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                l = mid + <span class="number">1</span></span><br><span class="line">                <span class="comment"># 这个 mid 为 &lt; target 的 值</span></span><br><span class="line">                <span class="comment"># 所以不可能为答案</span></span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
-
-<h2 id="74-搜索二维矩阵"><a href="#74-搜索二维矩阵" class="headerlink" title="74. 搜索二维矩阵"></a>74. 搜索二维矩阵</h2><p>给你一个满足下述两条属性的 m x n 整数矩阵：</p>
-<p>每行中的整数从左到右按非严格递增顺序排列。<br>每行的第一个整数大于前一行的最后一个整数。<br>给你一个整数 target ，如果 target 在矩阵中，返回 true ；否则，返回 false 。</p>
+<h2 id="74-搜索二维矩阵">74. 搜索二维矩阵</h2>
+<p>给你一个满足下述两条属性的 m x n 整数矩阵：</p>
+<p>每行中的整数从左到右按非严格递增顺序排列。<br>
+每行的第一个整数大于前一行的最后一个整数。<br>
+给你一个整数 target ，如果 target 在矩阵中，返回 true ；否则，返回 false 。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">searchMatrix</span>(<span class="params">self, matrix: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]], target: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        n, m = <span class="built_in">len</span>(matrix), <span class="built_in">len</span>(matrix[<span class="number">0</span>])</span><br><span class="line">        l, r = <span class="number">0</span>, n - <span class="number">1</span></span><br><span class="line">        line = r</span><br><span class="line">        tar = target</span><br><span class="line">        <span class="comment"># d[i] &lt;= tar &lt; dp[i + 1]</span></span><br><span class="line">        <span class="keyword">while</span> l &lt;= r:</span><br><span class="line">            mid = (l + r) // <span class="number">2</span></span><br><span class="line">            <span class="keyword">if</span> matrix[mid][<span class="number">0</span>] &lt;= tar:</span><br><span class="line">                line = mid</span><br><span class="line">                <span class="comment"># line 记录的是 &lt;= tar 的值</span></span><br><span class="line">                l = mid + <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                r = mid - <span class="number">1</span></span><br><span class="line">        l, r = <span class="number">0</span>, m - <span class="number">1</span></span><br><span class="line">        <span class="keyword">while</span> l &lt;= r:</span><br><span class="line">            mid = (l + r) // <span class="number">2</span></span><br><span class="line">            <span class="keyword">if</span> matrix[line][mid] == tar:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            <span class="keyword">if</span> matrix[line][mid] &gt; tar:</span><br><span class="line">                r = mid - <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                l = mid + <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
 <ol start="34">
 <li>在排序数组中查找元素的第一个和最后一个位置</li>
 </ol>
@@ -111,19 +113,25 @@
 <p>如果数组中不存在目标值 target，返回 [-1, -1]。</p>
 <p>你必须设计并实现时间复杂度为 O(log n) 的算法解决此问题。</p>
 <p>示例 1：</p>
-<p>输入：nums &#x3D; [5,7,7,8,8,10], target &#x3D; 8<br>输出：[3,4]<br>示例 2：</p>
-<p>输入：nums &#x3D; [5,7,7,8,8,10], target &#x3D; 6<br>输出：[-1,-1]</p>
+<p>输入：nums = [5,7,7,8,8,10], target = 8<br>
+输出：[3,4]<br>
+示例 2：</p>
+<p>输入：nums = [5,7,7,8,8,10], target = 6<br>
+输出：[-1,-1]</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">searchRange</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], target: <span class="built_in">int</span></span>) -&gt; <span class="type">List</span>[<span class="built_in">int</span>]:</span><br><span class="line">        N = <span class="built_in">len</span>(nums)</span><br><span class="line">        <span class="keyword">if</span> N == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> [-<span class="number">1</span>, -<span class="number">1</span>]</span><br><span class="line">        left, right = <span class="number">0</span>, N - <span class="number">1</span></span><br><span class="line">        ans1, ans2 = <span class="number">0</span>, N - <span class="number">1</span></span><br><span class="line">        mid = <span class="number">0</span></span><br><span class="line">        <span class="comment"># 找最大</span></span><br><span class="line">        <span class="keyword">while</span> left &lt;= right:</span><br><span class="line">            mid = (left + right) // <span class="number">2</span></span><br><span class="line">            <span class="keyword">if</span> nums[mid] &lt;= target:</span><br><span class="line">                <span class="comment"># mid是所有 &lt;= target</span></span><br><span class="line">                ans1 = mid</span><br><span class="line">                left = mid + <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                right = mid - <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> nums[ans1] != target:</span><br><span class="line">            <span class="keyword">return</span> [-<span class="number">1</span>, -<span class="number">1</span>]</span><br><span class="line">        left, right = <span class="number">0</span>, N - <span class="number">1</span></span><br><span class="line">        <span class="comment"># 找最小 ， 在相同数值数组内行为是一直往左，并且更新mid</span></span><br><span class="line">        <span class="keyword">while</span> left &lt;= right:</span><br><span class="line">            mid = (left + right) // <span class="number">2</span></span><br><span class="line">            <span class="keyword">if</span> nums[mid] &gt;= target:</span><br><span class="line">                <span class="comment"># mid是所有 &gt;= target</span></span><br><span class="line">                ans2 = mid</span><br><span class="line">                right = mid - <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                left = mid + <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> [ans2, ans1]</span><br><span class="line"></span><br><span class="line">                </span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
 <ol start="33">
-<li>搜索旋转排序数组<br>已解答<br>中等<br>相关标签<br>premium lock icon<br>相关企业<br>整数数组 nums 按升序排列，数组中的值 互不相同 。</li>
+<li>搜索旋转排序数组<br>
+已解答<br>
+中等<br>
+相关标签<br>
+premium lock icon<br>
+相关企业<br>
+整数数组 nums 按升序排列，数组中的值 互不相同 。</li>
 </ol>
-<p>在传递给函数之前，nums 在预先未知的某个下标 k（0 &lt;&#x3D; k &lt; nums.length）上进行了 向左旋转，使数组变为 [nums[k], nums[k+1], …, nums[n-1], nums[0], nums[1], …, nums[k-1]]（下标 从 0 开始 计数）。例如， [0,1,2,4,5,6,7] 下标 3 上向左旋转后可能变为 [4,5,6,7,0,1,2] 。</p>
+<p>在传递给函数之前，nums 在预先未知的某个下标 k（0 &lt;= k &lt; nums.length）上进行了 向左旋转，使数组变为 [nums[k], nums[k+1], …, nums[n-1], nums[0], nums[1], …, nums[k-1]]（下标 从 0 开始 计数）。例如， [0,1,2,4,5,6,7] 下标 3 上向左旋转后可能变为 [4,5,6,7,0,1,2] 。</p>
 <p>给你 旋转后 的数组 nums 和一个整数 target ，如果 nums 中存在这个目标值 target ，则返回它的下标，否则返回 -1 。</p>
 <p>你必须设计一个时间复杂度为 O(log n) 的算法解决此问题</p>
-<pre><code class="python">class Solution:
+<pre><code class="language-python">class Solution:
     def search(self, nums: List[int], target: int) -&gt; int:
         # 两个递增 且一个递增比第二个小
         k = nums[0]
@@ -159,7 +167,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/12/leetcode/%E4%BA%8C%E5%88%86%E6%B3%95/" data-id="cmrlv6mm2002r0ktl6lrs0p47" data-title="二分法特辑" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/12/leetcode/%E4%BA%8C%E5%88%86%E6%B3%95/" data-id="cmrlv9k0n002txktlezvx5wtx" data-title="二分法特辑" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       

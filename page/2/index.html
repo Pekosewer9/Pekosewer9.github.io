@@ -95,17 +95,19 @@
       
         <p>给定 n 个非负整数，用来表示柱状图中各个柱子的高度。每个柱子彼此相邻，且宽度为 1 。</p>
 <p>求在该柱状图中，能够勾勒出来的矩形的最大面积。</p>
-<p>输入：heights &#x3D; [2,1,5,6,2,3]<br>输出：10<br>解释：最大的矩形为图中红色区域，面积为 10</p>
-<h2 id="单调栈"><a href="#单调栈" class="headerlink" title="单调栈"></a>单调栈</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">largestRectangleArea</span>(<span class="params">self, heights: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># 维护一个单调递增的单调栈</span></span><br><span class="line">        stack = <span class="built_in">list</span>()</span><br><span class="line">        n = <span class="built_in">len</span>(heights)</span><br><span class="line">        dp = [<span class="number">1</span>] * n</span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        stack.append([-<span class="number">1</span>, -<span class="number">1</span>])</span><br><span class="line">        heights.append(-<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">for</span> index, ele <span class="keyword">in</span> <span class="built_in">enumerate</span>(heights):</span><br><span class="line">            <span class="keyword">while</span>  ele &lt; stack[-<span class="number">1</span>][<span class="number">1</span>]:</span><br><span class="line">                j = stack[-<span class="number">1</span>][<span class="number">0</span>]</span><br><span class="line">                dp[j] = index - stack[-<span class="number">2</span>][<span class="number">0</span>] - <span class="number">1</span></span><br><span class="line">                stack.pop()</span><br><span class="line">            stack.append([index, ele])</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            ans = <span class="built_in">max</span>(ans, heights[i] * dp[i])</span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
+<p>输入：heights = [2,1,5,6,2,3]<br>
+输出：10<br>
+解释：最大的矩形为图中红色区域，面积为 10</p>
+<h2 id="单调栈">单调栈</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">largestRectangleArea</span>(<span class="params">self, heights: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># 维护一个单调递增的单调栈</span></span><br><span class="line">        stack = <span class="built_in">list</span>()</span><br><span class="line">        n = <span class="built_in">len</span>(heights)</span><br><span class="line">        dp = [<span class="number">1</span>] * n</span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        stack.append([-<span class="number">1</span>, -<span class="number">1</span>])</span><br><span class="line">        heights.append(-<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">for</span> index, ele <span class="keyword">in</span> <span class="built_in">enumerate</span>(heights):</span><br><span class="line">            <span class="keyword">while</span>  ele &lt; stack[-<span class="number">1</span>][<span class="number">1</span>]:</span><br><span class="line">                j = stack[-<span class="number">1</span>][<span class="number">0</span>]</span><br><span class="line">                dp[j] = index - stack[-<span class="number">2</span>][<span class="number">0</span>] - <span class="number">1</span></span><br><span class="line">                stack.pop()</span><br><span class="line">            stack.append([index, ele])</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            ans = <span class="built_in">max</span>(ans, heights[i] * dp[i])</span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>用dp[i]记录每一个index &#x3D; i的可以像左右延申多少，用单调递增的单调栈实现dp[i]的计算</p>
+<p>用dp[i]记录每一个index = i的可以像左右延申多少，用单调递增的单调栈实现dp[i]的计算</p>
 </blockquote>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/10/leetcode/84.%20%E6%9F%B1%E7%8A%B6%E5%9B%BE%E4%B8%AD%E6%9C%80%E5%A4%A7%E7%9A%84%E7%9F%A9%E5%BD%A2/" data-id="cmrlv6mm1002p0ktl04flg16z" data-title="84. 柱状图中最大的矩形" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/10/leetcode/84.%20%E6%9F%B1%E7%8A%B6%E5%9B%BE%E4%B8%AD%E6%9C%80%E5%A4%A7%E7%9A%84%E7%9F%A9%E5%BD%A2/" data-id="cmrlv9k0m002qxktl17kx3w2a" data-title="84. 柱状图中最大的矩形" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -141,8 +143,9 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>题目描述：<br>根据每日 气温 列表，请重新生成一个列表，对应位置的输入是你需要再等待多久温度才会升高超过该日的天数。如果之后都不会升高，请在该位置用 0 来代替。</p>
-<p>例如，给定一个列表 temperatures &#x3D; [73, 74, 75, 71, 69, 72, 76, 73]，你的输出应该是 [1, 1, 4, 2, 1, 1, 0, 0]。</p>
+        <p>题目描述：<br>
+根据每日 气温 列表，请重新生成一个列表，对应位置的输入是你需要再等待多久温度才会升高超过该日的天数。如果之后都不会升高，请在该位置用 0 来代替。</p>
+<p>例如，给定一个列表 temperatures = [73, 74, 75, 71, 69, 72, 76, 73]，你的输出应该是 [1, 1, 4, 2, 1, 1, 0, 0]。</p>
 <p>提示：气温 列表长度的范围是 [1, 30000]。每个气温的值的均为华氏度，都是在 [30, 100] 范围内的整数。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">dailyTemperatures</span>(<span class="params">self, temperatures: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="type">List</span>[<span class="built_in">int</span>]:</span><br><span class="line">        <span class="comment"># ele = [temper, index]</span></span><br><span class="line">        stack = <span class="built_in">list</span>()</span><br><span class="line">        ans = <span class="built_in">list</span>()</span><br><span class="line">        n = <span class="built_in">len</span>(temperatures)</span><br><span class="line">        ans = [<span class="number">0</span>] * n</span><br><span class="line">        <span class="keyword">for</span> index, ele <span class="keyword">in</span> <span class="built_in">enumerate</span>(temperatures):</span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> stack:</span><br><span class="line">                    stack.append([ele, index])</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">if</span> ele &gt; stack[-<span class="number">1</span>][<span class="number">0</span>]:</span><br><span class="line">                    <span class="keyword">while</span> stack <span class="keyword">and</span> (ele &gt; stack[-<span class="number">1</span>][<span class="number">0</span>]):</span><br><span class="line">                        j = stack[-<span class="number">1</span>][<span class="number">1</span>]</span><br><span class="line">                        ans[j] = index - j</span><br><span class="line">                        stack.pop()</span><br><span class="line">                stack.append([ele, index])</span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
 <blockquote>
@@ -152,7 +155,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/10/leetcode/739.%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6/" data-id="cmrlv6mm1002o0ktl6znp2ebb" data-title="739.每日温度" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/10/leetcode/739.%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6/" data-id="cmrlv9k0m002oxktl4ibvb30a" data-title="739.每日温度" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -189,35 +192,37 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <p>ReLu:   Max(0,Wx)</p>
-<h2 id="CNN"><a href="#CNN" class="headerlink" title="CNN"></a>CNN</h2><p><font color = 'black'>Perceiving and Understanding the virtual world</p>
+<h2 id="CNN">CNN</h2>
+<p><font color = 'black'>Perceiving and Understanding the virtual world</p>
 <blockquote>
 <p>Convolution Layer || Pooling layer</p>
 </blockquote>
-<p>之前的工作：<br>raw picture -&gt; feature representation -&gt; Neural Network -&gt; label output</p>
+<p>之前的工作：<br>
+raw picture -&gt; feature representation -&gt; Neural Network -&gt; label output</p>
 <p>怎么把feature representation输入NN：</p>
 <ol>
 <li>把feature的向量全部连接在一起</li>
 </ol>
-<h4 id="直接NN-VS-feature后NN"><a href="#直接NN-VS-feature后NN" class="headerlink" title="直接NN VS feature后NN"></a>直接NN VS feature后NN</h4><p>一般来说，用直接NN会更好</p>
+<h4 id="直接NN-VS-feature后NN">直接NN VS feature后NN</h4>
+<p>一般来说，用直接NN会更好</p>
 <blockquote>
 <p>但是我们还需要人工设计design计算图-&gt;layer的连接样式</p>
 </blockquote>
 <p>CNN结构</p>
 <img src="/2026/07/09/CS231n/CNN/image-12.png" class="" title="alt text">
-
 <p>用途：几乎所有视觉问题，包括TEXT2IMG IMG2TEXT , 视觉分割</p>
 <p>Fully Connected layer: templates , 拉伸</p>
-<p>Convolution layer: 不拉伸 , filter: pixel image , </p>
+<p>Convolution layer: 不拉伸 , filter: pixel image ,</p>
 <img src="/2026/07/09/CS231n/CNN/image-13.png" class="" title="alt text">
-
-
-<h3 id="Exp"><a href="#Exp" class="headerlink" title="Exp:"></a>Exp:</h3><p>32 * 32 * 3 image — 5 * 5 * 3 filter -&gt; 28 * 28  * 1 result</p>
+<h3 id="Exp">Exp:</h3>
+<p>32 * 32 * 3 image — 5 * 5 * 3 filter -&gt; 28 * 28  * 1 result</p>
 <p>用 6 个 filter</p>
 <p>3* 32 * 32  image — 6 * 3 * 5 * 5 -&gt; 6 * 28 * 28 + bias (6 维)[每个filter公用一个bias，这个bias在一个filter中是一个标量，所以bias总共是6维的] -&gt; 6* 28 * 28 result</p>
 <blockquote>
 <p>bias 和 6-d的filter都是通过梯度下降得到的</p>
 </blockquote>
-<p>Filter size:<br><font color = 'blue'> cout * cin * Kw * Kh </p>
+<p>Filter size:<br>
+<font color = 'blue'> cout * cin * Kw * Kh</p>
 <p><font colot = 'black'>在Convolution layer中间，我们需要加入Relu等其他激活函数-&gt;不然就会退化成一层convolution layer</p>
 <p>第一层filter最终学习到的样式：</p>
 <ol>
@@ -225,38 +230,46 @@
 <li>边缘检测</li>
 </ol>
 <blockquote>
-<p>Q:为什么滤波器会不同<br>A:因为随机初始化不同，所以随机的初始时很重要的</p>
+<p>Q:为什么滤波器会不同<br>
+A:因为随机初始化不同，所以随机的初始时很重要的</p>
 </blockquote>
 <p>后面的filter不能直接看出来，要看对哪些图像响应明显</p>
 <p>Input : x * x</p>
 <p>Filter y * y</p>
 <p>Output (x-y+1) * (x - y + 1)</p>
-<h3 id="想要让OUTPUT也保持x-x"><a href="#想要让OUTPUT也保持x-x" class="headerlink" title="想要让OUTPUT也保持x * x"></a>想要让OUTPUT也保持x * x</h3><ol>
+<h3 id="想要让OUTPUT也保持x-x">想要让OUTPUT也保持x * x</h3>
+<ol>
 <li>paddle ，在外面一圈加入额外的数字 0</li>
 </ol>
-<h3 id="感受野"><a href="#感受野" class="headerlink" title="感受野"></a>感受野</h3><p>越到后面，每一个pixel表示的感受野越大</p>
+<h3 id="感受野">感受野</h3>
+<p>越到后面，每一个pixel表示的感受野越大</p>
 <p>但是我们想让感受野变大变得更快</p>
 <ol>
 <li>stride</li>
 <li>pooling</li>
 </ol>
-<h3 id="stride-每一次filter跳的步数"><a href="#stride-每一次filter跳的步数" class="headerlink" title="stride , 每一次filter跳的步数"></a>stride , 每一次filter跳的步数</h3><blockquote>
-<p>input W  filter K padding P Stride S<br>output &#x3D; (W-K+2P)&#x2F;S + 1 &#x3D; (W&#x2F;S) + 1</p>
+<h3 id="stride-每一次filter跳的步数">stride , 每一次filter跳的步数</h3>
+<blockquote>
+<p>input W  filter K padding P Stride S<br>
+output = (W-K+2P)/S + 1 = (W/S) + 1</p>
 </blockquote>
-<h2 id="Pooling"><a href="#Pooling" class="headerlink" title="Pooling"></a>Pooling</h2><p>Exp:</p>
+<h2 id="Pooling">Pooling</h2>
+<p>Exp:</p>
 <p>64 * 224 * 224 -pool-&gt; 64* 112 * 112</p>
-<p>一般使用stride &#x3D; 2 || 4</p>
-<h3 id="downsampling-method"><a href="#downsampling-method" class="headerlink" title="downsampling method:"></a>downsampling method:</h3><ol>
+<p>一般使用stride = 2 || 4</p>
+<h3 id="downsampling-method">downsampling method:</h3>
+<ol>
 <li>maxpooling</li>
 <li>meanpooling</li>
 </ol>
-<h3 id="平移不变性"><a href="#平移不变性" class="headerlink" title="平移不变性"></a>平移不变性</h3><p>先平移再卷积和先卷积再平移得到的结果一样</p>
+<h3 id="平移不变性">平移不变性</h3>
+<p>先平移再卷积和先卷积再平移得到的结果一样</p>
 <p>所以CNN是尊重空间结构的</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/09/CS231n/CNN/" data-id="cmrlv6mlt00070ktlf2l1e6rv" data-title="CNN" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/09/CS231n/CNN/" data-id="cmrlv9k0c0005xktl1q9o7xhi" data-title="CNN" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -292,43 +305,42 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="Neural-Networks"><a href="#Neural-Networks" class="headerlink" title="Neural Networks"></a>Neural Networks</h2><figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">x - [D]</span><br><span class="line">W1 - [H * D]</span><br><span class="line">W2 - [C * D]</span><br><span class="line">C - 分类数</span><br><span class="line">f = Wx</span><br><span class="line">f = W2max(W1x,0)</span><br></pre></td></tr></table></figure>
-
+        <h2 id="Neural-Networks">Neural Networks</h2>
+<figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">x - [D]</span><br><span class="line">W1 - [H * D]</span><br><span class="line">W2 - [C * D]</span><br><span class="line">C - 分类数</span><br><span class="line">f = Wx</span><br><span class="line">f = W2max(W1x,0)</span><br></pre></td></tr></table></figure>
 <p><font color = 'black'> 每个第二层的可以成为一个被共享所有类共享的模板</p>
 <p>max(W1x,0) -&gt; 一个简单的激活函数</p>
 <blockquote>
-<p>如果没有激活函数，就是linear的，W &#x3D; W1 * W2</p>
+<p>如果没有激活函数，就是linear的，W = W1 * W2</p>
 </blockquote>
 <p><font color = 'blue'>max(W1,0)被称为 Relu</p>
-<p>合适的零中心值 和 平滑度 可以获得更快的收敛速度 </p>
+<p>合适的零中心值 和 平滑度 可以获得更快的收敛速度</p>
 <blockquote>
 <p>缺点:可能创造死的神经元</p>
 </blockquote>
 <font color = 'black'> 
 Sigmoid: 1/1+e^x
 SiLU x* sigmoid(x)
-
 <blockquote>
 <p>缺点:会把数值压缩在一个较窄的范围内，又是会让梯度消失，所以我们不会把他们用在NN的中间层</p>
 </blockquote>
-<h3 id="3layers-FULLY-CONNECTED"><a href="#3layers-FULLY-CONNECTED" class="headerlink" title="3layers - FULLY CONNECTED"></a>3layers - FULLY CONNECTED</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">f = <span class="keyword">lambda</span> x: <span class="number">1.0</span>/(<span class="number">1.0</span> + np.exp(-x)) <span class="comment">#用lambda定义sigmoid函数</span></span><br><span class="line">x = np.random.randn(<span class="number">3</span>, <span class="number">1</span>) </span><br><span class="line">h1 = f(np.dot(W1, x) + b1) <span class="comment">#hidden layer 1</span></span><br><span class="line">h2 = f(np.dot(W2, h1) + b2) <span class="comment"># hidden layer 2</span></span><br><span class="line">out = np.dot(W3, h2) +b3 <span class="comment"># output layer</span></span><br></pre></td></tr></table></figure>
-
+<h3 id="3layers-FULLY-CONNECTED">3layers - FULLY CONNECTED</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">f = <span class="keyword">lambda</span> x: <span class="number">1.0</span>/(<span class="number">1.0</span> + np.exp(-x)) <span class="comment">#用lambda定义sigmoid函数</span></span><br><span class="line">x = np.random.randn(<span class="number">3</span>, <span class="number">1</span>) </span><br><span class="line">h1 = f(np.dot(W1, x) + b1) <span class="comment">#hidden layer 1</span></span><br><span class="line">h2 = f(np.dot(W2, h1) + b2) <span class="comment"># hidden layer 2</span></span><br><span class="line">out = np.dot(W3, h2) +b3 <span class="comment"># output layer</span></span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>我们选择正则化项而不是减少神经网络层数来防止过拟合</p>
 </blockquote>
 <p>原因：我们要先确保神经网络理解我们的数据，确保表达能力</p>
 <p>如L2 -&gt;  不让W参数过大</p>
-<h2 id="Backpropagation"><a href="#Backpropagation" class="headerlink" title="Backpropagation"></a>Backpropagation</h2><p>we should know how to compute dL&#x2F;dW1 dL&#x2F;dW2 </p>
-<p>![“”,&#x2F;]</p>
+<h2 id="Backpropagation">Backpropagation</h2>
+<p>we should know how to compute dL/dW1 dL/dW2</p>
+<p>![“”,/]</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> (<span class="number">1</span> / (<span class="number">1</span> + std::exp((-a))))</span><br></pre></td></tr></table></figure>
-
 <p>sparse jacobian matrix xxxxxxx</p>
 <p>jacobian matrix 当维数大的时候太耗费计算资源：</p>
 <img src="/2026/07/06/CS231n/3_NN_BackPropagation/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20260709201458_206_39.jpg" class="" title="alt text">
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/06/CS231n/3_NN_BackPropagation/" data-id="cmrlv6mls00050ktlh99je1mu" data-title="3_NN_BackPropagation" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/06/CS231n/3_NN_BackPropagation/" data-id="cmrlv9k0d0007xktlcaa20ngz" data-title="3_NN_BackPropagation" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -364,24 +376,25 @@ SiLU x* sigmoid(x)
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="递归"><a href="#递归" class="headerlink" title="递归"></a>递归</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">decodeString</span>(<span class="params">self, s</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :type s: str</span></span><br><span class="line"><span class="string">        :rtype: str</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        nums = []</span><br><span class="line">        pain = <span class="string">&quot;&quot;</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">recap</span>(<span class="params">ans,left_index, right_index</span>):</span><br><span class="line">            index = left_index + <span class="number">1</span></span><br><span class="line">            <span class="keyword">while</span> index &lt; right_index:</span><br><span class="line">                num = <span class="number">0</span></span><br><span class="line">                <span class="keyword">if</span> s[index] &lt;= <span class="string">&#x27;9&#x27;</span> <span class="keyword">and</span> s[index] &gt;= <span class="string">&#x27;0&#x27;</span> :</span><br><span class="line">                    mark = <span class="literal">True</span></span><br><span class="line">                    <span class="keyword">while</span> s[index] != <span class="string">&#x27;[&#x27;</span>:</span><br><span class="line">                        num = num * <span class="number">10</span> + <span class="built_in">int</span>(s[index])</span><br><span class="line">                        index += <span class="number">1</span></span><br><span class="line">                    left_count = <span class="number">1</span></span><br><span class="line">                    left_index_post = index</span><br><span class="line">                    <span class="keyword">while</span> left_count != <span class="number">0</span>:</span><br><span class="line">                        index += <span class="number">1</span></span><br><span class="line">                        <span class="keyword">if</span> s[index] == <span class="string">&#x27;[&#x27;</span>:</span><br><span class="line">                            left_count += <span class="number">1</span></span><br><span class="line">                        <span class="keyword">if</span> s[index] == <span class="string">&#x27;]&#x27;</span>:</span><br><span class="line">                            left_count -= <span class="number">1</span></span><br><span class="line">                    right_index_post = index</span><br><span class="line">                    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num):</span><br><span class="line">                        ans = recap(ans,left_index_post, right_index_post)</span><br><span class="line">                    nums.append(num)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    ans = ans + s[index]</span><br><span class="line">                index += <span class="number">1</span></span><br><span class="line">            <span class="keyword">return</span> ans</span><br><span class="line">        pain = recap(<span class="string">&quot;&quot;</span>,-<span class="number">1</span>, <span class="built_in">len</span>(s))</span><br><span class="line">        <span class="keyword">return</span> pain</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">decodeString</span>(<span class="params">self, s: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        stack = <span class="built_in">list</span>()</span><br><span class="line">        index = <span class="number">0</span></span><br><span class="line">        n = <span class="built_in">len</span>(s)</span><br><span class="line">        test = []</span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">strpop</span>():</span><br><span class="line">            str_pre = <span class="string">&quot;&quot;</span></span><br><span class="line">            ch = <span class="string">&#x27;&#x27;</span></span><br><span class="line">            <span class="keyword">while</span> ch != <span class="string">&#x27;[&#x27;</span>:</span><br><span class="line">                ch = stack.pop()</span><br><span class="line">                <span class="keyword">if</span> ch == <span class="string">&#x27;[&#x27;</span>:</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">                str_pre += ch</span><br><span class="line">            cnt = stack.pop()</span><br><span class="line">            str_pre = str_pre[::-<span class="number">1</span>]</span><br><span class="line">            test.append(str_pre)</span><br><span class="line">            l = <span class="built_in">len</span>(str_pre)</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(cnt):</span><br><span class="line">                <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(l):</span><br><span class="line">                    stack.append(str_pre[j])</span><br><span class="line">        <span class="keyword">while</span> index &lt; n:</span><br><span class="line">            <span class="keyword">if</span> (s[index] &lt;= <span class="string">&#x27;9&#x27;</span>) <span class="keyword">and</span> (s[index] &gt;= <span class="string">&#x27;0&#x27;</span>):</span><br><span class="line">                num = <span class="number">0</span></span><br><span class="line">                <span class="keyword">while</span> s[index] != <span class="string">&#x27;[&#x27;</span>:</span><br><span class="line">                    num = num * <span class="number">10</span> + <span class="built_in">int</span>(s[index])</span><br><span class="line">                    index += <span class="number">1</span></span><br><span class="line">                stack.append(num)</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">if</span> s[index] == <span class="string">&#x27;]&#x27;</span>:</span><br><span class="line">                strpop()</span><br><span class="line">                index += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                stack.append(s[index])</span><br><span class="line">                index += <span class="number">1</span></span><br><span class="line">        <span class="comment">## 用join整合stack</span></span><br><span class="line">        result = <span class="string">&quot;&quot;</span></span><br><span class="line">        result = <span class="string">&quot;&quot;</span>.join(stack)</span><br><span class="line">        <span class="comment">## result前的&quot;&quot;是分隔符号，如果为/则为 a/b/c/.....</span></span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
-
+        <h2 id="递归">递归</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">decodeString</span>(<span class="params">self, s</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :type s: str</span></span><br><span class="line"><span class="string">        :rtype: str</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        nums = []</span><br><span class="line">        pain = <span class="string">&quot;&quot;</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">recap</span>(<span class="params">ans,left_index, right_index</span>):</span><br><span class="line">            index = left_index + <span class="number">1</span></span><br><span class="line">            <span class="keyword">while</span> index &lt; right_index:</span><br><span class="line">                num = <span class="number">0</span></span><br><span class="line">                <span class="keyword">if</span> s[index] &lt;= <span class="string">&#x27;9&#x27;</span> <span class="keyword">and</span> s[index] &gt;= <span class="string">&#x27;0&#x27;</span> :</span><br><span class="line">                    mark = <span class="literal">True</span></span><br><span class="line">                    <span class="keyword">while</span> s[index] != <span class="string">&#x27;[&#x27;</span>:</span><br><span class="line">                        num = num * <span class="number">10</span> + <span class="built_in">int</span>(s[index])</span><br><span class="line">                        index += <span class="number">1</span></span><br><span class="line">                    left_count = <span class="number">1</span></span><br><span class="line">                    left_index_post = index</span><br><span class="line">                    <span class="keyword">while</span> left_count != <span class="number">0</span>:</span><br><span class="line">                        index += <span class="number">1</span></span><br><span class="line">                        <span class="keyword">if</span> s[index] == <span class="string">&#x27;[&#x27;</span>:</span><br><span class="line">                            left_count += <span class="number">1</span></span><br><span class="line">                        <span class="keyword">if</span> s[index] == <span class="string">&#x27;]&#x27;</span>:</span><br><span class="line">                            left_count -= <span class="number">1</span></span><br><span class="line">                    right_index_post = index</span><br><span class="line">                    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num):</span><br><span class="line">                        ans = recap(ans,left_index_post, right_index_post)</span><br><span class="line">                    nums.append(num)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    ans = ans + s[index]</span><br><span class="line">                index += <span class="number">1</span></span><br><span class="line">            <span class="keyword">return</span> ans</span><br><span class="line">        pain = recap(<span class="string">&quot;&quot;</span>,-<span class="number">1</span>, <span class="built_in">len</span>(s))</span><br><span class="line">        <span class="keyword">return</span> pain</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="栈">栈</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">decodeString</span>(<span class="params">self, s: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        stack = <span class="built_in">list</span>()</span><br><span class="line">        index = <span class="number">0</span></span><br><span class="line">        n = <span class="built_in">len</span>(s)</span><br><span class="line">        test = []</span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">strpop</span>():</span><br><span class="line">            str_pre = <span class="string">&quot;&quot;</span></span><br><span class="line">            ch = <span class="string">&#x27;&#x27;</span></span><br><span class="line">            <span class="keyword">while</span> ch != <span class="string">&#x27;[&#x27;</span>:</span><br><span class="line">                ch = stack.pop()</span><br><span class="line">                <span class="keyword">if</span> ch == <span class="string">&#x27;[&#x27;</span>:</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">                str_pre += ch</span><br><span class="line">            cnt = stack.pop()</span><br><span class="line">            str_pre = str_pre[::-<span class="number">1</span>]</span><br><span class="line">            test.append(str_pre)</span><br><span class="line">            l = <span class="built_in">len</span>(str_pre)</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(cnt):</span><br><span class="line">                <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(l):</span><br><span class="line">                    stack.append(str_pre[j])</span><br><span class="line">        <span class="keyword">while</span> index &lt; n:</span><br><span class="line">            <span class="keyword">if</span> (s[index] &lt;= <span class="string">&#x27;9&#x27;</span>) <span class="keyword">and</span> (s[index] &gt;= <span class="string">&#x27;0&#x27;</span>):</span><br><span class="line">                num = <span class="number">0</span></span><br><span class="line">                <span class="keyword">while</span> s[index] != <span class="string">&#x27;[&#x27;</span>:</span><br><span class="line">                    num = num * <span class="number">10</span> + <span class="built_in">int</span>(s[index])</span><br><span class="line">                    index += <span class="number">1</span></span><br><span class="line">                stack.append(num)</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">if</span> s[index] == <span class="string">&#x27;]&#x27;</span>:</span><br><span class="line">                strpop()</span><br><span class="line">                index += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                stack.append(s[index])</span><br><span class="line">                index += <span class="number">1</span></span><br><span class="line">        <span class="comment">## 用join整合stack</span></span><br><span class="line">        result = <span class="string">&quot;&quot;</span></span><br><span class="line">        result = <span class="string">&quot;&quot;</span>.join(stack)</span><br><span class="line">        <span class="comment">## result前的&quot;&quot;是分隔符号，如果为/则为 a/b/c/.....</span></span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>用join整合stack</p>
 </blockquote>
-<p><font color = 'black'>思路就是把整个栈当成输出，当然中间部分需要一些reverse<br>reverse用 str &#x3D; str[::-1]实现</p>
+<p><font color = 'black'>思路就是把整个栈当成输出，当然中间部分需要一些reverse<br>
+reverse用 str = str[::-1]实现</p>
 <p>本题中可能出现括号嵌套的情况，比如 2[a2[bc]]，这种情况下我们可以先转化成 2[abcbc]，在转化成 abcbcabcbc。我们可以把字母、数字和括号看成是独立的 TOKEN，并用栈来维护这些 TOKEN。具体的做法是，遍历这个栈：</p>
-<p>如果当前的字符为数位，解析出一个数字（连续的多个数位）并进栈<br>如果当前的字符为字母或者左括号，直接进栈<br>如果当前的字符为右括号，开始出栈，一直到左括号出栈，出栈序列反转后拼接成一个字符串，此时取出栈顶的数字（此时栈顶一定是数字，想想为什么？），就是这个字符串应该出现的次数，我们根据这个次数和字符串构造出新的字符串并进栈</p>
+<p>如果当前的字符为数位，解析出一个数字（连续的多个数位）并进栈<br>
+如果当前的字符为字母或者左括号，直接进栈<br>
+如果当前的字符为右括号，开始出栈，一直到左括号出栈，出栈序列反转后拼接成一个字符串，此时取出栈顶的数字（此时栈顶一定是数字，想想为什么？），就是这个字符串应该出现的次数，我们根据这个次数和字符串构造出新的字符串并进栈</p>
 <p>链接：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/decode-string/solutions/264391/zi-fu-chuan-jie-ma-by-leetcode-solution/">https://leetcode.cn/problems/decode-string/solutions/264391/zi-fu-chuan-jie-ma-by-leetcode-solution/</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/06/leetcode/394_%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A7%A3%E7%A0%81/" data-id="cmrlv6mm1002j0ktl1asn2t2v" data-title="394. 字符串解码" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/06/leetcode/394_%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A7%A3%E7%A0%81/" data-id="cmrlv9k0l002kxktl8qho7pvm" data-title="394. 字符串解码" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -417,19 +430,19 @@ SiLU x* sigmoid(x)
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="模拟"><a href="#模拟" class="headerlink" title="模拟"></a>模拟</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">trap</span>(<span class="params">self, height</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :type height: List[int]</span></span><br><span class="line"><span class="string">        :rtype: int</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        height_cmp = []</span><br><span class="line">        left_bound = <span class="number">0</span></span><br><span class="line">        right_bound = <span class="number">0</span></span><br><span class="line">        n = <span class="built_in">len</span>(height)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            height_cmp.append([height[i], i])</span><br><span class="line">        height_comp = <span class="built_in">sorted</span>(height_cmp, key=<span class="keyword">lambda</span> x: x[<span class="number">0</span>], reverse=<span class="literal">True</span>)</span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, n - <span class="number">1</span>):</span><br><span class="line">            <span class="keyword">if</span> height_comp[i + <span class="number">1</span>][<span class="number">0</span>] == <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            loop = <span class="literal">True</span></span><br><span class="line">            test = []</span><br><span class="line">            loop_bound = [<span class="number">0</span>,<span class="number">0</span>]</span><br><span class="line">            <span class="keyword">if</span> i == <span class="number">0</span>: <span class="comment">#初始条件判断</span></span><br><span class="line">                <span class="keyword">if</span> height_comp[i][<span class="number">1</span>] &lt; height_comp[i + <span class="number">1</span>][<span class="number">1</span>]:</span><br><span class="line">                    left_bound = height_comp[i][<span class="number">1</span>]</span><br><span class="line">                    right_bound = height_comp[i + <span class="number">1</span>][<span class="number">1</span>]</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    right_bound = height_comp[i][<span class="number">1</span>]</span><br><span class="line">                    left_bound = height_comp[i + <span class="number">1</span>][<span class="number">1</span>]</span><br><span class="line">                loop_bound = [left_bound, right_bound]</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">if</span> (height_comp[i + <span class="number">1</span>][<span class="number">1</span>] &lt;= right_bound) <span class="keyword">and</span> (height_comp[i + <span class="number">1</span>][<span class="number">1</span>] &gt;= left_bound):</span><br><span class="line">                    loop = <span class="literal">False</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">if</span> height_comp[i + <span class="number">1</span>][<span class="number">1</span>] &lt; left_bound:</span><br><span class="line">                        loop_bound = [height_comp[i + <span class="number">1</span>][<span class="number">1</span>], left_bound]</span><br><span class="line">                        left_bound = height_comp[i + <span class="number">1</span>][<span class="number">1</span>]</span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        loop_bound = [right_bound, height_comp[i + <span class="number">1</span>][<span class="number">1</span>]]</span><br><span class="line">                        right_bound = height_comp[i + <span class="number">1</span>][<span class="number">1</span>]</span><br><span class="line">            test.append(loop_bound)</span><br><span class="line">            <span class="keyword">if</span> loop == <span class="literal">True</span>:</span><br><span class="line">                <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(loop_bound[<span class="number">0</span>] + <span class="number">1</span>, loop_bound[<span class="number">1</span>]):</span><br><span class="line">                    ans += height_comp[i + <span class="number">1</span>][<span class="number">0</span>] - height[j]</span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line">        </span><br><span class="line"><span class="comment"># 原创思想:按照高度排序，逐步扩展边界</span></span><br><span class="line"><span class="comment"># 速度慢        </span></span><br></pre></td></tr></table></figure>
-
-<h2 id="双指针-动态规划"><a href="#双指针-动态规划" class="headerlink" title="双指针 动态规划"></a>双指针 动态规划</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">trap</span>(<span class="params">self, height</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :type height: List[int]</span></span><br><span class="line"><span class="string">        :rtype: int</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        left, right = <span class="number">0</span>, <span class="built_in">len</span>(height) - <span class="number">1</span></span><br><span class="line">        left_Max = right_Max = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> left &lt; right:</span><br><span class="line">            left_Max = <span class="built_in">max</span>(left_Max, height[left])</span><br><span class="line">            right_Max = <span class="built_in">max</span>(right_Max, height[right])</span><br><span class="line">            <span class="keyword">if</span> height[left] &lt; height[right]:</span><br><span class="line">                ans += left_Max - height[left]</span><br><span class="line">                left += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                ans += right_Max - height[right]</span><br><span class="line">                right -= <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
-
+        <h2 id="模拟">模拟</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">trap</span>(<span class="params">self, height</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :type height: List[int]</span></span><br><span class="line"><span class="string">        :rtype: int</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        height_cmp = []</span><br><span class="line">        left_bound = <span class="number">0</span></span><br><span class="line">        right_bound = <span class="number">0</span></span><br><span class="line">        n = <span class="built_in">len</span>(height)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            height_cmp.append([height[i], i])</span><br><span class="line">        height_comp = <span class="built_in">sorted</span>(height_cmp, key=<span class="keyword">lambda</span> x: x[<span class="number">0</span>], reverse=<span class="literal">True</span>)</span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, n - <span class="number">1</span>):</span><br><span class="line">            <span class="keyword">if</span> height_comp[i + <span class="number">1</span>][<span class="number">0</span>] == <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            loop = <span class="literal">True</span></span><br><span class="line">            test = []</span><br><span class="line">            loop_bound = [<span class="number">0</span>,<span class="number">0</span>]</span><br><span class="line">            <span class="keyword">if</span> i == <span class="number">0</span>: <span class="comment">#初始条件判断</span></span><br><span class="line">                <span class="keyword">if</span> height_comp[i][<span class="number">1</span>] &lt; height_comp[i + <span class="number">1</span>][<span class="number">1</span>]:</span><br><span class="line">                    left_bound = height_comp[i][<span class="number">1</span>]</span><br><span class="line">                    right_bound = height_comp[i + <span class="number">1</span>][<span class="number">1</span>]</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    right_bound = height_comp[i][<span class="number">1</span>]</span><br><span class="line">                    left_bound = height_comp[i + <span class="number">1</span>][<span class="number">1</span>]</span><br><span class="line">                loop_bound = [left_bound, right_bound]</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">if</span> (height_comp[i + <span class="number">1</span>][<span class="number">1</span>] &lt;= right_bound) <span class="keyword">and</span> (height_comp[i + <span class="number">1</span>][<span class="number">1</span>] &gt;= left_bound):</span><br><span class="line">                    loop = <span class="literal">False</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">if</span> height_comp[i + <span class="number">1</span>][<span class="number">1</span>] &lt; left_bound:</span><br><span class="line">                        loop_bound = [height_comp[i + <span class="number">1</span>][<span class="number">1</span>], left_bound]</span><br><span class="line">                        left_bound = height_comp[i + <span class="number">1</span>][<span class="number">1</span>]</span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        loop_bound = [right_bound, height_comp[i + <span class="number">1</span>][<span class="number">1</span>]]</span><br><span class="line">                        right_bound = height_comp[i + <span class="number">1</span>][<span class="number">1</span>]</span><br><span class="line">            test.append(loop_bound)</span><br><span class="line">            <span class="keyword">if</span> loop == <span class="literal">True</span>:</span><br><span class="line">                <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(loop_bound[<span class="number">0</span>] + <span class="number">1</span>, loop_bound[<span class="number">1</span>]):</span><br><span class="line">                    ans += height_comp[i + <span class="number">1</span>][<span class="number">0</span>] - height[j]</span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line">        </span><br><span class="line"><span class="comment"># 原创思想:按照高度排序，逐步扩展边界</span></span><br><span class="line"><span class="comment"># 速度慢        </span></span><br></pre></td></tr></table></figure>
+<h2 id="双指针-动态规划">双指针 动态规划</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">trap</span>(<span class="params">self, height</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :type height: List[int]</span></span><br><span class="line"><span class="string">        :rtype: int</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        left, right = <span class="number">0</span>, <span class="built_in">len</span>(height) - <span class="number">1</span></span><br><span class="line">        left_Max = right_Max = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> left &lt; right:</span><br><span class="line">            left_Max = <span class="built_in">max</span>(left_Max, height[left])</span><br><span class="line">            right_Max = <span class="built_in">max</span>(right_Max, height[right])</span><br><span class="line">            <span class="keyword">if</span> height[left] &lt; height[right]:</span><br><span class="line">                ans += left_Max - height[left]</span><br><span class="line">                left += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                ans += right_Max - height[right]</span><br><span class="line">                right -= <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
 <p>上述做法的时间复杂度较高是因为需要对每个下标位置都向两边扫描。如果已经知道每个位置两边的最大高度，则可以在 O(n) 的时间内得到能接的雨水总量。使用动态规划的方法，可以在 O(n) 的时间内预处理得到每个位置两边的最大高度。</p>
 <p>创建两个长度为 n 的数组 leftMax 和 rightMax。对于 0≤i&lt;n，leftMax[i] 表示下标 i 及其左边的位置中，height 的最大高度，rightMax[i] 表示下标 i 及其右边的位置中，height 的最大高度。</p>
-<p>显然，leftMax[0]&#x3D;height[0]，rightMax[n−1]&#x3D;height[n−1]。两个数组的其余元素的计算如下：</p>
-<p>当 1≤i≤n−1 时，leftMax[i]&#x3D;max(leftMax[i−1],height[i])；</p>
-<p>当 0≤i≤n−2 时，rightMax[i]&#x3D;max(rightMax[i+1],height[i])。</p>
+<p>显然，leftMax[0]=height[0]，rightMax[n−1]=height[n−1]。两个数组的其余元素的计算如下：</p>
+<p>当 1≤i≤n−1 时，leftMax[i]=max(leftMax[i−1],height[i])；</p>
+<p>当 0≤i≤n−2 时，rightMax[i]=max(rightMax[i+1],height[i])。</p>
 <p>因此可以正向遍历数组 height 得到数组 leftMax 的每个元素值，反向遍历数组 height 得到数组 rightMax 的每个元素值。</p>
 <p>在得到数组 leftMax 和 rightMax 的每个元素值之后，对于 0≤i&lt;n，下标 i 处能接的雨水量等于 min(leftMax[i],rightMax[i])−height[i]。遍历每个下标位置即可得到能接的雨水总量。</p>
-<h2 id="单调栈"><a href="#单调栈" class="headerlink" title="单调栈"></a>单调栈</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">trap</span>(<span class="params">self, height: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        stack = <span class="built_in">list</span>()</span><br><span class="line">        n = <span class="built_in">len</span>(height)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i, h <span class="keyword">in</span> <span class="built_in">enumerate</span>(height):</span><br><span class="line">            <span class="keyword">while</span> stack <span class="keyword">and</span> h &gt; height[stack[-<span class="number">1</span>]]:</span><br><span class="line">                top = stack.pop()</span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> stack:</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">                left = stack[-<span class="number">1</span>]</span><br><span class="line">                currWidth = i - left - <span class="number">1</span></span><br><span class="line">                currHeight = <span class="built_in">min</span>(height[left], height[i]) - height[top]</span><br><span class="line">                ans += currWidth * currHeight</span><br><span class="line">            stack.append(i)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
-
+<h2 id="单调栈">单调栈</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">trap</span>(<span class="params">self, height: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        stack = <span class="built_in">list</span>()</span><br><span class="line">        n = <span class="built_in">len</span>(height)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i, h <span class="keyword">in</span> <span class="built_in">enumerate</span>(height):</span><br><span class="line">            <span class="keyword">while</span> stack <span class="keyword">and</span> h &gt; height[stack[-<span class="number">1</span>]]:</span><br><span class="line">                top = stack.pop()</span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> stack:</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">                left = stack[-<span class="number">1</span>]</span><br><span class="line">                currWidth = i - left - <span class="number">1</span></span><br><span class="line">                currHeight = <span class="built_in">min</span>(height[left], height[i]) - height[top]</span><br><span class="line">                ans += currWidth * currHeight</span><br><span class="line">            stack.append(i)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>弄出一个单调下降的栈，一层层加水</p>
 </blockquote>
@@ -437,7 +450,7 @@ SiLU x* sigmoid(x)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/06/leetcode/42_%E6%8E%A5%E9%9B%A8%E6%B0%B4/" data-id="cmrlv6mm0002g0ktl95se6zhb" data-title="42.接雨水" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/06/leetcode/42_%E6%8E%A5%E9%9B%A8%E6%B0%B4/" data-id="cmrlv9k0l002hxktlckja0pgw" data-title="42.接雨水" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -477,7 +490,7 @@ SiLU x* sigmoid(x)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/05/CS231n/%E6%8E%A8%E5%AF%BC%E4%B8%80%E5%B1%82Linear_Network%E7%9A%84%E5%AF%BC%E6%95%B0/" data-id="cmrlv6mlz00290ktlhwjfd86n" data-title="推导一层Linear_Network的导数" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/05/CS231n/%E6%8E%A8%E5%AF%BC%E4%B8%80%E5%B1%82Linear_Network%E7%9A%84%E5%AF%BC%E6%95%B0/" data-id="cmrlv9k0j0023xktl4ee98nya" data-title="推导一层Linear_Network的导数" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -513,11 +526,16 @@ SiLU x* sigmoid(x)
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="Regulation-and-Optimization"><a href="#Regulation-and-Optimization" class="headerlink" title="Regulation and Optimization"></a>Regulation and Optimization</h2><h3 id="Loss-Function-tell-u-how-bad-the-model-is"><a href="#Loss-Function-tell-u-how-bad-the-model-is" class="headerlink" title="Loss Function : tell u how bad the model is"></a>Loss Function : tell u how bad the model is</h3><h3 id="正则化"><a href="#正则化" class="headerlink" title="正则化"></a>正则化</h3><blockquote>
-<p>在Loss Function上加上 λR(W) -&gt; 正则项<br>goal：prevent the model doing too much on training data<br>不希望model过拟合</p>
+        <h2 id="Regulation-and-Optimization">Regulation and Optimization</h2>
+<h3 id="Loss-Function-tell-u-how-bad-the-model-is">Loss Function : tell u how bad the model is</h3>
+<h3 id="正则化">正则化</h3>
+<blockquote>
+<p>在Loss Function上加上 λR(W) -&gt; 正则项<br>
+goal：prevent the model doing too much on training data<br>
+不希望model过拟合</p>
 </blockquote>
 <p>λ -&gt; 超参数 ， 正则化强度</p>
-<p>L2 Regulation R(w) : W^2(每个权值平方相加) L2喜欢分散的权值 </p>
+<p>L2 Regulation R(w) : W^2(每个权值平方相加) L2喜欢分散的权值</p>
 <p>L2 R：如果权值很小，R(w) 结果就相当低</p>
 <p>L2 正则更喜欢小的但不接近0的权值</p>
 <p>L1 正则喜欢0的权值(稀疏向量)</p>
@@ -525,41 +543,44 @@ SiLU x* sigmoid(x)
 <p>可能和导数相关?</p>
 </blockquote>
 <p><font color = 'black'>正则化可以让我们表达对模型分布的偏好，简化模型(不一定),比如dropout能让我们得到较好的效果，但是模型会更复杂</p>
-<h3 id="优化-得到最好的W"><a href="#优化-得到最好的W" class="headerlink" title="优化:得到最好的W"></a>优化:得到最好的W</h3><p>following the slope,going downhills</p>
+<h3 id="优化-得到最好的W">优化:得到最好的W</h3>
+<p>following the slope,going downhills</p>
 <blockquote>
 <p>Homework1 : calc the ▽W L</p>
 </blockquote>
-<h3 id="Gradient-descent-梯度下降"><a href="#Gradient-descent-梯度下降" class="headerlink" title="Gradient descent (梯度下降)"></a>Gradient descent (梯度下降)</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Gradient descent</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    weights_grad = evaluate_gradient(loss_fun,data,weights)</span><br><span class="line">    weights += - (step_size * weights_grad) <span class="comment"># - （步长 * 梯度)</span></span><br></pre></td></tr></table></figure>
-
+<h3 id="Gradient-descent-梯度下降">Gradient descent (梯度下降)</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Gradient descent</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    weights_grad = evaluate_gradient(loss_fun,data,weights)</span><br><span class="line">    weights += - (step_size * weights_grad) <span class="comment"># - （步长 * 梯度)</span></span><br></pre></td></tr></table></figure>
 <p><font color = 'black'>到后面grad变小，长度也变小</p>
 <p>停止：</p>
 <ol>
 <li>固定迭代次数</li>
 <li>最小步长</li>
 </ol>
-<h3 id="Stochastic-Gradient-descent"><a href="#Stochastic-Gradient-descent" class="headerlink" title="Stochastic Gradient descent"></a>Stochastic Gradient descent</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Gradient descent</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    batched_data = sample_training_data(data, <span class="number">256</span>)</span><br><span class="line">    weights_grad = evaluate_gradient(loss_fun, batched_data, weights)</span><br><span class="line">    weights += - (step_size * weights_grad) <span class="comment"># - （步长 * 梯度)</span></span><br></pre></td></tr></table></figure>
-
+<h3 id="Stochastic-Gradient-descent">Stochastic Gradient descent</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Gradient descent</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    batched_data = sample_training_data(data, <span class="number">256</span>)</span><br><span class="line">    weights_grad = evaluate_gradient(loss_fun, batched_data, weights)</span><br><span class="line">    weights += - (step_size * weights_grad) <span class="comment"># - （步长 * 梯度)</span></span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>problems</p>
 </blockquote>
 <ol>
-<li>jittering(抖动) </li>
-<li>局部最小 , 鞍点(梯度为0)<blockquote>
+<li>jittering(抖动)</li>
+<li>局部最小 , 鞍点(梯度为0)</li>
+</ol>
+<blockquote>
 <p>在维度变高时，鞍点会变多</p>
 </blockquote>
-</li>
-</ol>
 <blockquote>
 <p>solution</p>
 </blockquote>
 <ol>
-<li>SGD + Momentum (it can converge faster)<font color = 'black'></li>
+<li>SGD + Momentum (it can converge faster)<br>
+<font color = 'black'></li>
 </ol>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># SGD + Momentum</span></span><br><span class="line"><span class="comment"># V_t+1 = ρV_t + ▽f(x_t)</span></span><br><span class="line"><span class="comment"># x_t+1 = x_t - αv_t+1 α步长</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    tmp = dx</span><br><span class="line">    dx = p * tmp + eva_gra(loss_func, data, weights)</span><br><span class="line">    x += - (α *dx)</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>ρ 一般取 0.9 和 0.99, 反正很大</p>
 </blockquote>
-<h3 id="RMSProp"><a href="#RMSProp" class="headerlink" title="RMSProp"></a>RMSProp</h3><ol start="2">
+<h3 id="RMSProp">RMSProp</h3>
+<ol start="2">
 <li>RMSProp</li>
 </ol>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">grad_squared = <span class="number">0</span> <span class="comment"># [是一个向量]</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    dx = eva_gra(x)</span><br><span class="line">    grad_squared = decay_rate * grad_squared + (<span class="number">1</span> - decay_rate) * dx * dx</span><br><span class="line">    x -= learning_rate * dx / (np.sqrt(grad_squared) + <span class="number">1e-7</span>)</span><br></pre></td></tr></table></figure>
@@ -569,30 +590,36 @@ SiLU x* sigmoid(x)
 <ol start="3">
 <li>Adam</li>
 </ol>
-<p>Adam &#x3D; SGD + Momentum + RMSProp</p>
+<p>Adam = SGD + Momentum + RMSProp</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># text here</span></span><br><span class="line"><span class="comment"># 1. Momentum</span></span><br><span class="line"><span class="comment"># 2. Bias correction</span></span><br><span class="line"><span class="comment"># 3. AdaGrad/ RMSProp</span></span><br><span class="line">v_i = <span class="number">0</span></span><br><span class="line">grad_square = <span class="number">0</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    dx = eva_gra(x)</span><br><span class="line">    v_i = ρ * v_i + (<span class="number">1</span> - ρ) *  dx</span><br><span class="line">    grad_square = decay_rate * grad_square + (<span class="number">1</span> - decay_rate) * dx * dx</span><br><span class="line">    v_i_unbias = v_i / (<span class="number">1</span> - ρ ^ t)</span><br><span class="line">    grad_square_unbias = grad_square / (<span class="number">1</span> - decay_rate ^ t)</span><br><span class="line">    x -= lr * v_i_unbias / (np.sqrt(grad_sqaure_unbias) + <span class="number">1e-7</span>)</span><br></pre></td></tr></table></figure>
-
-<h3 id="Choose-the-learning-rate"><a href="#Choose-the-learning-rate" class="headerlink" title="Choose the learning rate"></a>Choose the learning rate</h3><p>change the learning rate:</p>
+<h3 id="Choose-the-learning-rate">Choose the learning rate</h3>
+<p>change the learning rate:</p>
 <ol>
-<li><p>Cosine Learning Rate<br><img src="/image-10.png" alt="alt text"></p>
+<li>
+<p>Cosine Learning Rate<br>
+<img src="image-10.png" alt="alt text"></p>
 </li>
-<li><p>迭代几次后learning rate 下降(比如变为原来1&#x2F;10)</p>
+<li>
+<p>迭代几次后learning rate 下降(比如变为原来1/10)</p>
 </li>
-<li><p>Linear Warmup：先</p>
+<li>
+<p>Linear Warmup：先</p>
 </li>
 </ol>
 <blockquote>
 <p>Learning Rate Scaling Law:如果batch的数据上升N倍，learning rate 也应该上升N倍</p>
 </blockquote>
-<p>Second-Order Optimization:<br><img src="/image-11.png" alt="alt text"></p>
+<p>Second-Order Optimization:<br>
+<img src="image-11.png" alt="alt text"></p>
 <blockquote>
-<p>用Hessian矩阵拟合二阶函数来拟合这个图像<br>在小模型上运行很好</p>
+<p>用Hessian矩阵拟合二阶函数来拟合这个图像<br>
+在小模型上运行很好</p>
 </blockquote>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/05/CS231n/2.Regularization_and_Optimization/" data-id="cmrlv6mlr00030ktla03t0ewj" data-title="Lesson2" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/05/CS231n/2.Regularization_and_Optimization/" data-id="cmrlv9k080000xktl72ad3x3o" data-title="Lesson2" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -618,15 +645,17 @@ SiLU x* sigmoid(x)
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h1 id="K-个一组翻转链表"><a href="#K-个一组翻转链表" class="headerlink" title="K 个一组翻转链表"></a>K 个一组翻转链表</h1><p><strong>Difficulty:</strong> Hard</p>
+        <h1>K 个一组翻转链表</h1>
+<p><strong>Difficulty:</strong> Hard</p>
 <p><strong>Tags:</strong> 递归, 链表</p>
-<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>给你链表的头节点 <code>head</code> ，每 <code>k</code> * * 个节点一组进行翻转，请你返回修改后的链表。</p>
+<h2 id="题目描述">题目描述</h2>
+<p>给你链表的头节点 <code>head</code> ，每 <code>k</code> * * 个节点一组进行翻转，请你返回修改后的链表。</p>
 <p><code>k</code> 是一个正整数，它的值小于或等于链表的长度。如果节点总数不是 <code>k</code> * * 的整数倍，那么请将最后剩余的节点保持原有顺序。</p>
 <p>你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换。</p>
-<h2 id="示例-1："><a href="#示例-1：" class="headerlink" title="示例 1："></a>示例 1：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head = [1,2,3,4,5], k = 2</span><br><span class="line">输出：[2,1,4,3,5]</span><br></pre></td></tr></table></figure>
-
-<h2 id="示例-2："><a href="#示例-2：" class="headerlink" title="示例 2："></a>示例 2：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head = [1,2,3,4,5], k = 3</span><br><span class="line">输出：[3,2,1,4,5]</span><br></pre></td></tr></table></figure>
-
+<h2 id="示例-1：">示例 1：</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head = [1,2,3,4,5], k = 2</span><br><span class="line">输出：[2,1,4,3,5]</span><br></pre></td></tr></table></figure>
+<h2 id="示例-2：">示例 2：</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head = [1,2,3,4,5], k = 3</span><br><span class="line">输出：[3,2,1,4,5]</span><br></pre></td></tr></table></figure>
 <ul>
 <li>链表中的节点数目为 <code>n</code></li>
 <li><code>1 &lt;= k &lt;= n &lt;= 5000</code></li>
@@ -636,7 +665,7 @@ SiLU x* sigmoid(x)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/leetcode/25.K%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-id="cmrlv6mlz00240ktl18n0f6ke" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/leetcode/25.K%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-id="cmrlv9k0j0025xktl5vao22pf" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -670,21 +699,27 @@ SiLU x* sigmoid(x)
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="图像分类"><a href="#图像分类" class="headerlink" title="图像分类"></a>图像分类</h2><p>· 给出labels的集合 </p>
+        <h2 id="图像分类">图像分类</h2>
+<p>· 给出labels的集合</p>
 <p>· 给图片赋予一个label’</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">classify_image</span>(<span class="params">image</span>):</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> class_label</span><br></pre></td></tr></table></figure>
-
 <hr>
-<h3 id="图像"><a href="#图像" class="headerlink" title="图像"></a>图像</h3><p>由数据矩阵定义，每个像素值[0,255]<br>RGB -&gt; 3个颜色通道<br>800 * 600 * 3矩阵</p>
+<h3 id="图像">图像</h3>
+<p>由数据矩阵定义，每个像素值[0,255]<br>
+RGB -&gt; 3个颜色通道<br>
+800 * 600 * 3矩阵</p>
 <p>不同角度\光照 -&gt; 图像像素完全不一样</p>
 <blockquote>
 <p>Challenges: zoom in &amp; out , illuminations , angles , background , occulusion(遮挡), deformation(可塑性),context</p>
 </blockquote>
-<h3 id="Attempts"><a href="#Attempts" class="headerlink" title="Attempts"></a>Attempts</h3><h4 id="hardcodes"><a href="#hardcodes" class="headerlink" title="hardcodes"></a>hardcodes</h4><p>Find edges -&gt; find corners -&gt; maps the features around the corners &#x2F; find the nums of the corners -&gt; labels</p>
+<h3 id="Attempts">Attempts</h3>
+<h4 id="hardcodes">hardcodes</h4>
+<p>Find edges -&gt; find corners -&gt; maps the features around the corners / find the nums of the corners -&gt; labels</p>
 <blockquote>
 <p>很难扩展</p>
 </blockquote>
-<h4 id="machine-learning"><a href="#machine-learning" class="headerlink" title="machine learning"></a>machine learning</h4><blockquote>
+<h4 id="machine-learning">machine learning</h4>
+<blockquote>
 <p>由数据驱动</p>
 </blockquote>
 <ol>
@@ -692,105 +727,117 @@ SiLU x* sigmoid(x)
 <li>using machine learning algorithms to train a classifier</li>
 </ol>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">dataset[image,labels]</span>):</span><br><span class="line">    <span class="comment">#machine learning</span></span><br><span class="line">    <span class="keyword">return</span> classifer</span><br></pre></td></tr></table></figure>
-
 <ol start="3">
 <li>eva the classifier on  images</li>
 </ol>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">predict</span>(<span class="params">model, test_images</span>):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> test_labels</span><br></pre></td></tr></table></figure>
-
-<h3 id="最近邻居分类-Nearest-Neighbors-Classifacation"><a href="#最近邻居分类-Nearest-Neighbors-Classifacation" class="headerlink" title="最近邻居分类(Nearest Neighbors Classifacation)"></a>最近邻居分类(Nearest Neighbors Classifacation)</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">dataset[image,labels]</span>):</span><br><span class="line">    <span class="comment"># 将所有data和labels都存储起来(memorize)</span></span><br><span class="line">    <span class="keyword">return</span> classifer</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">predict</span>(<span class="params">model, test_images</span>):</span><br><span class="line">    <span class="comment"># 找到最相似的图片，输出它的labels</span></span><br><span class="line">    <span class="keyword">return</span> test_labels</span><br></pre></td></tr></table></figure>
-
+<h3 id="最近邻居分类-Nearest-Neighbors-Classifacation">最近邻居分类(Nearest Neighbors Classifacation)</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">dataset[image,labels]</span>):</span><br><span class="line">    <span class="comment"># 将所有data和labels都存储起来(memorize)</span></span><br><span class="line">    <span class="keyword">return</span> classifer</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">predict</span>(<span class="params">model, test_images</span>):</span><br><span class="line">    <span class="comment"># 找到最相似的图片，输出它的labels</span></span><br><span class="line">    <span class="keyword">return</span> test_labels</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>计算距离，我们需要一个Distanc Metric(pic1, pic2)</p>
 </blockquote>
 <p>L1 distance -&gt; 逐像素相减取绝对值</p>
 <p>L2 distance</p>
-<p><img src="/image-2.png" alt="alt text"></p>
+<p><img src="image-2.png" alt="alt text"></p>
 <p>最简单的实现L1</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">NearestNeighbor</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">self, X, y</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot; X is N x D where each row is an example. Y is 1-dimension of size N &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># the nearest neighbor classifier simply remembers all the training data</span></span><br><span class="line">    <span class="variable language_">self</span>.Xtr = X</span><br><span class="line">    <span class="variable language_">self</span>.ytr = y</span><br><span class="line"></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">predict</span>(<span class="params">self, X</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot; X is N x D where each row is an example we wish to predict label for &quot;&quot;&quot;</span></span><br><span class="line">    num_test = X.shape[<span class="number">0</span>]</span><br><span class="line">    <span class="comment"># lets make sure that the output type matches the input type</span></span><br><span class="line">    Ypred = np.zeros(num_test, dtype = <span class="variable language_">self</span>.ytr.dtype) <span class="comment"># 归零</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># loop over all test rows</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num_test):</span><br><span class="line">      <span class="comment"># find the nearest training image to the i&#x27;th test image</span></span><br><span class="line">      <span class="comment"># using the L1 distance (sum of absolute value differences)</span></span><br><span class="line">      distances = np.<span class="built_in">sum</span>(np.<span class="built_in">abs</span>(<span class="variable language_">self</span>.Xtr - X[i,:]), axis = <span class="number">1</span>)</span><br><span class="line">      min_index = np.argmin(distances) <span class="comment"># get the index with smallest distance</span></span><br><span class="line">      Ypred[i] = <span class="variable language_">self</span>.ytr[min_index] <span class="comment"># predict the label of the nearest example</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> Ypred</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
 <blockquote>
-<p>张量变换<br>self.Xtr &#x3D; [N,D] N-数量 D-特征量</p>
+<p>张量变换<br>
+self.Xtr = [N,D] N-数量 D-特征量</p>
 </blockquote>
 <p><font color = 'black'>  可以为[x_size, y_size, channels] 展平后的 [x_size * y_size * channels]的一维</p>
-<p>self.Ytr &#x3D; [N,]</p>
-<p>X &#x3D; [N,D]</p>
-<p>X[i,:] &#x3D; [D,]</p>
+<p>self.Ytr = [N,]</p>
+<p>X = [N,D]</p>
+<p>X[i,:] = [D,]</p>
 <blockquote>
-<p>Xtr - X[i,:] &#x3D; [N,D] - [D,] 广播后为 [N,D] - N * [,D] &#x3D; [N,D]</p>
+<p>Xtr - X[i,:] = [N,D] - [D,] 广播后为 [N,D] - N * [,D] = [N,D]</p>
 </blockquote>
-<p>np.sum(axis &#x3D; 1) &#x3D; [N,D] (axis &#x3D; 0,axis &#x3D; 1) &#x3D; [N,]</p>
-<p>distance &#x3D; [N,]</p>
+<p>np.sum(axis = 1) = [N,D] (axis = 0,axis = 1) = [N,]</p>
+<p>distance = [N,]</p>
 <blockquote>
-<p>时间复杂度<br>TRAIN O(1)</p>
+<p>时间复杂度<br>
+TRAIN O(1)</p>
 </blockquote>
-<h2 id="PREDICT-O-N-预测一个样本的复杂度"><a href="#PREDICT-O-N-预测一个样本的复杂度" class="headerlink" title="PREDICT O(N) # 预测一个样本的复杂度"></a>PREDICT O(N) # 预测一个样本的复杂度</h2><h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><blockquote>
+<h2 id="PREDICT-O-N-预测一个样本的复杂度">PREDICT O(N) # 预测一个样本的复杂度</h2>
+<h3 id="问题">问题</h3>
+<blockquote>
 <p>我们需要在Predict降低复杂度，Train复杂度升高是OK的</p>
 </blockquote>
-<h3 id="1-nearest-neighbors"><a href="#1-nearest-neighbors" class="headerlink" title="1-nearest neighbors"></a>1-nearest neighbors</h3><p><img src="/image.png" alt="alt text"></p>
+<h3 id="1-nearest-neighbors">1-nearest neighbors</h3>
+<p><img src="image.png" alt="alt text"></p>
 <blockquote>
 <p>会出现噪点 ， 比如前面的黄色</p>
 </blockquote>
 <p>所以我们用K-Nearest Neighbors</p>
-<h2 id="KNN"><a href="#KNN" class="headerlink" title="KNN"></a>KNN</h2><p><img src="/image-1.png" alt="alt text"></p>
+<h2 id="KNN">KNN</h2>
+<p><img src="image-1.png" alt="alt text"></p>
 <p>根据这个划分空间，白色区域是相等可能的区域，可能属于不同的labels</p>
 <p><font color = 'blue'>特征有特定的意义,我们想要保存这个特征：L1更好(对特征值的选取更敏感)</p>
 <p>特征是任意的，可以旋转：L2更好(划分边缘更平滑)</p>
-<h3 id="hyperparameters-（超参数）"><a href="#hyperparameters-（超参数）" class="headerlink" title="hyperparameters （超参数）"></a>hyperparameters （超参数）</h3><font color = 'black'>
+<h3 id="hyperparameters-（超参数）">hyperparameters （超参数）</h3>
+<font color = 'black'>
 比如 KNN 中的 K 和 distance function
-
 <blockquote>
 <p>我们需要找到最佳参数 (tuning) 调参</p>
 </blockquote>
 <ol>
-<li>选择对training data最好的参数 (x)<blockquote>
-<p>K &#x3D; 1 永远是最佳的</p>
+<li>选择对training data最好的参数 (x)</li>
+</ol>
+<blockquote>
+<p>K = 1 永远是最佳的</p>
 </blockquote>
-</li>
-<li>选择对test data最好的参数 (x)<blockquote>
+<ol start="2">
+<li>选择对test data最好的参数 (x)</li>
+</ol>
+<blockquote>
 <p>可能只对测试集有用</p>
 </blockquote>
-</li>
+<ol start="3">
 <li>将training data 一部分改为validation验证data，用train训练，来后在validation上找到最好的参数，最后test，不要用test data 调参</li>
 <li>交叉验证(每个fold都验证一遍)</li>
 </ol>
 <blockquote>
 <p>在大型数据集上太难了，在论文中会用，但是工程上很难</p>
 </blockquote>
-<h2 id="Linear-Classifier-线性分类-Linear-layer-线性层"><a href="#Linear-Classifier-线性分类-Linear-layer-线性层" class="headerlink" title="Linear Classifier (线性分类) &#x3D; Linear layer(线性层)"></a>Linear Classifier (线性分类) &#x3D; Linear layer(线性层)</h2><p>image-x 32 * 32 * 3 &#x3D; 3072</p>
-<p>labels &#x3D; [10, ]</p>
-<p>x &#x3D; [3072, 1]</p>
-<p>W &#x3D; [10, 3072]</p>
-<p>F(x,W) &#x3D; Wx + b[10, 1] &#x3D; [10, 1]</p>
+<h2 id="Linear-Classifier-线性分类-Linear-layer-线性层">Linear Classifier (线性分类) = Linear layer(线性层)</h2>
+<p>image-x 32 * 32 * 3 = 3072</p>
+<p>labels = [10, ]</p>
+<p>x = [3072, 1]</p>
+<p>W = [10, 3072]</p>
+<p>F(x,W) = Wx + b[10, 1] = [10, 1]</p>
 <p>选出可行度最大的</p>
 <blockquote>
-<p>N * N Linear Classifier &#x3D; NN</p>
+<p>N * N Linear Classifier = NN</p>
 </blockquote>
-<p><img src="/image-4.png" alt="alt text"></p>
+<p><img src="image-4.png" alt="alt text"></p>
 <p>相同颜色的就是对于不同的labels的模板的分数权值(templates)</p>
-<p><img src="/image-5.png" alt="alt text"></p>
+<p><img src="image-5.png" alt="alt text"></p>
 <p>linear classifier 对于空间分类的是直线的分类边界</p>
 <blockquote>
 <p>可以看出，b的存在让划分线更加灵活</p>
 </blockquote>
-<h3 id="choose-W"><a href="#choose-W" class="headerlink" title="choose W"></a>choose W</h3><ol>
+<h3 id="choose-W">choose W</h3>
+<ol>
 <li>用loss function: 量化分类器有多坏</li>
 <li>optimiztions</li>
 </ol>
-<p>Loss Function:<br><img src="/image-6.png" alt="alt text"></p>
-<h2 id="Softmax-Classifier"><a href="#Softmax-Classifier" class="headerlink" title="Softmax Classifier"></a>Softmax Classifier</h2><p><img src="/image-7.png" alt="alt text"></p>
+<p>Loss Function:<br>
+<img src="image-6.png" alt="alt text"></p>
+<h2 id="Softmax-Classifier">Softmax Classifier</h2>
+<p><img src="image-7.png" alt="alt text"></p>
 <blockquote>
 <p>将有正有负的评分转化为percent</p>
 </blockquote>
-<p>我们得到了这些概率，我们可以让正确的labels最大，所以我们设计Loss Function如下：<br><img src="/image-8.png" alt="alt text"></p>
+<p>我们得到了这些概率，我们可以让正确的labels最大，所以我们设计Loss Function如下：<br>
+<img src="image-8.png" alt="alt text"></p>
 <p>或者我们可以用KL散度</p>
-<p><img src="/image-9.png" alt="alt text"></p>
+<p><img src="image-9.png" alt="alt text"></p>
 <p>或者交叉熵</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/CS231n/1_Introduction/" data-id="cmrlv6mlo00000ktlau3z4dql" data-title="1.Introduction" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/CS231n/1_Introduction/" data-id="cmrlv9k0b0003xktl2erg72ty" data-title="1.Introduction" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       

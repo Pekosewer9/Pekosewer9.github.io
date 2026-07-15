@@ -6,12 +6,12 @@
   
   <title>3_NN_BackPropagation | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Neural Networks123456x - [D]W1 - [H * D]W2 - [C * D]C - 分类数f &#x3D; Wxf &#x3D; W2max(W1x,0)   每个第二层的可以成为一个被共享所有类共享的模板 max(W1x,0) -&gt; 一个简单的激活函数  如果没有激活函数，就是linear的，W &#x3D; W1 * W2  max(W1,0)被称为 Relu 合适的零中心值 和">
+  <meta name="description" content="Neural Networks 123456x - [D]W1 - [H * D]W2 - [C * D]C - 分类数f &#x3D; Wxf &#x3D; W2max(W1x,0)  每个第二层的可以成为一个被共享所有类共享的模板 max(W1x,0) -&gt; 一个简单的激活函数  如果没有激活函数，就是linear的，W &#x3D; W1 * W2  max(W1,0)被称为 Relu 合适的零中心值 和 平滑度">
 <meta property="og:type" content="article">
 <meta property="og:title" content="3_NN_BackPropagation">
 <meta property="og:url" content="http://example.com/2026/07/06/CS231n/3_NN_BackPropagation/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Neural Networks123456x - [D]W1 - [H * D]W2 - [C * D]C - 分类数f &#x3D; Wxf &#x3D; W2max(W1x,0)   每个第二层的可以成为一个被共享所有类共享的模板 max(W1x,0) -&gt; 一个简单的激活函数  如果没有激活函数，就是linear的，W &#x3D; W1 * W2  max(W1,0)被称为 Relu 合适的零中心值 和">
+<meta property="og:description" content="Neural Networks 123456x - [D]W1 - [H * D]W2 - [C * D]C - 分类数f &#x3D; Wxf &#x3D; W2max(W1x,0)  每个第二层的可以成为一个被共享所有类共享的模板 max(W1x,0) -&gt; 一个简单的激活函数  如果没有激活函数，就是linear的，W &#x3D; W1 * W2  max(W1,0)被称为 Relu 合适的零中心值 和 平滑度">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2026/07/06/CS231n/3_NN_BackPropagation/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20260709201458_206_39.jpg">
 <meta property="article:published_time" content="2026-07-06T07:26:50.000Z">
@@ -100,43 +100,42 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="Neural-Networks"><a href="#Neural-Networks" class="headerlink" title="Neural Networks"></a>Neural Networks</h2><figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">x - [D]</span><br><span class="line">W1 - [H * D]</span><br><span class="line">W2 - [C * D]</span><br><span class="line">C - 分类数</span><br><span class="line">f = Wx</span><br><span class="line">f = W2max(W1x,0)</span><br></pre></td></tr></table></figure>
-
+        <h2 id="Neural-Networks">Neural Networks</h2>
+<figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">x - [D]</span><br><span class="line">W1 - [H * D]</span><br><span class="line">W2 - [C * D]</span><br><span class="line">C - 分类数</span><br><span class="line">f = Wx</span><br><span class="line">f = W2max(W1x,0)</span><br></pre></td></tr></table></figure>
 <p><font color = 'black'> 每个第二层的可以成为一个被共享所有类共享的模板</p>
 <p>max(W1x,0) -&gt; 一个简单的激活函数</p>
 <blockquote>
-<p>如果没有激活函数，就是linear的，W &#x3D; W1 * W2</p>
+<p>如果没有激活函数，就是linear的，W = W1 * W2</p>
 </blockquote>
 <p><font color = 'blue'>max(W1,0)被称为 Relu</p>
-<p>合适的零中心值 和 平滑度 可以获得更快的收敛速度 </p>
+<p>合适的零中心值 和 平滑度 可以获得更快的收敛速度</p>
 <blockquote>
 <p>缺点:可能创造死的神经元</p>
 </blockquote>
 <font color = 'black'> 
 Sigmoid: 1/1+e^x
 SiLU x* sigmoid(x)
-
 <blockquote>
 <p>缺点:会把数值压缩在一个较窄的范围内，又是会让梯度消失，所以我们不会把他们用在NN的中间层</p>
 </blockquote>
-<h3 id="3layers-FULLY-CONNECTED"><a href="#3layers-FULLY-CONNECTED" class="headerlink" title="3layers - FULLY CONNECTED"></a>3layers - FULLY CONNECTED</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">f = <span class="keyword">lambda</span> x: <span class="number">1.0</span>/(<span class="number">1.0</span> + np.exp(-x)) <span class="comment">#用lambda定义sigmoid函数</span></span><br><span class="line">x = np.random.randn(<span class="number">3</span>, <span class="number">1</span>) </span><br><span class="line">h1 = f(np.dot(W1, x) + b1) <span class="comment">#hidden layer 1</span></span><br><span class="line">h2 = f(np.dot(W2, h1) + b2) <span class="comment"># hidden layer 2</span></span><br><span class="line">out = np.dot(W3, h2) +b3 <span class="comment"># output layer</span></span><br></pre></td></tr></table></figure>
-
+<h3 id="3layers-FULLY-CONNECTED">3layers - FULLY CONNECTED</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">f = <span class="keyword">lambda</span> x: <span class="number">1.0</span>/(<span class="number">1.0</span> + np.exp(-x)) <span class="comment">#用lambda定义sigmoid函数</span></span><br><span class="line">x = np.random.randn(<span class="number">3</span>, <span class="number">1</span>) </span><br><span class="line">h1 = f(np.dot(W1, x) + b1) <span class="comment">#hidden layer 1</span></span><br><span class="line">h2 = f(np.dot(W2, h1) + b2) <span class="comment"># hidden layer 2</span></span><br><span class="line">out = np.dot(W3, h2) +b3 <span class="comment"># output layer</span></span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>我们选择正则化项而不是减少神经网络层数来防止过拟合</p>
 </blockquote>
 <p>原因：我们要先确保神经网络理解我们的数据，确保表达能力</p>
 <p>如L2 -&gt;  不让W参数过大</p>
-<h2 id="Backpropagation"><a href="#Backpropagation" class="headerlink" title="Backpropagation"></a>Backpropagation</h2><p>we should know how to compute dL&#x2F;dW1 dL&#x2F;dW2 </p>
-<p>![“”,&#x2F;]</p>
+<h2 id="Backpropagation">Backpropagation</h2>
+<p>we should know how to compute dL/dW1 dL/dW2</p>
+<p>![“”,/]</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> (<span class="number">1</span> / (<span class="number">1</span> + std::exp((-a))))</span><br></pre></td></tr></table></figure>
-
 <p>sparse jacobian matrix xxxxxxx</p>
 <p>jacobian matrix 当维数大的时候太耗费计算资源：</p>
 <img src="/2026/07/06/CS231n/3_NN_BackPropagation/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20260709201458_206_39.jpg" class="" title="alt text">
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/06/CS231n/3_NN_BackPropagation/" data-id="cmrlv6mls00050ktlh99je1mu" data-title="3_NN_BackPropagation" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/06/CS231n/3_NN_BackPropagation/" data-id="cmrlv9k0d0007xktlcaa20ngz" data-title="3_NN_BackPropagation" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
