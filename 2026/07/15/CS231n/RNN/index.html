@@ -20,7 +20,7 @@
 <meta property="og:image" content="http://example.com/2026/07/15/CS231n/RNN/5.png">
 <meta property="og:image" content="http://example.com/2026/07/15/CS231n/RNN/6.png">
 <meta property="article:published_time" content="2026-07-15T06:47:27.000Z">
-<meta property="article:modified_time" content="2026-07-15T09:11:58.011Z">
+<meta property="article:modified_time" content="2026-07-15T09:14:53.022Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="RNN">
 <meta property="article:tag" content="sequence modeling">
@@ -133,7 +133,10 @@
 <p>每一步的Loss 相加得到总Loss，对每个时间步Loss都能得到对W的梯度</p>
 </blockquote>
 <p>对于多对一，可能只对最后的hidden state相关，所以只用考虑最后的Loss</p>
-<p>$$\delta_t &#x3D; \frac{\partial L_t}{\partial s_t} + \frac{\partial s_{t+1}}{\partial s_t} \delta_{t+1}$$</p>
+
+$$\delta_t = \frac{\partial L_t}{\partial s_t} + \frac{\partial s_{t+1}}{\partial s_t} \delta_{t+1}$$
+
+
 <p>用这条公式可以计算所有的L，其中$\delta_t$是总L 对 s_t的导数</p>
 <h4 id="问题-当时间序列长的时候，每一个时间步的反向传播都异常艰难"><a href="#问题-当时间序列长的时候，每一个时间步的反向传播都异常艰难" class="headerlink" title="问题:当时间序列长的时候，每一个时间步的反向传播都异常艰难"></a>问题:当时间序列长的时候，每一个时间步的反向传播都异常艰难</h4><p>解决:随时间反向传播</p>
 <p>（多输出）我们分割时间窗，然后只看这个时间窗里面的Loss，之前的只看成为h_0</p>
@@ -191,7 +194,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/15/CS231n/RNN/" data-id="cmrlv2ts20007n8tl1o9rg2f4" data-title="RNN" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/15/CS231n/RNN/" data-id="cmrlv6mlt00080ktldllx3anz" data-title="RNN" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
