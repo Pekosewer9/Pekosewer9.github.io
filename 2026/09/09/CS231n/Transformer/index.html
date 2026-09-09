@@ -4,24 +4,24 @@
   <meta charset="utf-8">
   
   
-  <title>CNN | Hexo</title>
+  <title>Transformer | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="ReLu:   Max(0,Wx) CNN Perceiving and Understanding the virtual world  Convolution Layer || Pooling layer  之前的工作： raw picture -&gt; feature representation -&gt; Neural Network -&gt; label output 怎么把fea">
+  <meta name="description" content="ATTENTION Seq2Seq with RNN  A ENCODER ht &#x3D; fW(x_t,h_t-1) RNN ENCODER will summarize the all the context as C(  Last hidden state  )   A DECODER A DIFFERENT RNN 有一个Initial decoder state s0  s_t &#x3D; Gu(y_">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CNN">
-<meta property="og:url" content="http://example.com/2026/07/09/CS231n/CNN/index.html">
+<meta property="og:title" content="Transformer">
+<meta property="og:url" content="http://example.com/2026/09/09/CS231n/Transformer/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="ReLu:   Max(0,Wx) CNN Perceiving and Understanding the virtual world  Convolution Layer || Pooling layer  之前的工作： raw picture -&gt; feature representation -&gt; Neural Network -&gt; label output 怎么把fea">
+<meta property="og:description" content="ATTENTION Seq2Seq with RNN  A ENCODER ht &#x3D; fW(x_t,h_t-1) RNN ENCODER will summarize the all the context as C(  Last hidden state  )   A DECODER A DIFFERENT RNN 有一个Initial decoder state s0  s_t &#x3D; Gu(y_">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2026/07/09/CS231n/CNN/image-12.png">
-<meta property="og:image" content="http://example.com/2026/07/09/CS231n/CNN/image-13.png">
-<meta property="article:published_time" content="2026-07-09T07:32:06.000Z">
-<meta property="article:modified_time" content="2026-07-11T06:25:24.139Z">
+<meta property="og:image" content="http://example.com/2026/09/09/CS231n/Transformer/1.png">
+<meta property="og:image" content="http://example.com/2026/09/09/CS231n/Transformer/2.png">
+<meta property="article:published_time" content="2026-09-09T08:02:09.000Z">
+<meta property="article:modified_time" content="2026-09-09T11:52:59.784Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="CS231n">
-<meta property="article:tag" content="CNN">
+<meta property="article:tag" content="Transformer">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2026/07/09/CS231n/CNN/image-12.png">
+<meta name="twitter:image" content="http://example.com/2026/09/09/CS231n/Transformer/1.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -78,10 +78,10 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-CS231n/CNN" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-CS231n/Transformer" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2026/07/09/CS231n/CNN/" class="article-date">
-  <time class="dt-published" datetime="2026-07-09T07:32:06.000Z" itemprop="datePublished">2026-07-09</time>
+    <a href="/2026/09/09/CS231n/Transformer/" class="article-date">
+  <time class="dt-published" datetime="2026-09-09T08:02:09.000Z" itemprop="datePublished">2026-09-09</time>
 </a>
     
   </div>
@@ -92,7 +92,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      CNN
+      Transformer
     </h1>
   
 
@@ -100,89 +100,111 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>ReLu:   Max(0,Wx)</p>
-<h2 id="CNN">CNN</h2>
-<p><font color = 'black'>Perceiving and Understanding the virtual world</p>
+        <h2 id="ATTENTION">ATTENTION</h2>
+<p>Seq2Seq with RNN</p>
 <blockquote>
-<p>Convolution Layer || Pooling layer</p>
+<p>A ENCODER ht = fW(x_t,h_t-1) RNN<br>
+ENCODER will summarize the all the context as C( <font color = 'red'> Last hidden state <font color = 'black'> )</p>
 </blockquote>
-<p>之前的工作：<br>
-raw picture -&gt; feature representation -&gt; Neural Network -&gt; label output</p>
-<p>怎么把feature representation输入NN：</p>
+<blockquote>
+<p>A DECODER A DIFFERENT RNN<br>
+有一个Initial decoder state s0</p>
+</blockquote>
+<p>s_t = Gu(y_t-1, s_t-1, c)</p>
+<blockquote>
+<p>问题: 获取上下文的唯一向量只有一个C， 维度也固定<br>
+想法: 给予Decoder回看Encoder模型的方法</p>
+</blockquote>
 <ol>
-<li>把feature的向量全部连接在一起</li>
-</ol>
-<h4 id="直接NN-VS-feature后NN">直接NN VS feature后NN</h4>
-<p>一般来说，用直接NN会更好</p>
-<blockquote>
-<p>但是我们还需要人工设计design计算图-&gt;layer的连接样式</p>
-</blockquote>
-<p>CNN结构</p>
-<img src="/2026/07/09/CS231n/CNN/image-12.png" class="" title="alt text">
-<p>用途：几乎所有视觉问题，包括TEXT2IMG IMG2TEXT , 视觉分割</p>
-<p>Fully Connected layer: templates , 拉伸</p>
-<p>Convolution layer: 不拉伸 , filter: pixel image ,</p>
-<img src="/2026/07/09/CS231n/CNN/image-13.png" class="" title="alt text">
-<h3 id="Exp">Exp:</h3>
-<p>32 * 32 * 3 image — 5 * 5 * 3 filter -&gt; 28 * 28  * 1 result</p>
-<p>用 6 个 filter</p>
-<p>3* 32 * 32  image — 6 * 3 * 5 * 5 -&gt; 6 * 28 * 28 + bias (6 维)[每个filter公用一个bias，这个bias在一个filter中是一个标量，所以bias总共是6维的] -&gt; 6* 28 * 28 result</p>
-<blockquote>
-<p>bias 和 6-d的filter都是通过梯度下降得到的</p>
-</blockquote>
-<p>Filter size:<br>
-<font color = 'blue'> cout * cin * Kw * Kh</p>
-<p><font colot = 'black'>在Convolution layer中间，我们需要加入Relu等其他激活函数-&gt;不然就会退化成一层convolution layer</p>
-<p>第一层filter最终学习到的样式：</p>
-<ol>
-<li>对比色 （如pink &amp;&amp; green）</li>
-<li>边缘检测</li>
+<li>initial state s0</li>
+<li>计算s0和前面 Encoder 不同隐藏状态的对齐得分(Alignment scores)， 这个得分e_t_i是一个标量</li>
+<li>softmax函数来 让对齐得分同一个s_t 对不同的h_i 归一化</li>
+<li>把之前的信息按照重要度汇总，变成 c_t = sigma(a_t_i * hi)</li>
+<li>Deocder: s_T = Gu(y_t1, s_t1, c_t)</li>
 </ol>
 <blockquote>
-<p>Q:为什么滤波器会不同<br>
-A:因为随机初始化不同，所以随机的初始时很重要的</p>
+<p>how to initialize state s0<br>
+有不同的方法</p>
 </blockquote>
-<p>后面的filter不能直接看出来，要看对哪些图像响应明显</p>
-<p>Input : x * x</p>
-<p>Filter y * y</p>
-<p>Output (x-y+1) * (x - y + 1)</p>
-<h3 id="想要让OUTPUT也保持x-x">想要让OUTPUT也保持x * x</h3>
-<ol>
-<li>paddle ，在外面一圈加入额外的数字 0</li>
-</ol>
-<h3 id="感受野">感受野</h3>
-<p>越到后面，每一个pixel表示的感受野越大</p>
-<p>但是我们想让感受野变大变得更快</p>
-<ol>
-<li>stride</li>
-<li>pooling</li>
-</ol>
-<h3 id="stride-每一次filter跳的步数">stride , 每一次filter跳的步数</h3>
+<p>我们可以看网络在关注什么</p>
+<img src="/2026/09/09/CS231n/Transformer/1.png" class="" title="coumpute graph">
 <blockquote>
-<p>input W  filter K padding P Stride S<br>
-output = (W-K+2P)/S + 1 = (W/S) + 1</p>
+<p>ATTENTION 不只可以用在RNN上， 还有一个更加普遍的机制</p>
 </blockquote>
-<h2 id="Pooling">Pooling</h2>
-<p>Exp:</p>
-<p>64 * 224 * 224 -pool-&gt; 64* 112 * 112</p>
-<p>一般使用stride = 2 || 4</p>
-<h3 id="downsampling-method">downsampling method:</h3>
+<ul>
+<li>Query Vector(s) - Q</li>
+<li>Data Vector(h) - K</li>
+<li>output Vector© - V</li>
+</ul>
 <ol>
-<li>maxpooling</li>
-<li>meanpooling</li>
+<li>
+<p>计算相似性函数 - 用点积 / <a target="_blank" rel="noopener" href="http://sqrt.np">sqrt.np</a>(D_q)<br>
+<font color = 'red'> D_q 是 Query的维度， 让最后结果的方差仍然是1, 不然softmax会太过极端， softmax两头导数都是接近0<br>
+<font color = 'black'></p>
+</li>
+<li>
+<p>并行处理一组查询<br>
+Q[N_Q X D_Q]  ,<br>
+X[N_X X D_Q]</p>
+<blockquote>
+<p>E = Q * X^T / sqrt(D_Q)<br>
+-&gt; E = [N,Q , D_Q , N_X]</p>
+</blockquote>
+</li>
+<li>
+<p>softmax对每一行执行</p>
+</li>
+<li>
+<p>A = softmax(E,dim = 1) = [N_Q , N_X]</p>
+</li>
+<li>
+<p>Y = AX -&gt; 线性组合</p>
+</li>
 </ol>
-<h3 id="平移不变性">平移不变性</h3>
-<p>先平移再卷积和先卷积再平移得到的结果一样</p>
-<p>所以CNN是尊重空间结构的</p>
+<h2 id="TransFormer">TransFormer</h2>
+<p>key_matrix : W_k = [D_x , D_Q]<br>
+query_matrix : Q = [N_Q , D_Q]<br>
+value_matrix : W_v = [D_x , D_V]</p>
+<p>K和V是两个不同的过滤X中信息的方式， 一个是注重于信息，一个是注重于计算相似度</p>
+<p>K = X · W_k -&gt; 查询相似度<br>
+V = X · W_v -&gt; 获取每个X能从上下文提取的的信息</p>
+<img src="/2026/09/09/CS231n/Transformer/2.png" class="" title="coumpute graph">
+<ul>
+<li>self-attention Query 和 X 是一样的 , 适用于输入是同一格式的情况<br>
+我们会将每一个输入的 X 都转化为 Q K V</li>
+</ul>
+<p>Q = X<code>Q K = X</code>K<br>
+V = X`V</p>
+<blockquote>
+<p>在硬件上， 执行大的矩阵乘法会比执行多次小的省时间<br>
+所以我们很常见就是把W_Q , W_K , W_V拼接起来一起点积X</p>
+</blockquote>
+<p>自注意层的置换不变性（在推理层面） -&gt; 自注意层本身对输入的位置无所谓， 输入相同的东西在不同位置也是一样的</p>
+<blockquote>
+<p>解决， 位置编码， 在输入X加入向量层表示token的索引</p>
+</blockquote>
+<p>掩蔽式注意力机制（masked attention）</p>
+<blockquote>
+<p>让K 和 X计算出来有些位置是 -无穷大， 这样softmax有些位置就是0</p>
+</blockquote>
+<p>应用：语言输入（不让语言看到后面的内容）</p>
+<h2 id="multi-head-attention">multi-head attention</h2>
+<blockquote>
+<p>将X路由到不同的self-attention-layer上  ， 用不同的Q K V，把输出的Y堆叠起来， 在输出的时候进行维度投影 -&gt; O</p>
+</blockquote>
+<p>现在的self-attention几乎都是多头的</p>
+<p>但是也可以用一个矩阵乘法来进行</p>
+<p>所以attention推理基本上就是4个矩阵乘法</p>
+<p>矩阵乘法highly - effienct, parallable</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/09/CS231n/CNN/" data-id="cmtu2gav00013qctlbj20hg60" data-title="CNN" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/09/09/CS231n/Transformer/" data-id="cmtu2gauz000yqctl79u9dbdw" data-title="Transformer" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CNN/" rel="tag">CNN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CS231n/" rel="tag">CS231n</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CS231n/" rel="tag">CS231n</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a></li></ul>
 
     </footer>
   </div>
@@ -190,19 +212,10 @@ output = (W-K+2P)/S + 1 = (W/S) + 1</p>
     
 <nav id="article-nav">
   
-    <a href="/2026/07/10/leetcode/739.%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          739.每日温度
-        
-      </div>
-    </a>
   
-  
-    <a href="/2026/07/06/CS231n/3_NN_BackPropagation/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2026/07/15/CS231n/RNN/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">3_NN_BackPropagation</div>
+      <div class="article-nav-title">RNN</div>
     </a>
   
 </nav>
