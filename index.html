@@ -93,13 +93,26 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>初始化过大</p>
-<p>最后的softmax 因为要进入exp函数, exp是越来越尖锐的， 所以两边的梯度会变化很大 (pi - 1(chooose)) 会很接近0<br>
-而且传播过程中也会乘以W很大，而发生变化</p>
-<p>所以我们有一个gamma beta因子来让模型自我学习不梯度爆炸和梯度消失的方法</p>
-<p>初始化过小：<br>
-在前向传播中，数据经过多层矩阵乘法 $Y = XW$。当 $W$ 的元素标准差过小时，每一层激活值的方差会呈指数级衰减，深层神经元的输出迅速趋近于 0。<br>
-在反向传播中，链式法则导致梯度的幅度同样逐层指数衰减，引发梯度消失（Vanishing Gradients），参数无法得到有效更新。</p>
+        <h2 id="初始化过大">初始化过大</h2>
+<p>最后的 softmax 因为要进入 exp 函数，exp 是越来越尖锐的，所以两边的梯度会变化很大，$(p_i - 1)$ 会很接近 0；而且传播过程中也会乘以很大的 $W$，从而发生变化。</p>
+<h2 id="初始化过小">初始化过小</h2>
+<p>在前向传播中，数据经过多层矩阵乘法 $Y = XW$。当 $W$ 的元素标准差过小时，每一层激活值的方差会呈指数级衰减，深层神经元的输出迅速趋近于 0。</p>
+<p>在反向传播中，链式法则导致梯度的幅度同样逐层指数衰减，引发<strong>梯度消失（Vanishing Gradients）</strong>，参数无法得到有效更新。</p>
+<h2 id="解决方案">解决方案</h2>
+<p>所以我们引入 $\gamma$、$\beta$ 因子，让模型自我学习，避免梯度爆炸和梯度消失。</p>
+<hr>
+<h2 id="Inline-Question-2">Inline Question 2</h2>
+<blockquote>
+<p>Describe the results of this experiment. What does this imply about the relationship between batch normalization and batch size? Why is this relationship observed?</p>
+</blockquote>
+<p><strong>Answer:</strong></p>
+<ul>
+<li><strong>批量较大时</strong>（如 32、64、128）：批量归一化能显著加速训练收敛，并提升最终准确率。</li>
+<li><strong>批量较小时</strong>（如 1、2、4）：批量归一化的效果明显变差，甚至可能不如不使用 BN。批量越小，训练越不稳定，性能下降越明显。</li>
+</ul>
+<blockquote>
+<p>补充：<code>layer_norm</code> 对 <code>batch_size</code> 没有要求。</p>
+</blockquote>
 
       
     </div>
