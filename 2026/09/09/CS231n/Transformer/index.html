@@ -16,7 +16,7 @@
 <meta property="og:image" content="http://example.com/2026/09/09/CS231n/Transformer/1.png">
 <meta property="og:image" content="http://example.com/2026/09/09/CS231n/Transformer/2.png">
 <meta property="article:published_time" content="2026-09-09T08:02:09.000Z">
-<meta property="article:modified_time" content="2026-09-09T11:52:59.784Z">
+<meta property="article:modified_time" content="2026-09-10T05:01:28.006Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="CS231n">
 <meta property="article:tag" content="Transformer">
@@ -161,7 +161,6 @@ X[N_X X D_Q]</p>
 <p>Y = AX -&gt; 线性组合</p>
 </li>
 </ol>
-<h2 id="TransFormer">TransFormer</h2>
 <p>key_matrix : W_k = [D_x , D_Q]<br>
 query_matrix : Q = [N_Q , D_Q]<br>
 value_matrix : W_v = [D_x , D_V]</p>
@@ -196,6 +195,8 @@ V = X`V</p>
 <p>但是也可以用一个矩阵乘法来进行</p>
 <p>所以attention推理基本上就是4个矩阵乘法</p>
 <p>矩阵乘法highly - effienct, parallable</p>
+<h2 id="TransFormer">TransFormer</h2>
+<p>SELF-ATTENTION -&gt; LAYER_NORM -&gt; RESNET -&gt; MLP</p>
 
       
     </div>
@@ -211,6 +212,15 @@ V = X`V</p>
   
     
 <nav id="article-nav">
+  
+    <a href="/2026/09/10/CS231n/batchnorm/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          batchnorm
+        
+      </div>
+    </a>
   
   
     <a href="/2026/07/15/CS231n/RNN/" id="article-nav-older" class="article-nav-link-wrap">
@@ -267,6 +277,10 @@ V = X`V</p>
       <ul>
         
           <li>
+            <a href="/2026/09/10/CS231n/batchnorm/">batchnorm</a>
+          </li>
+        
+          <li>
             <a href="/2026/09/09/CS231n/Transformer/">Transformer</a>
           </li>
         
@@ -280,10 +294,6 @@ V = X`V</p>
         
           <li>
             <a href="/2026/07/15/leetcode/152.%20%E4%B9%98%E7%A7%AF%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84/">152. 乘积最大子数组</a>
-          </li>
-        
-          <li>
-            <a href="/2026/07/13/CS231n/%E5%89%8D%E5%90%91%E4%BC%A0%E6%92%AD%E5%92%8C%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E4%BB%A3%E7%A0%81/">前向传播和反向传播代码</a>
           </li>
         
       </ul>
