@@ -71,6 +71,196 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-CMU711/2_learnedrepresentations" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/12/CMU711/2_learnedrepresentations/" class="article-date">
+  <time class="dt-published" datetime="2026-09-12T05:28:39.000Z" itemprop="datePublished">2026-09-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/09/12/CMU711/2_learnedrepresentations/">2.Learned Representations</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Tokenization">Tokenization</h2>
+<blockquote>
+<p>需要解决的问题:</p>
+</blockquote>
+<ol>
+<li>subwrod Models (各种词的变形)<br>
+sol: 分词法的不同 , 将词分为different tokens<br>
+<font color = 'blue'><br>
+example: the compan_ ies are expand_ ing &lt; 后缀提取 &gt;<br>
+<font color = 'black'></li>
+</ol>
+<ul>
+<li>我们可以减少词汇量， 共享参数</li>
+<li>我们不想要tokenize的种类太多或者太少</li>
+</ul>
+<ol start="2">
+<li>用UTF-8 bytes tokenize text</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">utf = <span class="string">&quot;我是傻逼。Hello!&quot;</span>.encode(<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>([x <span class="keyword">for</span> x <span class="keyword">in</span> utf])</span><br><span class="line"><span class="comment"># 输出列表</span></span><br><span class="line"><span class="comment"># 用0-255的数字序列表示token</span></span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>用Byte Pair Encoding</li>
+</ol>
+<blockquote>
+<p>将经常用的连续token对 pairs into new tokens<br>
+GPT-2 用的分词器就是基于BPE和UTF-8编码 <a target="_blank" rel="noopener" href="https://github.com/openai/gpt-2/blob/master/src/encoder.py">https://github.com/openai/gpt-2/blob/master/src/encoder.py</a></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">text = <span class="string">&quot;&quot;&quot;Hello, world! Here is some example text to test</span></span><br><span class="line"><span class="string">the BPE algorithm. It is not very interesting, but it will</span></span><br><span class="line"><span class="string">do the job.</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span> </span><br><span class="line">tokens = text.encode(<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line">tokens = <span class="built_in">list</span>(<span class="built_in">map</span>(<span class="built_in">int</span>, tokens))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(text))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(tokens))</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_stats</span>(<span class="params">ids</span>):</span><br><span class="line">    counts = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> pair <span class="keyword">in</span> <span class="built_in">zip</span>(ids, ids[<span class="number">1</span>:]):</span><br><span class="line">        <span class="comment"># zip 把ids 的第i个元素，和ids的第i个元素组合起来成为元组</span></span><br><span class="line">        counts[pair] = counts.get(pair, <span class="number">0</span>) + <span class="number">1</span></span><br><span class="line">        <span class="comment"># 读取counts中key为pair的值， 如果没有pair则返回0</span></span><br><span class="line">        <span class="comment"># 为了保证安全性</span></span><br><span class="line">    <span class="keyword">return</span> counts</span><br><span class="line">    </span><br><span class="line">stats = get_stats(tokens)</span><br><span class="line"><span class="comment"># 返回元组的字典</span></span><br><span class="line"><span class="comment"># print(sorted(((v,k) for k,v in stats.items()), reverse=True))</span></span><br><span class="line"></span><br><span class="line">top_pair = <span class="built_in">max</span>(stats, key=stats.get)</span><br><span class="line"><span class="built_in">print</span>(top_pair, <span class="string">&#x27;&quot;&#x27;</span> + <span class="built_in">chr</span>(top_pair[<span class="number">0</span>]) + <span class="string">&#x27;&quot;&#x27;</span>, <span class="string">&#x27;&quot;&#x27;</span> + <span class="built_in">chr</span>(top_pair[<span class="number">1</span>]) + <span class="string">&#x27;&quot;&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="用Tiktoken库分词">用Tiktoken库分词</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># !pip install tiktoken</span></span><br><span class="line"><span class="keyword">import</span> tiktoken</span><br><span class="line"></span><br><span class="line">enc = tiktoken.get_encoding(<span class="string">&quot;gpt2&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(enc.encode(<span class="string">&quot;Hello, こんにちは&quot;</span>))</span><br><span class="line"></span><br><span class="line">enc = tiktoken.get_encoding(<span class="string">&quot;cl100k_base&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(enc.encode(<span class="string">&quot;Hello, こんにちは&quot;</span>))</span><br></pre></td></tr></table></figure>
+<font color = 'red'>
+1. 用正则预先分词
+2. 用utf-8编码
+3. 用BPE合并
+<font color = 'black'>
+<blockquote>
+<p>注意是以1Byte-&gt;token为单位合并的， 比如’我’编码为3个Byte，之后就按照频率合并，比如这三个Byte合成一个token</p>
+</blockquote>
+<ol start="4">
+<li>用Google的SentencePiece库</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sentencepiece <span class="keyword">as</span> spm</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;toy_tokenizer_txt.txt&quot;</span>, <span class="string">&quot;w&quot;</span>, encoding=<span class="string">&quot;utf-8&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.write(training_text)</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="comment"># There are a lot of sentencepiece options.</span></span><br><span class="line"><span class="comment"># If you are considering training your own tokenizer for a serious project</span></span><br><span class="line"><span class="comment"># or production, make sure you are aware of the exact setting you are running.</span></span><br><span class="line"><span class="comment"># Here we just make sure that we have set the vocab size and byte_fallback.</span></span><br><span class="line"><span class="comment"># For fun, we also split digits to show the use of such a rule.</span></span><br><span class="line">options = <span class="built_in">dict</span>(</span><br><span class="line">  <span class="comment"># input spec</span></span><br><span class="line">  <span class="built_in">input</span>=<span class="string">&quot;toy_tokenizer_txt.txt&quot;</span>,</span><br><span class="line">  input_format=<span class="string">&quot;text&quot;</span>,</span><br><span class="line">  model_prefix=<span class="string">&quot;toy_tokenizer&quot;</span>,</span><br><span class="line">  model_type=<span class="string">&quot;bpe&quot;</span>,</span><br><span class="line">  vocab_size=<span class="number">2048</span>,</span><br><span class="line">  byte_fallback=<span class="literal">True</span>,</span><br><span class="line">  split_digits=<span class="literal">True</span>,</span><br><span class="line">  num_threads=os.cpu_count(),</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">spm.SentencePieceTrainer.train(**options)</span><br></pre></td></tr></table></figure>
+<h3 id="Continous-Word-Embeddings">Continous Word Embeddings</h3>
+<p>Previous : ont hot</p>
+<ul>
+<li>too sparse</li>
+</ul>
+<ol>
+<li>Continous Bag of Words(CBoW)<br>
+给不同的token给与连续的embedding vector<br>
+再将学到的embedding 加起来 成为(d,)<br>
+经过一个Linear Layer 变成(k,) 然后可以softmax</li>
+</ol>
+<blockquote>
+<p>Each vector element is a feature</p>
+</blockquote>
+<ol start="2">
+<li>Deep CBoW -&gt; using two-layers neural network.<br>
+用 tanh/relu 来进行activation function, Non-linearity</li>
+</ol>
+
+<h3 id="Training-CBoW">Training CBoW</h3>
+<blockquote>
+<p>gradient descent</p>
+</blockquote>
+<ul>
+<li>Loss Function: Binary Cross entropy<br>
+最后一层输出一个 - y</li>
+</ul>
+<p>用sigmoid将y限制在[0,1]</p>
+<p>之后用类似Cross entropy的方式进行 -&gt; 本质就是p 和 1-p 的cross entropy</p>
+<p>如果 y_pred = 1 就是 -log(p(y)) 否则就是 -log(1 - y)</p>
+<blockquote>
+<p>没什么好说的， 就是softmax() 把 k维输出变成 K维的概率</p>
+</blockquote>
+<h3 id="what-is-cross-entropy-come-from">what is cross entropy come from</h3>
+<p>KL divergence -&gt; KL散度</p>
+<blockquote>
+<p>衡量概率距离的一种方法</p>
+</blockquote>
+<p>minKL(p1,p2) = min - sum(p1(x)log(p2(x)/p1(x)))</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/09/12/CMU711/2_learnedrepresentations/" data-id="cmty4ucrl0004estl9wudc1ae" data-title="2.Learned Representations" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CMU711/" rel="tag">CMU711</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-CMU711/1_Introduction" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/12/CMU711/1_Introduction/" class="article-date">
+  <time class="dt-published" datetime="2026-09-12T01:40:19.000Z" itemprop="datePublished">2026-09-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/09/12/CMU711/1_Introduction/">1.Introduction</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="NLP-ASPECTS">NLP ASPECTS</h2>
+<ol>
+<li>Learn useful representations</li>
+<li>Generate Language</li>
+<li>Bridge language and action (e.g: code IDE)</li>
+</ol>
+<h4 id="past-methods">past methods</h4>
+<ol>
+<li>Based ON Rules</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">classify</span>(<span class="params">x: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    sports = [<span class="string">&#x27;basketball&#x27;</span>,<span class="string">&#x27;soccer&#x27;</span>] ..</span><br><span class="line">    <span class="keyword">if</span> (key <span class="keyword">in</span> x afor key <span class="keyword">in</span> sports_keywords):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;sports&quot;</span></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>Supervised Learning<br>
+Data -&gt; Training -&gt; Model</li>
+<li>Reinforcement Learning<br>
+Agent -&gt; action -&gt; environment -&gt; reward</li>
+</ol>
+<h3 id="A-Rule-Based-NLP-System">A Rule-Based NLP System</h3>
+<p>Exp: 分类评论 -&gt; postive(1) neutral(0) negative(-1)</p>
+<ol>
+<li>modeling -&gt;  怎么计算 -&gt; 点积, para怎么设计</li>
+<li>Learning -&gt; Learning the parameters based on data</li>
+<li>Inference -&gt; 决策</li>
+</ol>
+<h3 id="Embedding">Embedding</h3>
+<h4 id="BoW-Modelling">BoW Modelling</h4>
+<p>基本上就是One-hot vector<br>
+Features f(x) ∈ R_V V是size of words</p>
+<p>Auto_regression<br>
+S</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/09/12/CMU711/1_Introduction/" data-id="cmty4ucrj0001estl6zhu14mi" data-title="1.Introduction" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CMU711/" rel="tag">CMU711</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-CS231n/batchnorm" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2026/09/10/CS231n/batchnorm/" class="article-date">
@@ -117,7 +307,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/10/CS231n/batchnorm/" data-id="cmtv7f046000024tlalg32156" data-title="batchnorm" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/09/10/CS231n/batchnorm/" data-id="cmty4ucrv002festlaf0vabr0" data-title="batchnorm" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -252,7 +442,7 @@ V = X`V</p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/09/CS231n/Transformer/" data-id="cmtu3450r001rxktleyjzad1h" data-title="Transformer" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/09/09/CS231n/Transformer/" data-id="cmty4ucrp000destlbx3x3oll" data-title="Transformer" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -373,7 +563,7 @@ y_t = fW_hy(h_t) fW_hy-&gt; 将hidden state转化为输出的output</p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/15/CS231n/RNN/" data-id="cmtu3450s001uxktlg7w38dr5" data-title="RNN" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/15/CS231n/RNN/" data-id="cmty4ucro000bestlf5j9hq7n" data-title="RNN" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -428,7 +618,7 @@ y_t = fW_hy(h_t) fW_hy-&gt; 将hidden state转化为输出的output</p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/15/leetcode/152.%20%E4%B9%98%E7%A7%AF%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84-1/" data-id="cmtu3450v002dxktleux2c0l0" data-title="152. 乘积最大子数组" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/15/leetcode/152.%20%E4%B9%98%E7%A7%AF%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84-1/" data-id="cmty4ucrw002lestlbkzg860c" data-title="152. 乘积最大子数组" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -468,7 +658,7 @@ y_t = fW_hy(h_t) fW_hy-&gt; 将hidden state转化为输出的output</p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/15/leetcode/152.%20%E4%B9%98%E7%A7%AF%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84/" data-id="cmtu3450s001yxktl4eqwghby" data-title="152. 乘积最大子数组" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/15/leetcode/152.%20%E4%B9%98%E7%A7%AF%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84/" data-id="cmty4ucrx002sestl409h2o2j" data-title="152. 乘积最大子数组" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -512,7 +702,7 @@ y_t = fW_hy(h_t) fW_hy-&gt; 将hidden state转化为输出的output</p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/13/CS231n/%E5%89%8D%E5%90%91%E4%BC%A0%E6%92%AD%E5%92%8C%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E4%BB%A3%E7%A0%81/" data-id="cmtu3450s001wxktle8dd5hb3" data-title="前向传播和反向传播代码" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/13/CS231n/%E5%89%8D%E5%90%91%E4%BC%A0%E6%92%AD%E5%92%8C%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E4%BB%A3%E7%A0%81/" data-id="cmty4ucrv002gestl8w27gku3" data-title="前向传播和反向传播代码" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -560,7 +750,7 @@ y_t = fW_hy(h_t) fW_hy-&gt; 将hidden state转化为输出的output</p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/12/CS231n/Softmax_Classifier/" data-id="cmtu3450n0008xktl9rbe6qy6" data-title="softmax_classiefier的向量化表示" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/12/CS231n/Softmax_Classifier/" data-id="cmty4ucrp000eestl2v7o4ibx" data-title="softmax_classiefier的向量化表示" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -667,212 +857,11 @@ premium lock icon<br>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/12/leetcode/%E4%BA%8C%E5%88%86%E6%B3%95/" data-id="cmtu3450y003rxktl5z2hfcex" data-title="二分法特辑" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/12/leetcode/%E4%BA%8C%E5%88%86%E6%B3%95/" data-id="cmty4ucs0003aestl9cgl70t7" data-title="二分法特辑" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%BA%8C%E5%88%86%E6%B3%95/" rel="tag">二分法</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-leetcode/300. 最长递增子序列" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2026/07/12/leetcode/300.%20%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E5%BA%8F%E5%88%97/" class="article-date">
-  <time class="dt-published" datetime="2026-07-12T01:48:01.000Z" itemprop="datePublished">2026-07-12</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2026/07/12/leetcode/300.%20%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E5%BA%8F%E5%88%97/">300. 最长递增子序列</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <ol start="300">
-<li>最长递增子序列<br>
-给你一个整数数组 nums ，找到其中最长严格递增子序列的长度。</li>
-</ol>
-<p>子序列 是由数组派生而来的序列，删除（或不删除）数组中的元素而不改变其余元素的顺序。例如，[3,6,2,7] 是数组 [0,3,1,6,2,2,7] 的子序列。</p>
-<p>示例 1：</p>
-<p>输入：nums = [10,9,2,5,3,7,101,18]<br>
-输出：4<br>
-解释：最长递增子序列是 [2,3,7,101]，因此长度为 4 。</p>
-<p>O(N^2) 解法 十分之简单</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">lengthOfLIS</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># dp[i] -&gt; 以 i 为末尾的最长子序列</span></span><br><span class="line">        n = <span class="built_in">len</span>(nums)</span><br><span class="line">        dp = [<span class="number">1</span>] * n</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(i):</span><br><span class="line">                <span class="keyword">if</span> nums[i] &gt; nums[j]:</span><br><span class="line">                    dp[i] = <span class="built_in">max</span>(dp[j] + <span class="number">1</span>, dp[i])</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">max</span>(dp)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>O(Nlog(N))解法</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">lengthOfLIS</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># 若用二分查找，可以将速度降到O(Nlog(N))</span></span><br><span class="line">        <span class="comment"># 用二分查找寻找下标</span></span><br><span class="line">        <span class="comment"># dp[i] = 长度为i最后一个数的最小值</span></span><br><span class="line">        <span class="comment"># len 目前最长序列的长度</span></span><br><span class="line">        n = <span class="built_in">len</span>(nums)</span><br><span class="line">        dp = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            <span class="comment"># 接下来用二分查找查找dp[0:i-1]中 dp[j - 1] &lt;= nums[i] &lt;= dp[j]</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">not</span> dp) <span class="keyword">or</span> nums[i] &gt; dp[-<span class="number">1</span>]:</span><br><span class="line">                dp.append(nums[i])</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            tar = nums[i]</span><br><span class="line">            left = <span class="number">0</span></span><br><span class="line">            right = <span class="built_in">len</span>(dp) - <span class="number">1</span></span><br><span class="line">            loc = right</span><br><span class="line">            <span class="comment"># 应该记录的是 大于 nums[i] 的值</span></span><br><span class="line">            <span class="keyword">while</span> left &lt;= right:</span><br><span class="line">                mid = (left + right) // <span class="number">2</span></span><br><span class="line">                <span class="keyword">if</span> dp[mid] &gt;= nums[i]:</span><br><span class="line">                    loc = mid</span><br><span class="line">                    right = mid - <span class="number">1</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    left = mid + <span class="number">1</span></span><br><span class="line">            dp[loc] = nums[i]</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">len</span>(dp)</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>关键是二分怎么写</p>
-</blockquote>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/12/leetcode/300.%20%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E5%BA%8F%E5%88%97/" data-id="cmtu3450u0029xktl5lqxebro" data-title="300. 最长递增子序列" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-CS231n/6_CNNArchitectures" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2026/07/11/CS231n/6_CNNArchitectures/" class="article-date">
-  <time class="dt-published" datetime="2026-07-11T06:24:08.000Z" itemprop="datePublished">2026-07-11</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2026/07/11/CS231n/6_CNNArchitectures/">Lecture 6: CNN Architectures</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="CNN-Architectures">CNN Architectures</h2>
-<h3 id="Normalization-Layers">Normalization Layers</h3>
-<p><font color = 'blue'>根据学习到参数的均值和标准差来缩放和平移我们的input data(输入数据)</p>
-<p><font color = 'black'>问题：怎么计算均值和标准差</p>
-<p>x : N * D</p>
-<p>从D方向上：计算μ，σ ： N * 1 (per batch)</p>
-<p>scale因子 : 从N方向计算 ： 1 * D</p>
-<blockquote>
-<p>不同的Norm形式</p>
-</blockquote>
-<img src="/2026/07/11/CS231n/6_CNNArchitectures/2.png" class="" title="alt text">
-<h4 id="Batch-Normalization-BatchNorm">Batch Normalization (BatchNorm)</h4>
-<p>核心操作： 跨样本（Batch）做归一化。</p>
-<p>具体做法： 对于同一个特征通道（Channel），它会把当前 Batch 里所有样本的特征值凑在一起，计算出均值和方差，然后进行缩放。结果是(1 * D)</p>
-<h4 id="Layer-Normalization-LayerNorm">Layer Normalization (LayerNorm)</h4>
-<p>核心操作： 样本内（Layer/Feature）做归一化。</p>
-<p>具体做法： 彻底切断样本之间的联系。对于某一个特定样本，它把该样本当前层的所有特征通道（Channel）凑在一起，计算这个单一样本自身的均值和方差。结果是(N * 1)</p>
-<p>我们减去μ 除以σ,(归一化)</p>
-<h4 id="Group-Norm-Instance-Norm">Group Norm, Instance Norm</h4>
-<p>对一个样本内不同的一个或者几个样本通道做归一化</p>
-<h3 id="Dropout">Dropout</h3>
-<p>在每次反向传播中，我们会将某些激活函数置零，让某些点对最后结果不起作用</p>
-<p>redundent representation : 让分类器不会过度依赖某一个特征，让它泛化在更多特征上</p>
-<p>丢弃率: 50% || 25%</p>
-<p>会让train时间 longer , test 更准确</p>
-<blockquote>
-<p>注意，如果dropout 50%的数值，训练时： 随机把 $50%$ 的神经元清零，然后把剩下的神经元全部除以 $0.5$（也就是乘以 2）。</p>
-</blockquote>
-<p>反向传播： 将上游梯度0 传入，这些数据不会被更新</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## test time</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">predict</span>():</span><br><span class="line">    H1 = np.maximum(<span class="number">0</span>, np.dot(W1, X) +b1) * p</span><br><span class="line">    H2 = np.maximum(<span class="number">0</span>,np.dot(W2, H1) + b2) *p</span><br><span class="line">    out = np.dot(W3, H2) + b3</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>或者训练时间不变，predict的时候乘以dropout率 p</p>
-</blockquote>
-<h3 id="激活函数">激活函数</h3>
-<p>sigmoid : 不再用了</p>
-<p>sigmoid两端的gradient非常小</p>
-<p>原因 : 多层的sigmoid会让梯度越来越小， 最后近乎没有</p>
-<p>ReLu: Rectified Linear Unit: 计算方便， 梯度为1不会造成梯度快速下降</p>
-<p>问题：在 x = 0接近处不平滑</p>
-<p>GELU： 在中间更加平滑 x * N(x) -&gt; x 乘以正态分布</p>
-<img src="/2026/07/11/CS231n/6_CNNArchitectures/3.png" class="" title="alt text">
-<p>同时还有SiLU / ELU /Leaky ReLu /</p>
-<blockquote>
-<p>Activation Function的位置：线性层后面：全连接层，卷积层</p>
-</blockquote>
-<h2 id="CNN-Archetectures">CNN Archetectures</h2>
-<img src="/2026/07/11/CS231n/6_CNNArchitectures/4.png" class="" title="alt text">
-<p>最后的FC 1000 -&gt; ImageNet有1000个类别</p>
-<p><font color = 'red' > why 3 * 3 Conv(stride = 1, pad = 1) : 在每一层都可以将感受野边长加长 2 ， 3个3 * 3 Conv -&gt; 7 * 7 感受野，且 3个 3 * 3有更少的 参数，且多个3*3有更多非线性的激活函数</p>
-<font color = 'black'>
-<h3 id="RestNet">RestNet</h3>
-<p>更深层模型为什么表示能力反而变差了：更难优化！(局部最小化)</p>
-<p>我们至少想让深层模型和浅层模型一样的表示能看里</p>
-<p>所以我们让 H(x)  = F(x)(deep layer的接受x后的输出) + x(shallow layer的输出) 这就是Restnet</p>
-<p>用了RestNet后 ： 更大层数带来了更好的性能，一直到100-152层之后就没有很大变化</p>
-<p>在极深的网络中，反向传播时梯度非常容易在倒退回前几层时“干涸”（梯度消失）。而右边的 Identity 相当于铺设了一条梯度高速公路。在反向传播计算导数时，$\frac{d(F(X)+X)}{dX} = \frac{dF(X)}{dX} + 1$。即使主干部分的梯度 $\frac{dF(X)}{dX}$ 趋近于 $0$，后面那个恒稳的 $+1$ 也能保证梯度毫无损耗地传回前一层，从而彻底解决了网络堆叠太深时无法训练的问题。</p>
-<img src="/2026/07/11/CS231n/6_CNNArchitectures/5.png" class="" title="alt text">
-<h2 id="Weight-Initialization">Weight Initialization</h2>
-<p>kai ming initialize :</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">W = np.random.randomn(Din, Dout) * np.sqrt(<span class="number">2</span>/ Din)</span><br><span class="line"><span class="comment"># Din 维度越大 ， W需要越小的lamda</span></span><br></pre></td></tr></table></figure>
-<p>Normlization:可能会难以优化</p>
-<h2 id="Data-Preprocessing">Data Preprocessing</h2>
-<p>数据预处理</p>
-<ol>
-<li>img : 在不同的通道上归一化</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">norm_pixel[i, j, c] = (pixel[i, j, c] - np.mean(pixel[:,:,c]))/ np.std(pixel[:,:,c])</span><br></pre></td></tr></table></figure>
-<h2 id="Data-augmentation">Data augmentation</h2>
-<p>Data Augmentation（数据增强） 是机器学习和深度学习中的一项关键技术，指的是在不增加真实数据的情况下，通过对现有数据进行各种变换，人工生成更多样的训练样本。</p>
-<ol>
-<li>水平|垂直翻转，旋转(CV)</li>
-<li>调整大小|裁剪 先随机裁剪，再随机reshape成需要的大小(CV)</li>
-<li>color jitter 调整对比度和亮度</li>
-<li>Cutout 在图片的某个部分加上灰框(模拟遮挡)</li>
-</ol>
-<p>If we dont have a lot of data,Can u still train CNNs?</p>
-<h2 id="Transfer-Learning">Transfer Learning</h2>
-<p>把模型最后一层看成一个KNN 或者 Linear layer,只不过对象不是像素，而是各种被提取出来的特征</p>
-<blockquote>
-<p>小数据集</p>
-</blockquote>
-<ol>
-<li>在大的数据集上训练出来trainer</li>
-<li>冻结下面的Conv以及FC.</li>
-<li>用小数据集训练加上在FC1000后的，最后一层FC - C</li>
-</ol>
-<blockquote>
-<p>大数据集</p>
-</blockquote>
-<ol>
-<li>在大数据上训练出来trainer</li>
-<li>用这个参数初始化每一层的参数W</li>
-<li>用我的大数据集在所有参数上面训练(finetuning)</li>
-</ol>
-<p>如果数据集和原来有很多不同：</p>
-<ol>
-<li>LoRa</li>
-<li>一些迁移方法</li>
-</ol>
-<h3 id="超参数选择">超参数选择</h3>
-<ol>
-<li>Overfit a small sample</li>
-<li>grid search</li>
-<li>Find Accuracy Curves</li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/11/CS231n/6_CNNArchitectures/" data-id="cmtu3450m0007xktl48yhfn76" data-title="Lecture 6: CNN Architectures" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Activation-Functions/" rel="tag">Activation Functions</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CNN/" rel="tag">CNN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CS231n/" rel="tag">CS231n</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Dropout/" rel="tag">Dropout</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Normalization-Layers/" rel="tag">Normalization Layers</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RestNet/" rel="tag">RestNet</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Weight-Initialization/" rel="tag">Weight Initialization</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/" rel="tag">数据增强</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86/" rel="tag">数据预处理</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E8%BF%81%E7%A7%BB/" rel="tag">模型迁移</a></li></ul>
 
     </footer>
   </div>
@@ -900,7 +889,7 @@ premium lock icon<br>
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Activation-Functions/" rel="tag">Activation Functions</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BackPropagation/" rel="tag">BackPropagation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CNN/" rel="tag">CNN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CS231n/" rel="tag">CS231n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-drivern-approaches/" rel="tag">Data drivern approaches</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dropout/" rel="tag">Dropout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K-Nearest-Neighbor/" rel="tag">K-Nearest Neighbor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" rel="tag">K最近邻居算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LSTM/" rel="tag">LSTM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linear-Classification/" rel="tag">Linear Classification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NN/" rel="tag">NN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Normalization-Layers/" rel="tag">Normalization Layers</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Optimization/" rel="tag">Optimization</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RNN/" rel="tag">RNN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Regulation/" rel="tag">Regulation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RestNet/" rel="tag">RestNet</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Weight-Initialization/" rel="tag">Weight Initialization</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dp/" rel="tag">dp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sequence-modeling/" rel="tag">sequence modeling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/softmax/" rel="tag">softmax</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%88%86%E6%B3%95/" rel="tag">二分法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BC%98%E5%8C%96/" rel="tag">优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" rel="tag">单调栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/" rel="tag">完全背包</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1/" rel="tag">序列建模</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/" rel="tag">数据增强</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86/" rel="tag">数据预处理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E7%BB%84/" rel="tag">数组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%88/" rel="tag">栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E8%BF%81%E7%A7%BB/" rel="tag">模型迁移</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" rel="tag">正则化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" rel="tag">滑动窗口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" rel="tag">线性分类</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%92%E5%BD%92/" rel="tag">递归</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%93%BE%E8%A1%A8/" rel="tag">链表</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Activation-Functions/" rel="tag">Activation Functions</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BackPropagation/" rel="tag">BackPropagation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMU711/" rel="tag">CMU711</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CNN/" rel="tag">CNN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CS231n/" rel="tag">CS231n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-drivern-approaches/" rel="tag">Data drivern approaches</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dropout/" rel="tag">Dropout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K-Nearest-Neighbor/" rel="tag">K-Nearest Neighbor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" rel="tag">K最近邻居算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LSTM/" rel="tag">LSTM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linear-Classification/" rel="tag">Linear Classification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NN/" rel="tag">NN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Normalization-Layers/" rel="tag">Normalization Layers</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Optimization/" rel="tag">Optimization</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RNN/" rel="tag">RNN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Regulation/" rel="tag">Regulation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RestNet/" rel="tag">RestNet</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Weight-Initialization/" rel="tag">Weight Initialization</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dp/" rel="tag">dp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sequence-modeling/" rel="tag">sequence modeling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/softmax/" rel="tag">softmax</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%88%86%E6%B3%95/" rel="tag">二分法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BC%98%E5%8C%96/" rel="tag">优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" rel="tag">单调栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/" rel="tag">完全背包</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1/" rel="tag">序列建模</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/" rel="tag">数据增强</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86/" rel="tag">数据预处理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E7%BB%84/" rel="tag">数组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%88/" rel="tag">栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E8%BF%81%E7%A7%BB/" rel="tag">模型迁移</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" rel="tag">正则化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" rel="tag">滑动窗口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" rel="tag">线性分类</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%92%E5%BD%92/" rel="tag">递归</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%93%BE%E8%A1%A8/" rel="tag">链表</a></li></ul>
     </div>
   </div>
 
@@ -910,7 +899,7 @@ premium lock icon<br>
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Activation-Functions/" style="font-size: 10px;">Activation Functions</a> <a href="/tags/BackPropagation/" style="font-size: 12.5px;">BackPropagation</a> <a href="/tags/CNN/" style="font-size: 12.5px;">CNN</a> <a href="/tags/CS231n/" style="font-size: 20px;">CS231n</a> <a href="/tags/Data-drivern-approaches/" style="font-size: 10px;">Data drivern approaches</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/K-Nearest-Neighbor/" style="font-size: 10px;">K-Nearest Neighbor</a> <a href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" style="font-size: 10px;">K最近邻居算法</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LeetCode/" style="font-size: 10px;">LeetCode</a> <a href="/tags/Linear-Classification/" style="font-size: 10px;">Linear Classification</a> <a href="/tags/NN/" style="font-size: 10px;">NN</a> <a href="/tags/Normalization-Layers/" style="font-size: 10px;">Normalization Layers</a> <a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/Regulation/" style="font-size: 10px;">Regulation</a> <a href="/tags/RestNet/" style="font-size: 10px;">RestNet</a> <a href="/tags/Transformer/" style="font-size: 10px;">Transformer</a> <a href="/tags/Weight-Initialization/" style="font-size: 10px;">Weight Initialization</a> <a href="/tags/dp/" style="font-size: 10px;">dp</a> <a href="/tags/sequence-modeling/" style="font-size: 10px;">sequence modeling</a> <a href="/tags/softmax/" style="font-size: 10px;">softmax</a> <a href="/tags/%E4%BA%8C%E5%88%86%E6%B3%95/" style="font-size: 10px;">二分法</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 10px;">优化</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 17.5px;">动态规划</a> <a href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" style="font-size: 15px;">单调栈</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 15px;">双指针</a> <a href="/tags/%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/" style="font-size: 10px;">完全背包</a> <a href="/tags/%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1/" style="font-size: 10px;">序列建模</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/" style="font-size: 10px;">数据增强</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86/" style="font-size: 10px;">数据预处理</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%A0%88/" style="font-size: 15px;">栈</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E8%BF%81%E7%A7%BB/" style="font-size: 10px;">模型迁移</a> <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" style="font-size: 10px;">正则化</a> <a href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" style="font-size: 10px;">滑动窗口</a> <a href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" style="font-size: 10px;">线性分类</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 10px;">递归</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a>
+      <a href="/tags/Activation-Functions/" style="font-size: 10px;">Activation Functions</a> <a href="/tags/BackPropagation/" style="font-size: 12.5px;">BackPropagation</a> <a href="/tags/CMU711/" style="font-size: 12.5px;">CMU711</a> <a href="/tags/CNN/" style="font-size: 12.5px;">CNN</a> <a href="/tags/CS231n/" style="font-size: 20px;">CS231n</a> <a href="/tags/Data-drivern-approaches/" style="font-size: 10px;">Data drivern approaches</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/K-Nearest-Neighbor/" style="font-size: 10px;">K-Nearest Neighbor</a> <a href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" style="font-size: 10px;">K最近邻居算法</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LeetCode/" style="font-size: 10px;">LeetCode</a> <a href="/tags/Linear-Classification/" style="font-size: 10px;">Linear Classification</a> <a href="/tags/NLP/" style="font-size: 12.5px;">NLP</a> <a href="/tags/NN/" style="font-size: 10px;">NN</a> <a href="/tags/Normalization-Layers/" style="font-size: 10px;">Normalization Layers</a> <a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/Regulation/" style="font-size: 10px;">Regulation</a> <a href="/tags/RestNet/" style="font-size: 10px;">RestNet</a> <a href="/tags/Transformer/" style="font-size: 10px;">Transformer</a> <a href="/tags/Weight-Initialization/" style="font-size: 10px;">Weight Initialization</a> <a href="/tags/dp/" style="font-size: 10px;">dp</a> <a href="/tags/sequence-modeling/" style="font-size: 10px;">sequence modeling</a> <a href="/tags/softmax/" style="font-size: 10px;">softmax</a> <a href="/tags/%E4%BA%8C%E5%88%86%E6%B3%95/" style="font-size: 10px;">二分法</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 10px;">优化</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 17.5px;">动态规划</a> <a href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" style="font-size: 15px;">单调栈</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 15px;">双指针</a> <a href="/tags/%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/" style="font-size: 10px;">完全背包</a> <a href="/tags/%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1/" style="font-size: 10px;">序列建模</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/" style="font-size: 10px;">数据增强</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86/" style="font-size: 10px;">数据预处理</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%A0%88/" style="font-size: 15px;">栈</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E8%BF%81%E7%A7%BB/" style="font-size: 10px;">模型迁移</a> <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" style="font-size: 10px;">正则化</a> <a href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" style="font-size: 10px;">滑动窗口</a> <a href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" style="font-size: 10px;">线性分类</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 10px;">递归</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a>
     </div>
   </div>
 
@@ -932,6 +921,14 @@ premium lock icon<br>
       <ul>
         
           <li>
+            <a href="/2026/09/12/CMU711/2_learnedrepresentations/">2.Learned Representations</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/12/CMU711/1_Introduction/">1.Introduction</a>
+          </li>
+        
+          <li>
             <a href="/2026/09/10/CS231n/batchnorm/">batchnorm</a>
           </li>
         
@@ -941,14 +938,6 @@ premium lock icon<br>
         
           <li>
             <a href="/2026/07/15/CS231n/RNN/">RNN</a>
-          </li>
-        
-          <li>
-            <a href="/2026/07/15/leetcode/152.%20%E4%B9%98%E7%A7%AF%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84-1/">152. 乘积最大子数组</a>
-          </li>
-        
-          <li>
-            <a href="/2026/07/15/leetcode/152.%20%E4%B9%98%E7%A7%AF%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84/">152. 乘积最大子数组</a>
           </li>
         
       </ul>
