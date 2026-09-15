@@ -71,6 +71,60 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-leetcode/394_字符串解码" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/07/06/leetcode/394_%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A7%A3%E7%A0%81/" class="article-date">
+  <time class="dt-published" datetime="2026-07-06T05:51:49.000Z" itemprop="datePublished">2026-07-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/07/06/leetcode/394_%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A7%A3%E7%A0%81/">394. 字符串解码</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="递归">递归</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">decodeString</span>(<span class="params">self, s</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :type s: str</span></span><br><span class="line"><span class="string">        :rtype: str</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        nums = []</span><br><span class="line">        pain = <span class="string">&quot;&quot;</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">recap</span>(<span class="params">ans,left_index, right_index</span>):</span><br><span class="line">            index = left_index + <span class="number">1</span></span><br><span class="line">            <span class="keyword">while</span> index &lt; right_index:</span><br><span class="line">                num = <span class="number">0</span></span><br><span class="line">                <span class="keyword">if</span> s[index] &lt;= <span class="string">&#x27;9&#x27;</span> <span class="keyword">and</span> s[index] &gt;= <span class="string">&#x27;0&#x27;</span> :</span><br><span class="line">                    mark = <span class="literal">True</span></span><br><span class="line">                    <span class="keyword">while</span> s[index] != <span class="string">&#x27;[&#x27;</span>:</span><br><span class="line">                        num = num * <span class="number">10</span> + <span class="built_in">int</span>(s[index])</span><br><span class="line">                        index += <span class="number">1</span></span><br><span class="line">                    left_count = <span class="number">1</span></span><br><span class="line">                    left_index_post = index</span><br><span class="line">                    <span class="keyword">while</span> left_count != <span class="number">0</span>:</span><br><span class="line">                        index += <span class="number">1</span></span><br><span class="line">                        <span class="keyword">if</span> s[index] == <span class="string">&#x27;[&#x27;</span>:</span><br><span class="line">                            left_count += <span class="number">1</span></span><br><span class="line">                        <span class="keyword">if</span> s[index] == <span class="string">&#x27;]&#x27;</span>:</span><br><span class="line">                            left_count -= <span class="number">1</span></span><br><span class="line">                    right_index_post = index</span><br><span class="line">                    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num):</span><br><span class="line">                        ans = recap(ans,left_index_post, right_index_post)</span><br><span class="line">                    nums.append(num)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    ans = ans + s[index]</span><br><span class="line">                index += <span class="number">1</span></span><br><span class="line">            <span class="keyword">return</span> ans</span><br><span class="line">        pain = recap(<span class="string">&quot;&quot;</span>,-<span class="number">1</span>, <span class="built_in">len</span>(s))</span><br><span class="line">        <span class="keyword">return</span> pain</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="栈">栈</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">decodeString</span>(<span class="params">self, s: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        stack = <span class="built_in">list</span>()</span><br><span class="line">        index = <span class="number">0</span></span><br><span class="line">        n = <span class="built_in">len</span>(s)</span><br><span class="line">        test = []</span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">strpop</span>():</span><br><span class="line">            str_pre = <span class="string">&quot;&quot;</span></span><br><span class="line">            ch = <span class="string">&#x27;&#x27;</span></span><br><span class="line">            <span class="keyword">while</span> ch != <span class="string">&#x27;[&#x27;</span>:</span><br><span class="line">                ch = stack.pop()</span><br><span class="line">                <span class="keyword">if</span> ch == <span class="string">&#x27;[&#x27;</span>:</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">                str_pre += ch</span><br><span class="line">            cnt = stack.pop()</span><br><span class="line">            str_pre = str_pre[::-<span class="number">1</span>]</span><br><span class="line">            test.append(str_pre)</span><br><span class="line">            l = <span class="built_in">len</span>(str_pre)</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(cnt):</span><br><span class="line">                <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(l):</span><br><span class="line">                    stack.append(str_pre[j])</span><br><span class="line">        <span class="keyword">while</span> index &lt; n:</span><br><span class="line">            <span class="keyword">if</span> (s[index] &lt;= <span class="string">&#x27;9&#x27;</span>) <span class="keyword">and</span> (s[index] &gt;= <span class="string">&#x27;0&#x27;</span>):</span><br><span class="line">                num = <span class="number">0</span></span><br><span class="line">                <span class="keyword">while</span> s[index] != <span class="string">&#x27;[&#x27;</span>:</span><br><span class="line">                    num = num * <span class="number">10</span> + <span class="built_in">int</span>(s[index])</span><br><span class="line">                    index += <span class="number">1</span></span><br><span class="line">                stack.append(num)</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">if</span> s[index] == <span class="string">&#x27;]&#x27;</span>:</span><br><span class="line">                strpop()</span><br><span class="line">                index += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                stack.append(s[index])</span><br><span class="line">                index += <span class="number">1</span></span><br><span class="line">        <span class="comment">## 用join整合stack</span></span><br><span class="line">        result = <span class="string">&quot;&quot;</span></span><br><span class="line">        result = <span class="string">&quot;&quot;</span>.join(stack)</span><br><span class="line">        <span class="comment">## result前的&quot;&quot;是分隔符号，如果为/则为 a/b/c/.....</span></span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>用join整合stack</p>
+</blockquote>
+<p><font color = 'black'>思路就是把整个栈当成输出，当然中间部分需要一些reverse<br>
+reverse用 str = str[::-1]实现</p>
+<p>本题中可能出现括号嵌套的情况，比如 2[a2[bc]]，这种情况下我们可以先转化成 2[abcbc]，在转化成 abcbcabcbc。我们可以把字母、数字和括号看成是独立的 TOKEN，并用栈来维护这些 TOKEN。具体的做法是，遍历这个栈：</p>
+<p>如果当前的字符为数位，解析出一个数字（连续的多个数位）并进栈<br>
+如果当前的字符为字母或者左括号，直接进栈<br>
+如果当前的字符为右括号，开始出栈，一直到左括号出栈，出栈序列反转后拼接成一个字符串，此时取出栈顶的数字（此时栈顶一定是数字，想想为什么？），就是这个字符串应该出现的次数，我们根据这个次数和字符串构造出新的字符串并进栈</p>
+<p>链接：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/decode-string/solutions/264391/zi-fu-chuan-jie-ma-by-leetcode-solution/">https://leetcode.cn/problems/decode-string/solutions/264391/zi-fu-chuan-jie-ma-by-leetcode-solution/</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/07/06/leetcode/394_%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A7%A3%E7%A0%81/" data-id="cmu2awlus0038pktlgtv5fftn" data-title="394. 字符串解码" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%A0%88/" rel="tag">栈</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%80%92%E5%BD%92/" rel="tag">递归</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-leetcode/42_接雨水" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2026/07/06/leetcode/42_%E6%8E%A5%E9%9B%A8%E6%B0%B4/" class="article-date">
@@ -113,7 +167,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/06/leetcode/42_%E6%8E%A5%E9%9B%A8%E6%B0%B4/" data-id="cmty4ucrz0031estl0tvlcmey" data-title="42.接雨水" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/06/leetcode/42_%E6%8E%A5%E9%9B%A8%E6%B0%B4/" data-id="cmu2awlus003apktl3auz9zkw" data-title="42.接雨水" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -153,7 +207,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/05/CS231n/%E6%8E%A8%E5%AF%BC%E4%B8%80%E5%B1%82Linear_Network%E7%9A%84%E5%AF%BC%E6%95%B0/" data-id="cmty4ucrw002jestl7me203ac" data-title="推导一层Linear_Network的导数" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/05/CS231n/%E6%8E%A8%E5%AF%BC%E4%B8%80%E5%B1%82Linear_Network%E7%9A%84%E5%AF%BC%E6%95%B0/" data-id="cmu2awlui000rpktl3j8xfsli" data-title="推导一层Linear_Network的导数" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -282,7 +336,7 @@ goal：prevent the model doing too much on training data<br>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/05/CS231n/2.Regularization_and_Optimization/" data-id="cmty4ucrm0005estl11pscpfa" data-title="Lesson2" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/05/CS231n/2.Regularization_and_Optimization/" data-id="cmu2awlud0005pktla4184tvl" data-title="Lesson2" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -328,7 +382,7 @@ goal：prevent the model doing too much on training data<br>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/leetcode/25.K%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-id="cmty4ucrw002nestl2yhq07kz" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/leetcode/25.K%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-id="cmu2awluq0031pktl140p8cun" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -500,7 +554,7 @@ TRAIN O(1)</p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/CS231n/1_Introduction/" data-id="cmty4ucrf0000estlavj48nem" data-title="1.Introduction" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/CS231n/1_Introduction/" data-id="cmu2awlue0006pktlggye7apa" data-title="1.Introduction" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -558,7 +612,7 @@ TRAIN O(1)</p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/leetcode/25_k%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-id="cmty4ucrx002testl0mz16nw9" data-title="25.K个翻转链表" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/leetcode/25_k%E4%B8%AA%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" data-id="cmu2awluj000tpktlg4vtfo1n" data-title="25.K个翻转链表" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -599,7 +653,7 @@ TRAIN O(1)</p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/leetcode/15_%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/" data-id="cmty4ucrv002hestlcsijevk7" data-title="15.三数之和" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/leetcode/15_%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/" data-id="cmu2awluq0030pktldjq21taf" data-title="15.三数之和" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -652,7 +706,7 @@ right_index作用于已经未处理的序列头部<br>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/leetcode/283._%E7%A7%BB%E5%8A%A8%E9%9B%B6/" data-id="cmty4ucrz0030estl43abg32m" data-title="283移动零" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/leetcode/283._%E7%A7%BB%E5%8A%A8%E9%9B%B6/" data-id="cmu2awlur0034pktl7ufqg5v9" data-title="283移动零" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -706,7 +760,7 @@ right_index作用于已经未处理的序列头部<br>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/03/hello-world/" data-id="cmty4ucrl0003estlfk3d7kwm" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/03/hello-world/" data-id="cmu2awlu90000pktld3xrb8ua" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -768,6 +822,10 @@ right_index作用于已经未处理的序列头部<br>
       <ul>
         
           <li>
+            <a href="/2026/09/15/CMU711/4_RNN/">4.Recurrent Neural Networks</a>
+          </li>
+        
+          <li>
             <a href="/2026/09/14/CMU711/3_Autoaggrevssive_Language_Modelling/">Autoaggresive Language Modelling</a>
           </li>
         
@@ -781,10 +839,6 @@ right_index作用于已经未处理的序列头部<br>
         
           <li>
             <a href="/2026/09/10/CS231n/batchnorm/">batchnorm</a>
-          </li>
-        
-          <li>
-            <a href="/2026/09/09/CS231n/Transformer/">Transformer</a>
           </li>
         
       </ul>

@@ -4,30 +4,17 @@
   <meta charset="utf-8">
   
   
-  <title>RNN | Hexo</title>
+  <title>4.Recurrent Neural Networks | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Recurrent Neural Network  普通的NN 一个输入对应一个输出 一对多 ： 如image - &gt; sequcence of words(图片对应一句话描述) 多对一 : 如视频识别标签 多对多 ：视频描述   RNN的内部状态(隐藏状态) 在每一次输入都进行更新   h_t(new_state) &#x3D; fW(h_t-1, x_t) y_t &#x3D; fW_hy(h_t) fW_">
-<meta property="og:type" content="article">
-<meta property="og:title" content="RNN">
-<meta property="og:url" content="http://example.com/2026/07/15/CS231n/RNN/index.html">
+  <meta property="og:type" content="article">
+<meta property="og:title" content="4.Recurrent Neural Networks">
+<meta property="og:url" content="http://example.com/2026/09/15/CMU711/4_RNN/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Recurrent Neural Network  普通的NN 一个输入对应一个输出 一对多 ： 如image - &gt; sequcence of words(图片对应一句话描述) 多对一 : 如视频识别标签 多对多 ：视频描述   RNN的内部状态(隐藏状态) 在每一次输入都进行更新   h_t(new_state) &#x3D; fW(h_t-1, x_t) y_t &#x3D; fW_hy(h_t) fW_">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2026/07/15/CS231n/RNN/1.png">
-<meta property="og:image" content="http://example.com/2026/07/15/CS231n/RNN/2.png">
-<meta property="og:image" content="http://example.com/2026/07/15/CS231n/RNN/3.png">
-<meta property="og:image" content="http://example.com/2026/07/15/CS231n/RNN/4.png">
-<meta property="og:image" content="http://example.com/2026/07/15/CS231n/RNN/5.png">
-<meta property="og:image" content="http://example.com/2026/07/15/CS231n/RNN/6.png">
-<meta property="article:published_time" content="2026-07-15T06:47:27.000Z">
-<meta property="article:modified_time" content="2026-07-15T09:16:58.274Z">
+<meta property="article:published_time" content="2026-09-15T06:25:17.000Z">
+<meta property="article:modified_time" content="2026-09-15T06:25:17.232Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="RNN">
-<meta property="article:tag" content="sequence modeling">
-<meta property="article:tag" content="序列建模">
-<meta property="article:tag" content="LSTM">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2026/07/15/CS231n/RNN/1.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -84,10 +71,10 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-CS231n/RNN" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-CMU711/4_RNN" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2026/07/15/CS231n/RNN/" class="article-date">
-  <time class="dt-published" datetime="2026-07-15T06:47:27.000Z" itemprop="datePublished">2026-07-15</time>
+    <a href="/2026/09/15/CMU711/4_RNN/" class="article-date">
+  <time class="dt-published" datetime="2026-09-15T06:25:17.000Z" itemprop="datePublished">2026-09-15</time>
 </a>
     
   </div>
@@ -98,7 +85,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      RNN
+      4.Recurrent Neural Networks
     </h1>
   
 
@@ -106,116 +93,24 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="Recurrent-Neural-Network">Recurrent Neural Network</h2>
-<ol>
-<li>普通的NN 一个输入对应一个输出</li>
-<li>一对多 ： 如image - &gt; sequcence of words(图片对应一句话描述)</li>
-<li>多对一 : 如视频识别标签</li>
-<li>多对多 ：视频描述</li>
-</ol>
-<blockquote>
-<p>RNN的内部状态(隐藏状态) 在每一次输入都进行更新</p>
-</blockquote>
-<blockquote>
-<p>h_t(new_state) = fW(h_t-1, x_t)<br>
-y_t = fW_hy(h_t) fW_hy-&gt; 将hidden state转化为输出的output</p>
-</blockquote>
-<font color = 'black'>
-更新的fW 和 转化的fW_hy 都用一致的函数
-<h2 id="Vanilla（普通）RNN">Vanilla（普通）RNN</h2>
-<img src="/2026/07/15/CS231n/RNN/1.png" class="" title="alt text">
-<p><font color = 'green'> 用tanh的好处是可以吧ht的值压在(-1,1)之间</p>
-<font color = 'black'>
-<h2 id="RNN-的-计算图-computational-graph">RNN 的 计算图(computational graph)</h2>
-<img src="/2026/07/15/CS231n/RNN/2.png" class="" title="coumpute graph">
-<blockquote>
-<p>每一步的Loss 相加得到总Loss，对每个时间步Loss都能得到对W的梯度</p>
-</blockquote>
-<p>对于多对一，可能只对最后的hidden state相关，所以只用考虑最后的Loss</p>
-<p>$$\delta_t = \frac{\partial L_t}{\partial s_t} + \frac{\partial s_{t+1}}{\partial s_t} \delta_{t+1}$$</p>
-<p>用这条公式可以计算所有的L，其中$\delta_t$是总L 对 s_t的导数</p>
-<h4 id="问题-当时间序列长的时候，每一个时间步的反向传播都异常艰难">问题:当时间序列长的时候，每一个时间步的反向传播都异常艰难</h4>
-<p>loca<br>
-解决:随时间反向传播</p>
-<p>（多输出）我们分割时间窗，然后只看这个时间窗里面的Loss，之前的只看成为h_0</p>
-<p>（单输出） 前向传播和原来一样，反向传播从后往前分为不同的时间窗，每个时间窗给前面的只有Loss对x1和对前一个隐藏状态的导数</p>
-<p>如果每层W的不一样 -&gt; 失去递推性，相当于一个普通的NN了</p>
-<p>语言RNN模型: 将前一个状态softmax后的输出，作为第二个的输入，同时hidden layers也在由于输入在改变，同时前一个状态的输出是根据softmax输出的概率采样得到</p>
-<p>缺点：</p>
-<ol>
-<li>recurrent 反向传播（每一步都需要前面的hidden states）很慢</li>
-<li>失去前面的信息</li>
-</ol>
-<p>RNN在CV的应用：</p>
-<ol>
-<li>图片说明文字 h_0 为 CNN后的图片，序列输入为前一步预测的词元</li>
-</ol>
-<img src="/2026/07/15/CS231n/RNN/3.png" class="" title="coumpute graph">
-<ol start="2">
-<li>Visual Question Answering<br>
-…</li>
-</ol>
-<h3 id="Multilayer-RNN">Multilayer RNN</h3>
-<p>每一层的RNN</p>
-<blockquote>
-<p>hidden layer更新是基于每层独立<br>
-从层数来讲，上一层的输入是下一层的输出</p>
-</blockquote>
-<img src="/2026/07/15/CS231n/RNN/4.png" class="" title="alt text">
-<h2 id="LSTM">LSTM</h2>
-<p>RNN梯度计算 -&gt;</p>
-<img src="/2026/07/15/CS231n/RNN/5.png" class="" title="coumpute graph">
-<img src="/2026/07/15/CS231n/RNN/6.png" class="" title="coumpute graph">
-<blockquote>
-<p>十分容易出现梯度消失，所以我们用LSTM</p>
-</blockquote>
-<p>LSTM : (i, f, o, g) (sigmoid, sigmoid, sigmoid ,tanh) W(ht_1, x)</p>
-<p>每个门都有自己独立的一套权重矩阵 $W$ 和偏置 $b$。它们的计算公式高度一致，只有激活函数和物理意义不同。</p>
-<p>i,f,o由于是sigmoid，输出在(0, 1 )之间</p>
-<p>$$C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}_t$$</p>
-<blockquote>
-<p>f 控制之前的状态有多少要被记住， i控制新状态多少要被输入</p>
-</blockquote>
-<p>$$h_t = o_t \odot \tanh(C_t)$$</p>
-<blockquote>
-<p>o控制输出的状态和原来状态的关系</p>
-</blockquote>
-<p>由于C_t 到 C_t-1 之间不经过tanh函数，所以我们不用担心梯度消失</p>
-<p><font color = 'green'> 和ResNet的思想很相似,跳过一些层</p>
-<p><font color = 'black'>Modern RNNs(MAMBA)</p>
-<ol>
-<li>上下文没有限制 (相比Transformer的优势)</li>
-<li>前向传播的计算增长是线性的， 不需要遍历整个序列</li>
-</ol>
-
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/15/CS231n/RNN/" data-id="cmu2awluf000bpktlblwpfd2d" data-title="RNN" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/09/15/CMU711/4_RNN/" data-id="cmu2awlue0009pktl7tnm0lel" data-title="4.Recurrent Neural Networks" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LSTM/" rel="tag">LSTM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RNN/" rel="tag">RNN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sequence-modeling/" rel="tag">sequence modeling</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1/" rel="tag">序列建模</a></li></ul>
-
     </footer>
   </div>
   
     
 <nav id="article-nav">
   
-    <a href="/2026/09/09/CS231n/Transformer/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          Transformer
-        
-      </div>
-    </a>
   
-  
-    <a href="/2026/07/15/leetcode/152.%20%E4%B9%98%E7%A7%AF%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84-1/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2026/09/14/CMU711/3_Autoaggrevssive_Language_Modelling/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">152. 乘积最大子数组</div>
+      <div class="article-nav-title">Autoaggresive Language Modelling</div>
     </a>
   
 </nav>
