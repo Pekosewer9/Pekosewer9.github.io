@@ -6,15 +6,25 @@
   
   <title>4.Recurrent Neural Networks | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta property="og:type" content="article">
+  <meta name="description" content="Context  因为马尔可夫链，理论上，我们可以让上下文无限长 但是很容易遇到梯度消失问题  Sequence modelling  Recurrence -&gt; RNN Convolution -&gt; CNN Attention -&gt; Transformer  Standard RNN  Example: Language modeling -&gt; BPTT total lo">
+<meta property="og:type" content="article">
 <meta property="og:title" content="4.Recurrent Neural Networks">
 <meta property="og:url" content="http://example.com/2026/09/15/CMU711/4_RNN/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Context  因为马尔可夫链，理论上，我们可以让上下文无限长 但是很容易遇到梯度消失问题  Sequence modelling  Recurrence -&gt; RNN Convolution -&gt; CNN Attention -&gt; Transformer  Standard RNN  Example: Language modeling -&gt; BPTT total lo">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2026/09/15/CMU711/4_RNN/1.png">
+<meta property="og:image" content="http://example.com/2026/09/15/CMU711/4_RNN/2.png">
+<meta property="og:image" content="http://example.com/2026/09/15/CMU711/4_RNN/3.png">
+<meta property="og:image" content="http://example.com/2026/09/15/CMU711/4_RNN/4.png">
 <meta property="article:published_time" content="2026-09-15T06:25:17.000Z">
-<meta property="article:modified_time" content="2026-09-15T06:25:17.232Z">
+<meta property="article:modified_time" content="2026-09-15T10:06:18.523Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="CMU711">
+<meta property="article:tag" content="NLP">
+<meta property="article:tag" content="RNN">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2026/09/15/CMU711/4_RNN/1.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -93,14 +103,87 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        
+        <h3 id="Context">Context</h3>
+<ul>
+<li>因为马尔可夫链，理论上，我们可以让上下文无限长</li>
+<li>但是很容易遇到梯度消失问题</li>
+</ul>
+<h3 id="Sequence-modelling">Sequence modelling</h3>
+<ol>
+<li>Recurrence -&gt; RNN</li>
+<li>Convolution -&gt; CNN</li>
+<li>Attention -&gt; Transformer</li>
+</ol>
+<p><strong>Standard RNN</strong></p>
+<img src="/2026/09/15/CMU711/4_RNN/1.png" class="" title="alt text">
+<h4 id="Example-Language-modeling-BPTT">Example: Language modeling -&gt; BPTT</h4>
+<p>total loss = Σloss</p>
+<img src="/2026/09/15/CMU711/4_RNN/2.png" class="" title="alt text">
+<p><em>问题</em></p>
+<ol>
+<li>难以并行化，计算之间有依赖关系</li>
+</ol>
+<p>RNN的推理时间复杂度是O(N)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Write our own RNN cell </span></span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RNNCell</span>(torch.nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, input_size, hidden_size</span>):</span><br><span class="line">        <span class="built_in">super</span>(RNNCell, <span class="variable language_">self</span>).__init__()</span><br><span class="line">        <span class="variable language_">self</span>.input_size = input_size</span><br><span class="line">        <span class="variable language_">self</span>.hidden_size = hidden_size</span><br><span class="line">        <span class="variable language_">self</span>.Wh = torch.nn.Linear(hidden_size, hidden_size)</span><br><span class="line">        <span class="variable language_">self</span>.Wx = torch.nn.Linear(input_size, hidden_size)</span><br><span class="line">        <span class="variable language_">self</span>.activation = torch.nn.Tanh()</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x, h</span>):</span><br><span class="line">        h = <span class="variable language_">self</span>.activation(<span class="variable language_">self</span>.Wh(h) + <span class="variable language_">self</span>.Wx(x))</span><br><span class="line">        <span class="keyword">return</span> h</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RNNLM</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, vocab_size, hidden_size</span>):</span><br><span class="line">        <span class="built_in">super</span>(RNNLM, <span class="variable language_">self</span>).__init__()</span><br><span class="line">        <span class="variable language_">self</span>.embedding = nn.Embedding(vocab_size, hidden_size)</span><br><span class="line">        <span class="variable language_">self</span>.rnn = RNNCell(hidden_size, hidden_size)</span><br><span class="line">        <span class="variable language_">self</span>.output = nn.Linear(hidden_size, vocab_size)</span><br><span class="line">        <span class="variable language_">self</span>.hidden_size = hidden_size</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x, hidden=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="keyword">if</span> hidden <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            hidden = <span class="variable language_">self</span>.init_hidden(x.size(<span class="number">0</span>))</span><br><span class="line">        </span><br><span class="line">        x = <span class="variable language_">self</span>.embedding(x)</span><br><span class="line">        </span><br><span class="line">        outs = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(x.size(<span class="number">1</span>)):</span><br><span class="line">            hidden = <span class="variable language_">self</span>.rnn(x[:, i:i+<span class="number">1</span>], hidden)</span><br><span class="line">            out = <span class="variable language_">self</span>.output(hidden)</span><br><span class="line">            outs.append(out)</span><br><span class="line">        </span><br><span class="line">        outs = torch.cat(outs, dim=<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> outs, hidden</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">init_hidden</span>(<span class="params">self, batch_size</span>):</span><br><span class="line">        <span class="keyword">return</span> torch.zeros(batch_size, <span class="number">1</span>, <span class="variable language_">self</span>.hidden_size)</span><br></pre></td></tr></table></figure>
+<h2 id="Vanishing-Gradient">Vanishing Gradient</h2>
+<blockquote>
+<p>容易梯度爆炸或者梯度消失，取决于|W|</p>
+</blockquote>
+<h2 id="Solutions">Solutions</h2>
+<ol>
+<li>Gating function(门控)<br>
+我们会有一个可学习的标量z_t<br>
+ht = (1 - z_t) * h_t - 1 + z_t * ~h_t(这个~h_t是之前算出来的)</li>
+</ol>
+<ul>
+<li>若z_t = 0, 那么就是RNN</li>
+<li>若z_t = 1 ,那么就是记住很之前的东西，达到长距离依赖</li>
+</ul>
+<ol start="2">
+<li>
+<p>残差<br>
+h_t = h_t-1 + ~h_t</p>
+</li>
+<li>
+<p>GRU(Gated Recurrent Unit)<br>
+有两个门，一个是update gate， 另一个是 reset gate（给出了有一个擦除）</p>
+</li>
+</ol>
+<img src="/2026/09/15/CMU711/4_RNN/3.png" class="" title="alt text">
+<blockquote>
+<p>先重置门r_t * h_t-1 ，再让更新们决定最后的隐藏状态，r_t,z_t都是长度为(hidden_state,)的向量</p>
+</blockquote>
+<ol start="3">
+<li>LSTM</li>
+</ol>
+<h3 id="Encoder-Decoder">Encoder-Decoder</h3>
+<p><strong>如果让Decoder和Encoder都成为RNN，问题是如何链接</strong></p>
+<ul>
+<li>
+<p>把decoder的初始隐藏层变成Encoder的最后一层隐藏层的变换或者直接相等</p>
+</li>
+<li>
+<p>同样的将Encoder和Decoder一起训练， 由于Encoder没有输出， 所以让Decoder的每层输出都softmax</p>
+</li>
+</ul>
+<h3 id="Attention">Attention</h3>
+<blockquote>
+<p>我们会看每一个hidden state<br>
+current_hidden state - Query<br>
+an = score(Q,h_n) normalization<br>
+output = Σa_n * h_n</p>
+</blockquote>
+<img src="/2026/09/15/CMU711/4_RNN/4.png" class="" title="alt text">
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/15/CMU711/4_RNN/" data-id="cmu2bqhe50005n4tleffwgwzo" data-title="4.Recurrent Neural Networks" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/09/15/CMU711/4_RNN/" data-id="cmu2ibymr0003r0tl0bdu3qp1" data-title="4.Recurrent Neural Networks" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CMU711/" rel="tag">CMU711</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RNN/" rel="tag">RNN</a></li></ul>
+
     </footer>
   </div>
   
@@ -140,7 +223,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Activation-Functions/" style="font-size: 10px;">Activation Functions</a> <a href="/tags/BackPropagation/" style="font-size: 12.5px;">BackPropagation</a> <a href="/tags/CMU711/" style="font-size: 15px;">CMU711</a> <a href="/tags/CNN/" style="font-size: 12.5px;">CNN</a> <a href="/tags/CS231n/" style="font-size: 20px;">CS231n</a> <a href="/tags/Data-drivern-approaches/" style="font-size: 10px;">Data drivern approaches</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/K-Nearest-Neighbor/" style="font-size: 10px;">K-Nearest Neighbor</a> <a href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" style="font-size: 10px;">K最近邻居算法</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LeetCode/" style="font-size: 10px;">LeetCode</a> <a href="/tags/Linear-Classification/" style="font-size: 10px;">Linear Classification</a> <a href="/tags/NLP/" style="font-size: 15px;">NLP</a> <a href="/tags/NN/" style="font-size: 10px;">NN</a> <a href="/tags/Normalization-Layers/" style="font-size: 10px;">Normalization Layers</a> <a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/Regulation/" style="font-size: 10px;">Regulation</a> <a href="/tags/RestNet/" style="font-size: 10px;">RestNet</a> <a href="/tags/Transformer/" style="font-size: 10px;">Transformer</a> <a href="/tags/Weight-Initialization/" style="font-size: 10px;">Weight Initialization</a> <a href="/tags/dp/" style="font-size: 10px;">dp</a> <a href="/tags/language-modelling/" style="font-size: 10px;">language modelling</a> <a href="/tags/sequence-modeling/" style="font-size: 10px;">sequence modeling</a> <a href="/tags/softmax/" style="font-size: 10px;">softmax</a> <a href="/tags/%E4%BA%8C%E5%88%86%E6%B3%95/" style="font-size: 10px;">二分法</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 10px;">优化</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 17.5px;">动态规划</a> <a href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" style="font-size: 15px;">单调栈</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 15px;">双指针</a> <a href="/tags/%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/" style="font-size: 10px;">完全背包</a> <a href="/tags/%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1/" style="font-size: 10px;">序列建模</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/" style="font-size: 10px;">数据增强</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86/" style="font-size: 10px;">数据预处理</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%A0%88/" style="font-size: 15px;">栈</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E8%BF%81%E7%A7%BB/" style="font-size: 10px;">模型迁移</a> <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" style="font-size: 10px;">正则化</a> <a href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" style="font-size: 10px;">滑动窗口</a> <a href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" style="font-size: 10px;">线性分类</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 10px;">递归</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a>
+      <a href="/tags/Activation-Functions/" style="font-size: 10px;">Activation Functions</a> <a href="/tags/BackPropagation/" style="font-size: 12px;">BackPropagation</a> <a href="/tags/CMU711/" style="font-size: 16px;">CMU711</a> <a href="/tags/CNN/" style="font-size: 12px;">CNN</a> <a href="/tags/CS231n/" style="font-size: 20px;">CS231n</a> <a href="/tags/Data-drivern-approaches/" style="font-size: 10px;">Data drivern approaches</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/K-Nearest-Neighbor/" style="font-size: 10px;">K-Nearest Neighbor</a> <a href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" style="font-size: 10px;">K最近邻居算法</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LeetCode/" style="font-size: 10px;">LeetCode</a> <a href="/tags/Linear-Classification/" style="font-size: 10px;">Linear Classification</a> <a href="/tags/NLP/" style="font-size: 16px;">NLP</a> <a href="/tags/NN/" style="font-size: 10px;">NN</a> <a href="/tags/Normalization-Layers/" style="font-size: 10px;">Normalization Layers</a> <a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a> <a href="/tags/RNN/" style="font-size: 12px;">RNN</a> <a href="/tags/Regulation/" style="font-size: 10px;">Regulation</a> <a href="/tags/RestNet/" style="font-size: 10px;">RestNet</a> <a href="/tags/Transformer/" style="font-size: 10px;">Transformer</a> <a href="/tags/Weight-Initialization/" style="font-size: 10px;">Weight Initialization</a> <a href="/tags/dp/" style="font-size: 10px;">dp</a> <a href="/tags/language-modelling/" style="font-size: 10px;">language modelling</a> <a href="/tags/sequence-modeling/" style="font-size: 10px;">sequence modeling</a> <a href="/tags/softmax/" style="font-size: 10px;">softmax</a> <a href="/tags/%E4%BA%8C%E5%88%86%E6%B3%95/" style="font-size: 10px;">二分法</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 10px;">优化</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 18px;">动态规划</a> <a href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" style="font-size: 14px;">单调栈</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 14px;">双指针</a> <a href="/tags/%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/" style="font-size: 10px;">完全背包</a> <a href="/tags/%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1/" style="font-size: 10px;">序列建模</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/" style="font-size: 10px;">数据增强</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86/" style="font-size: 10px;">数据预处理</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%A0%88/" style="font-size: 14px;">栈</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E8%BF%81%E7%A7%BB/" style="font-size: 10px;">模型迁移</a> <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" style="font-size: 10px;">正则化</a> <a href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" style="font-size: 10px;">滑动窗口</a> <a href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" style="font-size: 10px;">线性分类</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 10px;">递归</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a>
     </div>
   </div>
 
