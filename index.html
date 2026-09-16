@@ -71,6 +71,169 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-CMU711/5_Transformer" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/16/CMU711/5_Transformer/" class="article-date">
+  <time class="dt-published" datetime="2026-09-16T06:29:20.000Z" itemprop="datePublished">2026-09-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/09/16/CMU711/5_Transformer/">5. Attention and Transformers</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="sequence-modeling">sequence modeling</h3>
+<blockquote>
+<p>给一组token输入， 输出相同大小的hidden state 和最后的隐藏状态<br>
+例子：</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch.nn</span><br><span class="line"><span class="variable language_">self</span>.decoder = nn.GRU(embed_size, hidden_size, batch_first = <span class="literal">True</span>)</span><br><span class="line">Hidden, last = <span class="variable language_">self</span>.decoder(Yin) <span class="comment"># Yin是一个token， 所以输出的就是Ty = 1</span></span><br></pre></td></tr></table></figure>
+<h2 id="SELF-Attention">SELF - Attention</h2>
+<p><em>当我们没有Encoder，我们只需要看输入token前面的序列</em></p>
+<p><strong>Query Vector ^ Tr</strong> @ <strong>Key Vector</strong> 得到一个值， 把Tx的值softmax归一化， 加上每个的 <strong>Value Vector</strong></p>
+<ul>
+<li>我们可以去掉recurrent的思想</li>
+</ul>
+<p>k_i = W_k() @ h_i</p>
+<p>v_i = W_v() @ h_i</p>
+<p>c_j = q_i^T @ k_j<br>
+<em>q_ij 的 attention score</em></p>
+<h3 id="计算score-function-c-j">计算score function c_j</h3>
+<blockquote>
+<p>Scaled Dot Product</p>
+</blockquote>
+<p><strong>a(q, k) = (q^T @ k) / sqrt(dim_k)</strong></p>
+<blockquote>
+<p>就是除以k的维度，来保持a(q,k) 让score为方差等于原来q,k方差的的正态分布</p>
+</blockquote>
+<h2 id="Transformer-architecture">Transformer architecture</h2>
+<blockquote>
+<p>MBART : Encoder-Decoder Model<br>
+LLaMA : Decoder_Only</p>
+</blockquote>
+<p>现在基本上都是用Deocode _ only</p>
+<img src="/2026/09/16/CMU711/5_Transformer/1.png" class="" title="LLama">
+<blockquote>
+<p>这个黑框里可以num_layers叠加</p>
+</blockquote>
+<h4 id="Five-Concepts">Five Concepts</h4>
+<ol>
+<li><strong>Positional encodings</strong><br>
+&lt;分词&gt; :我们用subwords方式分词<br>
+&lt;位置编码&gt; : 如果没有位置编码， 我们会有置换不变性 -&gt; 因为Self-attention是所有输入的token并行进入的</li>
+</ol>
+<p>Positianl embeddings -&gt; W_positions(T_max * d) (T_max是输入token的数量)</p>
+<p>downside -&gt; 没法推理长于T_max的序列</p>
+<h4 id="RoPE-旋转位置编码">RoPE -&gt; 旋转位置编码</h4>
+<h3 id="Scaled-dot-product-multi-layers-self-attention">Scaled dot product (multi layers self-attention)</h3>
+<p>Q (T,d)  K(T,d) V(T,d)<br>
+Attention(Q,K,V) = softmax  ( (Q @ K^T) / sqrt(d_k) ) V</p>
+<p>H0(长度为输入token数量n * embedding_size) -做self-attention注意力加权-&gt; FFN(W = （embedding_size, hidden_size) -&gt; Layer normalization -&gt;,<br>
+H1(n * hidden_size) -&gt;</p>
+<h3 id="Multi-heads">Multi-heads</h3>
+<p>我们想要Multi copies of attention</p>
+<p>MultiHead(Q, K ,V) = Concat(head1, … headh) W<br>
+where head_i = Attention(QWi, KWi, VWi)</p>
+<p>每个头都有不同的Q K V</p>
+<ol>
+<li>
+<p>让 T(sequence len = 3) D(dimension = 4) * Wq (dimension(4), hidden_dimension(2) * multihead(2)) -&gt; output(3,2 * 2) split最后一行 -&gt; (3 * 2) * 2 两个Query矩阵</p>
+</li>
+<li>
+<p>由此获得2 个 (3 * 2) 的 key 和 value矩阵， 由此获得value matrix 的 加权和 之后获得两个context矩阵 (3 * 2)</p>
+</li>
+<li>
+<p>context矩阵按照最后一个维度(hidden_layers)的方向拼接成(3 * 4)的矩阵</p>
+</li>
+<li>
+<p>把这个矩阵再过一次linear layer</p>
+</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">    B, T, C = x.size() <span class="comment"># batch_Size , len of sequenc , embeddings</span></span><br><span class="line">    q, k, v = <span class="variable language_">self</span>.c_attn(x).split(<span class="variable language_">self</span>.n_embd,dim= <span class="number">2</span>) <span class="comment"># 把dim = 2按照n.embd切分</span></span><br><span class="line">    <span class="comment"># 其实就是 q,k,v = torch.zeros(x.size()) 只是为了空间考虑</span></span><br><span class="line">    k = k.view(B, T, <span class="variable language_">self</span>.n_heads, C//<span class="variable language_">self</span>.n_heads).tranpose(<span class="number">1</span>,<span class="number">2</span>) <span class="comment"># k = (B,heads,T,C/heads)</span></span><br><span class="line">    q = q.view(B, T, <span class="variable language_">self</span>.n_heads, C//<span class="variable language_">self</span>.n_heads).tranpose(<span class="number">1</span>,<span class="number">2</span>) <span class="comment"># q = (B,heads,T,C/heads)</span></span><br><span class="line">    v = v.view(B, T, <span class="variable language_">self</span>.n_heads, C//<span class="variable language_">self</span>.n_heads).tranpose(<span class="number">1</span>,<span class="number">2</span>) <span class="comment"># v = (B,heads,T,C/heads)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># causal self-attention</span></span><br><span class="line">    att = (q @ k.tranpose(<span class="number">1</span>,<span class="number">2</span>)) * (<span class="number">1.0</span>/math.sqrt(k.size(-<span class="number">1</span>)))</span><br><span class="line">    <span class="comment"># (B,heads,T,T)</span></span><br><span class="line">    <span class="comment"># 这里除的是 sqrt(c// heads)</span></span><br><span class="line">    att = att.masked_fill ....</span><br><span class="line">    att = F.softmax(att, dim = -<span class="number">1</span>)</span><br><span class="line">    att = <span class="variable language_">self</span>.attn_dropout(att)</span><br><span class="line">    y = att @ v</span><br><span class="line">    y = y.transpose(-<span class="number">1</span>, -<span class="number">2</span>).conctiguous.view(B, T, C)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> y</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>不同的heads关注不同的词汇</p>
+</blockquote>
+<h3 id="Masking-for-Language-Modelling">Masking for Language Modelling</h3>
+<ul>
+<li>prevernt the model from cheating when predicting another token</li>
+</ul>
+<img src="/2026/09/16/CMU711/5_Transformer/2.png" class="" title="mask">
+<p>让attention的logits变为负无穷，在这一步 att = att.masked_fill … ， 所以sofrmax后就近似零</p>
+<ul>
+<li>
+<p>在训练的数据中，我们会把应该输出的序列开始加一个特殊符号， 最后加一个[S]</p>
+</li>
+<li>
+<p>同样，训练的时候加上[pad]的地方，我们也需要mask</p>
+</li>
+</ul>
+<h3 id="Residual-and-LayerNormalization">Residual and LayerNormalization</h3>
+<img src="/2026/09/16/CMU711/5_Transformer/2.png" class="" title="Layer Normalization">
+<blockquote>
+<p>用可学习的gamma和beta控制layer normal后的放缩和平移</p>
+</blockquote>
+<p>residual(x,f) = f(x) + x</p>
+<blockquote>
+<p>传递residual到模型的深层</p>
+</blockquote>
+<p><strong>学习从这一层到深层该怎么在现在这一层的基础上改变，而不是直接变换</strong></p>
+<p>残差连接告诉我们每一层attention层输入输出都是(Batch_size, token_size, embd_size)</p>
+<h3 id="Feed-Forward-Layer">Feed-Forward Layer</h3>
+<blockquote>
+<p>我们想让attention后的网络更non-linear一点</p>
+</blockquote>
+<h3 id="Improved-Transformer-architecture">Improved Transformer architecture</h3>
+<ol>
+<li>activation函数<br>
+sigmoid = 1/ 1 + e(-x)<br>
+relu = max(0,x)<br>
+Silu = x * sigmoid (x&lt;0 接近 0 ， x&gt;0 接近relu)</li>
+</ol>
+<blockquote>
+<p>我们需要模型学会把一个系数快速成为0<br>
+非单调的</p>
+</blockquote>
+<h3 id="Relative-Positional-EnCoding-RPE">Relative Positional EnCoding(RPE)</h3>
+<p>加到 Value / Attention Score 上（如 Shaw et al. / T5）：<br>
+直接在 Attention 矩阵中加上一个根据相对距离偏置量 $R_{i-j}$：$$A_{i,j} = \frac{Q_i K_j^T}{\sqrt{d_k}} + R_{i-j}$$</p>
+<h3 id="Rotaty-Positional-Encodings-RoPE">Rotaty Positional Encodings(RoPE)</h3>
+<blockquote>
+<p>如果两个token在句子中的位置不同，但是相对距离相同，我们应该看到相同的变换方法</p>
+</blockquote>
+<img src="/2026/09/16/CMU711/5_Transformer/4.png" class="" title="RoPE">
+<p>$$\mathbf{R}_{\Theta, m}^d = \begin{pmatrix} \cos(m\theta) &amp; -\sin(m\theta) \ \sin(m\theta) &amp; \cos(m\theta) \end{pmatrix}$$</p>
+<p>$$(\mathbf{R}<em>{m\theta} \mathbf{q})^T (\mathbf{R}</em>{n\theta} \mathbf{k}) = \mathbf{q}^T \mathbf{R}<em>{m\theta}^T \mathbf{R}</em>{n\theta} \mathbf{k} = \mathbf{q}^T \mathbf{R}_{(n-m)\theta} \mathbf{k}$$</p>
+<h3 id="PRE-layer-norm">PRE-layer- norm</h3>
+<h3 id="Grouped-query">Grouped-query</h3>
+<img src="/2026/09/16/CMU711/5_Transformer/5.png" class="" title="LLAMA">
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/09/16/CMU711/5_Transformer/" data-id="cmu3wuafu0005yctl5gvrbt2j" data-title="5. Attention and Transformers" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CMU711/" rel="tag">CMU711</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-CMU711/4_RNN" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2026/09/15/CMU711/4_RNN/" class="article-date">
@@ -168,7 +331,7 @@ output = Σa_n * h_n</p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/15/CMU711/4_RNN/" data-id="cmu2ibymr0003r0tl0bdu3qp1" data-title="4.Recurrent Neural Networks" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/09/15/CMU711/4_RNN/" data-id="cmu3wuafu0006yctlcl5ogsc2" data-title="4.Recurrent Neural Networks" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -319,7 +482,7 @@ take advantage of GPU’s parallel hardware</li>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/14/CMU711/3_Autoaggrevssive_Language_Modelling/" data-id="cmu2ibymr0004r0tlh8yvgubo" data-title="Autoaggresive Language Modelling" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/09/14/CMU711/3_Autoaggrevssive_Language_Modelling/" data-id="cmu3wuaft0004yctlbq61hz4z" data-title="Autoaggresive Language Modelling" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -441,7 +604,7 @@ GPT-2 用的分词器就是基于BPE和UTF-8编码 <a target="_blank" rel="noope
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/12/CMU711/2_learnedrepresentations/" data-id="cmu2ibyms0005r0tldnhtfee8" data-title="2.Learned Representations" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/09/12/CMU711/2_learnedrepresentations/" data-id="cmu3wuafu0008yctld354hjur" data-title="2.Learned Representations" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -511,7 +674,7 @@ S</p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/12/CMU711/1_Introduction/" data-id="cmu2ibymo0000r0tlhmjcb17g" data-title="1.Introduction" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/09/12/CMU711/1_Introduction/" data-id="cmu3wuafs0002yctl15krbfw2" data-title="1.Introduction" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -571,7 +734,7 @@ S</p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/10/CS231n/batchnorm/" data-id="cmu2ibymw000nr0tlhq8he7d7" data-title="batchnorm" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/09/10/CS231n/batchnorm/" data-id="cmu3wuafx000jyctl8excemsc" data-title="batchnorm" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -706,7 +869,7 @@ V = X`V</p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/09/CS231n/Transformer/" data-id="cmu2ibymv000ir0tlc0xtf2ys" data-title="Transformer" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/09/09/CS231n/Transformer/" data-id="cmu3wuafx000iyctlh04vhcx5" data-title="Transformer" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -827,7 +990,7 @@ y_t = fW_hy(h_t) fW_hy-&gt; 将hidden state转化为输出的output</p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/15/CS231n/RNN/" data-id="cmu2ibymw000lr0tlbgdhbu7v" data-title="RNN" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/15/CS231n/RNN/" data-id="cmu3wuafw000fyctlgy814ti9" data-title="RNN" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -882,7 +1045,7 @@ y_t = fW_hy(h_t) fW_hy-&gt; 将hidden state转化为输出的output</p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/15/leetcode/152.%20%E4%B9%98%E7%A7%AF%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84-1/" data-id="cmu2ibymv000jr0tlczv7hdhc" data-title="152. 乘积最大子数组" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/15/leetcode/152.%20%E4%B9%98%E7%A7%AF%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84-1/" data-id="cmu3wuag4002zyctl8e86cic5" data-title="152. 乘积最大子数组" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -922,56 +1085,10 @@ y_t = fW_hy(h_t) fW_hy-&gt; 将hidden state转化为输出的output</p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/15/leetcode/152.%20%E4%B9%98%E7%A7%AF%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84/" data-id="cmu2ibymx000sr0tle03ncgqe" data-title="152. 乘积最大子数组" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/15/leetcode/152.%20%E4%B9%98%E7%A7%AF%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84/" data-id="cmu3wuag40030yctl97frh0od" data-title="152. 乘积最大子数组" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-CS231n/前向传播和反向传播代码" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2026/07/13/CS231n/%E5%89%8D%E5%90%91%E4%BC%A0%E6%92%AD%E5%92%8C%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E4%BB%A3%E7%A0%81/" class="article-date">
-  <time class="dt-published" datetime="2026-07-13T07:01:05.000Z" itemprop="datePublished">2026-07-13</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2026/07/13/CS231n/%E5%89%8D%E5%90%91%E4%BC%A0%E6%92%AD%E5%92%8C%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E4%BB%A3%E7%A0%81/">前向传播和反向传播代码</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1>向前传播(包含flat)</h1>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">affine_forward</span>(<span class="params">x, w, b</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Computes the forward pass for an affine (fully-connected) layer.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    The input x has shape (N, d_1, ..., d_k) and contains a minibatch of N</span></span><br><span class="line"><span class="string">    examples, where each example x[i] has shape (d_1, ..., d_k). We will</span></span><br><span class="line"><span class="string">    reshape each input into a vector of dimension D = d_1 * ... * d_k, and</span></span><br><span class="line"><span class="string">    then transform it to an output vector of dimension M.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Inputs:</span></span><br><span class="line"><span class="string">    - x: A numpy array containing input data, of shape (N, d_1, ..., d_k)</span></span><br><span class="line"><span class="string">    - w: A numpy array of weights, of shape (D, M)</span></span><br><span class="line"><span class="string">    - b: A numpy array of biases, of shape (M,)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns a tuple of:</span></span><br><span class="line"><span class="string">    - out: output, of shape (N, M)</span></span><br><span class="line"><span class="string">    - cache: (x, w, b)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    out = <span class="literal">None</span></span><br><span class="line">    <span class="comment">###########################################################################</span></span><br><span class="line">    <span class="comment"># <span class="doctag">TODO:</span> Implement the affine forward pass. Store the result in out. You   #</span></span><br><span class="line">    <span class="comment"># will need to reshape the input into rows.                               #</span></span><br><span class="line">    <span class="comment">###########################################################################</span></span><br><span class="line">    N = x.shape[<span class="number">0</span>]</span><br><span class="line">    x_flatten = x.reshape(N, -<span class="number">1</span>)</span><br><span class="line">    out = np.dot(x_flatten, w) + b</span><br><span class="line">    <span class="comment">###########################################################################</span></span><br><span class="line">    <span class="comment">#                             END OF YOUR CODE                            #</span></span><br><span class="line">    <span class="comment">###########################################################################</span></span><br><span class="line">    cache = (x, w, b)</span><br><span class="line">    <span class="keyword">return</span> out, cache</span><br></pre></td></tr></table></figure>
-<h1>反向传播</h1>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">affine_backward</span>(<span class="params">dout, cache</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Computes the backward pass for an affine layer.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Inputs:</span></span><br><span class="line"><span class="string">    - dout: Upstream derivative, of shape (N, M)</span></span><br><span class="line"><span class="string">    - cache: Tuple of:</span></span><br><span class="line"><span class="string">      - x: Input data, of shape (N, d_1, ... d_k)</span></span><br><span class="line"><span class="string">      - w: Weights, of shape (D, M)</span></span><br><span class="line"><span class="string">      - b: Biases, of shape (M,)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns a tuple of:</span></span><br><span class="line"><span class="string">    - dx: Gradient with respect to x, of shape (N, d1, ..., d_k)</span></span><br><span class="line"><span class="string">    - dw: Gradient with respect to w, of shape (D, M)</span></span><br><span class="line"><span class="string">    - db: Gradient with respect to b, of shape (M,)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    x, w, b = cache</span><br><span class="line">    dx, dw, db = <span class="literal">None</span>, <span class="literal">None</span>, <span class="literal">None</span></span><br><span class="line">    N = x.shape[<span class="number">0</span>]</span><br><span class="line">    x_new = x.reshape(N,-<span class="number">1</span>)</span><br><span class="line">    dx = np.dot(dout, w.T)</span><br><span class="line">    dx = dx.reshape(x.shape)</span><br><span class="line"></span><br><span class="line">    dw = np.dot(x_new.T, dout)</span><br><span class="line">    </span><br><span class="line">    db = np.<span class="built_in">sum</span>(dout, axis = <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">###########################################################################</span></span><br><span class="line">    <span class="comment"># <span class="doctag">TODO:</span> Implement the affine backward pass.                               #</span></span><br><span class="line">    <span class="comment">###########################################################################</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">###########################################################################</span></span><br><span class="line">    <span class="comment">#                             END OF YOUR CODE                            #</span></span><br><span class="line">    <span class="comment">###########################################################################</span></span><br><span class="line">    <span class="keyword">return</span> dx, dw, db</span><br></pre></td></tr></table></figure>
-<h2 id="two-layer的传播全波">two - layer的传播全波</h2>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TwoLayerNet</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    A two-layer fully-connected neural network with ReLU nonlinearity and</span></span><br><span class="line"><span class="string">    softmax loss that uses a modular layer design. We assume an input dimension</span></span><br><span class="line"><span class="string">    of D, a hidden dimension of H, and perform classification over C classes.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    The architecure should be affine - relu - affine - softmax.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Note that this class does not implement gradient descent; instead, it</span></span><br><span class="line"><span class="string">    will interact with a separate Solver object that is responsible for running</span></span><br><span class="line"><span class="string">    optimization.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    The learnable parameters of the model are stored in the dictionary</span></span><br><span class="line"><span class="string">    self.params that maps parameter names to numpy arrays.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params"></span></span><br><span class="line"><span class="params">        self,</span></span><br><span class="line"><span class="params">        input_dim=<span class="number">3</span> * <span class="number">32</span> * <span class="number">32</span>,</span></span><br><span class="line"><span class="params">        hidden_dim=<span class="number">100</span>,</span></span><br><span class="line"><span class="params">        num_classes=<span class="number">10</span>,</span></span><br><span class="line"><span class="params">        weight_scale=<span class="number">1e-3</span>,</span></span><br><span class="line"><span class="params">        reg=<span class="number">0.0</span>,</span></span><br><span class="line"><span class="params">    </span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        Initialize a new network.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        Inputs:</span></span><br><span class="line"><span class="string">        - input_dim: An integer giving the size of the input</span></span><br><span class="line"><span class="string">        - hidden_dim: An integer giving the size of the hidden layer</span></span><br><span class="line"><span class="string">        - num_classes: An integer giving the number of classes to classify</span></span><br><span class="line"><span class="string">        - weight_scale: Scalar giving the standard deviation for random</span></span><br><span class="line"><span class="string">          initialization of the weights.</span></span><br><span class="line"><span class="string">        - reg: Scalar giving L2 regularization strength.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.params = &#123;&#125;</span><br><span class="line">        <span class="variable language_">self</span>.reg = reg</span><br><span class="line">        </span><br><span class="line">        <span class="comment">############################################################################</span></span><br><span class="line">        <span class="comment"># <span class="doctag">TODO:</span> Initialize the weights and biases of the two-layer net. Weights    #</span></span><br><span class="line">        <span class="comment"># should be initialized from a Gaussian centered at 0.0 with               #</span></span><br><span class="line">        <span class="comment"># standard deviation equal to weight_scale, and biases should be           #</span></span><br><span class="line">        <span class="comment"># initialized to zero. All weights and biases should be stored in the      #</span></span><br><span class="line">        <span class="comment"># dictionary self.params, with first layer weights                         #</span></span><br><span class="line">        <span class="comment"># and biases using the keys &#x27;W1&#x27; and &#x27;b1&#x27; and second layer                 #</span></span><br><span class="line">        <span class="comment"># weights and biases using the keys &#x27;W2&#x27; and &#x27;b2&#x27;.                         #</span></span><br><span class="line">        <span class="comment">############################################################################</span></span><br><span class="line">        <span class="variable language_">self</span>.params[<span class="string">&#x27;W1&#x27;</span>] = np.random.normal(<span class="number">0</span>, weight_scale, size= (input_dim, hidden_dim))</span><br><span class="line">        <span class="variable language_">self</span>.params[<span class="string">&#x27;b1&#x27;</span>] = np.zeros(hidden_dim)</span><br><span class="line"></span><br><span class="line">        <span class="variable language_">self</span>.params[<span class="string">&#x27;W2&#x27;</span>] = np.random.normal(<span class="number">0</span>, weight_scale, size= (hidden_dim, num_classes))</span><br><span class="line">        <span class="variable language_">self</span>.params[<span class="string">&#x27;b2&#x27;</span>] = np.zeros(num_classes)</span><br><span class="line">        <span class="comment">############################################################################</span></span><br><span class="line">        <span class="comment">#                             END OF YOUR CODE                             #</span></span><br><span class="line">        <span class="comment">############################################################################</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">loss</span>(<span class="params">self, X, y=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        Compute loss and gradient for a minibatch of data.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        Inputs:</span></span><br><span class="line"><span class="string">        - X: Array of input data of shape (N, d_1, ..., d_k)</span></span><br><span class="line"><span class="string">        - y: Array of labels, of shape (N,). y[i] gives the label for X[i].</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        Returns:</span></span><br><span class="line"><span class="string">        If y is None, then run a test-time forward pass of the model and return:</span></span><br><span class="line"><span class="string">        - scores: Array of shape (N, C) giving classification scores, where</span></span><br><span class="line"><span class="string">          scores[i, c] is the classification score for X[i] and class c.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        If y is not None, then run a training-time forward and backward pass and</span></span><br><span class="line"><span class="string">        return a tuple of:</span></span><br><span class="line"><span class="string">        - loss: Scalar value giving the loss</span></span><br><span class="line"><span class="string">        - grads: Dictionary with the same keys as self.params, mapping parameter</span></span><br><span class="line"><span class="string">          names to gradients of the loss with respect to those parameters.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        scores = <span class="literal">None</span></span><br><span class="line">        <span class="comment">############################################################################</span></span><br><span class="line">        <span class="comment"># <span class="doctag">TODO:</span> Implement the forward pass for the two-layer net, computing the    #</span></span><br><span class="line">        <span class="comment"># class scores for X and storing them in the scores variable.              #</span></span><br><span class="line">        <span class="comment">############################################################################</span></span><br><span class="line">        N = X.shape[<span class="number">0</span>]</span><br><span class="line">        X_flatten = X.reshape(N, -<span class="number">1</span>)</span><br><span class="line">        h = np.dot(X_flatten, <span class="variable language_">self</span>.params[<span class="string">&#x27;W1&#x27;</span>]) + <span class="variable language_">self</span>.params[<span class="string">&#x27;b1&#x27;</span>]</span><br><span class="line">        h_relu = np.maximum(h ,<span class="number">0</span>)</span><br><span class="line">        scores = np.dot(h_relu, <span class="variable language_">self</span>.params[<span class="string">&#x27;W2&#x27;</span>]) + <span class="variable language_">self</span>.params[<span class="string">&#x27;b2&#x27;</span>]</span><br><span class="line">        <span class="comment"># scores [N,C]</span></span><br><span class="line">        <span class="comment">############################################################################</span></span><br><span class="line">        <span class="comment">#                             END OF YOUR CODE                             #</span></span><br><span class="line">        <span class="comment">############################################################################</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># If y is None then we are in test mode so just return scores</span></span><br><span class="line">        <span class="keyword">if</span> y <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span> scores</span><br><span class="line">        <span class="comment"># W*x + b - relu - wx+b - softmax </span></span><br><span class="line">        loss, grads = <span class="number">0</span>, &#123;&#125;</span><br><span class="line"></span><br><span class="line">        loss, grads_soft = softmax_loss(scores, y)</span><br><span class="line">        loss +=  <span class="number">0.5</span> * <span class="variable language_">self</span>.reg * ( (<span class="variable language_">self</span>.params[<span class="string">&#x27;W1&#x27;</span>] * <span class="variable language_">self</span>.params[<span class="string">&#x27;W1&#x27;</span>]).<span class="built_in">sum</span>() +  (<span class="variable language_">self</span>.params[<span class="string">&#x27;W2&#x27;</span>] * <span class="variable language_">self</span>.params[<span class="string">&#x27;W2&#x27;</span>]).<span class="built_in">sum</span>() )</span><br><span class="line">        <span class="comment"># grad_soft [N,C]</span></span><br><span class="line">        <span class="comment"># W [H,C] B[C]</span></span><br><span class="line">        grads[<span class="string">&#x27;W2&#x27;</span>] = np.dot(h_relu.T, grads_soft) + <span class="variable language_">self</span>.reg * <span class="variable language_">self</span>.params[<span class="string">&#x27;W2&#x27;</span>]</span><br><span class="line">        grads[<span class="string">&#x27;b2&#x27;</span>] = np.<span class="built_in">sum</span>(grads_soft, axis = <span class="number">0</span>)</span><br><span class="line">        grads_layer2 = np.dot(grads_soft, <span class="variable language_">self</span>.params[<span class="string">&#x27;W2&#x27;</span>].T)</span><br><span class="line"></span><br><span class="line">        grads_relu = np.where(h &gt; <span class="number">0</span>, grads_layer2, <span class="number">0</span>)</span><br><span class="line">        grads[<span class="string">&#x27;W1&#x27;</span>] = np.dot(X_flatten.T, grads_relu) + <span class="variable language_">self</span>.reg * <span class="variable language_">self</span>.params[<span class="string">&#x27;W1&#x27;</span>]</span><br><span class="line">        grads[<span class="string">&#x27;b1&#x27;</span>] = np.<span class="built_in">sum</span>(grads_relu, axis = <span class="number">0</span>)</span><br><span class="line">        grads_layer1 = np.dot(grads_relu, <span class="variable language_">self</span>.params[<span class="string">&#x27;W1&#x27;</span>].T)</span><br><span class="line">        <span class="comment"># grads[&#x27;X&#x27;] = grads_layer1</span></span><br><span class="line">        <span class="comment">############################################################################</span></span><br><span class="line">        <span class="comment">#                             END OF YOUR CODE                             #</span></span><br><span class="line">        <span class="comment">############################################################################</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> loss, grads</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/13/CS231n/%E5%89%8D%E5%90%91%E4%BC%A0%E6%92%AD%E5%92%8C%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E4%BB%A3%E7%A0%81/" data-id="cmu2ibymw000qr0tl950nfi3m" data-title="前向传播和反向传播代码" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CS231n/" rel="tag">CS231n</a></li></ul>
-
     </footer>
   </div>
   
@@ -984,7 +1101,7 @@ y_t = fW_hy(h_t) fW_hy-&gt; 将hidden state转化为输出的output</p>
 
   <nav id="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -1008,7 +1125,7 @@ y_t = fW_hy(h_t) fW_hy-&gt; 将hidden state转化为输出的output</p>
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Activation-Functions/" style="font-size: 10px;">Activation Functions</a> <a href="/tags/BackPropagation/" style="font-size: 12px;">BackPropagation</a> <a href="/tags/CMU711/" style="font-size: 16px;">CMU711</a> <a href="/tags/CNN/" style="font-size: 12px;">CNN</a> <a href="/tags/CS231n/" style="font-size: 20px;">CS231n</a> <a href="/tags/Data-drivern-approaches/" style="font-size: 10px;">Data drivern approaches</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/K-Nearest-Neighbor/" style="font-size: 10px;">K-Nearest Neighbor</a> <a href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" style="font-size: 10px;">K最近邻居算法</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LeetCode/" style="font-size: 10px;">LeetCode</a> <a href="/tags/Linear-Classification/" style="font-size: 10px;">Linear Classification</a> <a href="/tags/NLP/" style="font-size: 16px;">NLP</a> <a href="/tags/NN/" style="font-size: 10px;">NN</a> <a href="/tags/Normalization-Layers/" style="font-size: 10px;">Normalization Layers</a> <a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a> <a href="/tags/RNN/" style="font-size: 12px;">RNN</a> <a href="/tags/Regulation/" style="font-size: 10px;">Regulation</a> <a href="/tags/RestNet/" style="font-size: 10px;">RestNet</a> <a href="/tags/Transformer/" style="font-size: 10px;">Transformer</a> <a href="/tags/Weight-Initialization/" style="font-size: 10px;">Weight Initialization</a> <a href="/tags/dp/" style="font-size: 10px;">dp</a> <a href="/tags/language-modelling/" style="font-size: 10px;">language modelling</a> <a href="/tags/sequence-modeling/" style="font-size: 10px;">sequence modeling</a> <a href="/tags/softmax/" style="font-size: 10px;">softmax</a> <a href="/tags/%E4%BA%8C%E5%88%86%E6%B3%95/" style="font-size: 10px;">二分法</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 10px;">优化</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 18px;">动态规划</a> <a href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" style="font-size: 14px;">单调栈</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 14px;">双指针</a> <a href="/tags/%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/" style="font-size: 10px;">完全背包</a> <a href="/tags/%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1/" style="font-size: 10px;">序列建模</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/" style="font-size: 10px;">数据增强</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86/" style="font-size: 10px;">数据预处理</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%A0%88/" style="font-size: 14px;">栈</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E8%BF%81%E7%A7%BB/" style="font-size: 10px;">模型迁移</a> <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" style="font-size: 10px;">正则化</a> <a href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" style="font-size: 10px;">滑动窗口</a> <a href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" style="font-size: 10px;">线性分类</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 10px;">递归</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a>
+      <a href="/tags/Activation-Functions/" style="font-size: 10px;">Activation Functions</a> <a href="/tags/BackPropagation/" style="font-size: 12.5px;">BackPropagation</a> <a href="/tags/CMU711/" style="font-size: 17.5px;">CMU711</a> <a href="/tags/CNN/" style="font-size: 12.5px;">CNN</a> <a href="/tags/CS231n/" style="font-size: 20px;">CS231n</a> <a href="/tags/Data-drivern-approaches/" style="font-size: 10px;">Data drivern approaches</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/K-Nearest-Neighbor/" style="font-size: 10px;">K-Nearest Neighbor</a> <a href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" style="font-size: 10px;">K最近邻居算法</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LeetCode/" style="font-size: 10px;">LeetCode</a> <a href="/tags/Linear-Classification/" style="font-size: 10px;">Linear Classification</a> <a href="/tags/NLP/" style="font-size: 17.5px;">NLP</a> <a href="/tags/NN/" style="font-size: 10px;">NN</a> <a href="/tags/Normalization-Layers/" style="font-size: 10px;">Normalization Layers</a> <a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a> <a href="/tags/RNN/" style="font-size: 12.5px;">RNN</a> <a href="/tags/Regulation/" style="font-size: 10px;">Regulation</a> <a href="/tags/RestNet/" style="font-size: 10px;">RestNet</a> <a href="/tags/Transformer/" style="font-size: 10px;">Transformer</a> <a href="/tags/Weight-Initialization/" style="font-size: 10px;">Weight Initialization</a> <a href="/tags/dp/" style="font-size: 10px;">dp</a> <a href="/tags/language-modelling/" style="font-size: 10px;">language modelling</a> <a href="/tags/sequence-modeling/" style="font-size: 10px;">sequence modeling</a> <a href="/tags/softmax/" style="font-size: 10px;">softmax</a> <a href="/tags/%E4%BA%8C%E5%88%86%E6%B3%95/" style="font-size: 10px;">二分法</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 10px;">优化</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 17.5px;">动态规划</a> <a href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" style="font-size: 15px;">单调栈</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 15px;">双指针</a> <a href="/tags/%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/" style="font-size: 10px;">完全背包</a> <a href="/tags/%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1/" style="font-size: 10px;">序列建模</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/" style="font-size: 10px;">数据增强</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86/" style="font-size: 10px;">数据预处理</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%A0%88/" style="font-size: 15px;">栈</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E8%BF%81%E7%A7%BB/" style="font-size: 10px;">模型迁移</a> <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" style="font-size: 10px;">正则化</a> <a href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" style="font-size: 10px;">滑动窗口</a> <a href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" style="font-size: 10px;">线性分类</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 10px;">递归</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a>
     </div>
   </div>
 
@@ -1030,6 +1147,10 @@ y_t = fW_hy(h_t) fW_hy-&gt; 将hidden state转化为输出的output</p>
       <ul>
         
           <li>
+            <a href="/2026/09/16/CMU711/5_Transformer/">5. Attention and Transformers</a>
+          </li>
+        
+          <li>
             <a href="/2026/09/15/CMU711/4_RNN/">4.Recurrent Neural Networks</a>
           </li>
         
@@ -1043,10 +1164,6 @@ y_t = fW_hy(h_t) fW_hy-&gt; 将hidden state转化为输出的output</p>
         
           <li>
             <a href="/2026/09/12/CMU711/1_Introduction/">1.Introduction</a>
-          </li>
-        
-          <li>
-            <a href="/2026/09/10/CS231n/batchnorm/">batchnorm</a>
           </li>
         
       </ul>
