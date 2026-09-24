@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>7.ScalingLaws | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Scaling Laws 决定了 -&gt; How many tokens, batchs size, learning rate Compute（算力资源）  算力被消耗在前向反向传播中   单位是（FLOPS，floating points operation）  C &#x3D; 6 * N * D（适用于训练过程）  N :  参数量 D ： 数据量 算力是六倍的参数量 * 数据量  Scalin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="7.ScalingLaws">
+<meta property="og:url" content="http://example.com/2026/09/24/CMU711/7_ScalingLaws/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Scaling Laws 决定了 -&gt; How many tokens, batchs size, learning rate Compute（算力资源）  算力被消耗在前向反向传播中   单位是（FLOPS，floating points operation）  C &#x3D; 6 * N * D（适用于训练过程）  N :  参数量 D ： 数据量 算力是六倍的参数量 * 数据量  Scalin">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2026/09/24/CMU711/7_ScalingLaws/1.png">
+<meta property="og:image" content="http://example.com/2026/09/24/CMU711/7_ScalingLaws/2.png">
+<meta property="og:image" content="http://example.com/2026/09/24/CMU711/7_ScalingLaws/3.png">
+<meta property="article:published_time" content="2026-09-24T07:02:13.000Z">
+<meta property="article:modified_time" content="2026-09-24T09:11:19.130Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="CMU711">
+<meta property="article:tag" content="NLP">
+<meta property="article:tag" content="ScalingLaw">
+<meta property="article:tag" content="Prompt">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2026/09/24/CMU711/7_ScalingLaws/1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-CMU711/7_ScalingLaws" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/24/CMU711/7_ScalingLaws/" class="article-date">
+  <time class="dt-published" datetime="2026-09-24T07:02:13.000Z" itemprop="datePublished">2026-09-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      7.ScalingLaws
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Scaling-Laws">Scaling Laws</h2>
+<p><em>决定了 -&gt; How many tokens, batchs size, learning rate</em></p>
+<h3 id="Compute（算力资源）">Compute（算力资源）</h3>
+<blockquote>
+<p>算力被消耗在前向反向传播中</p>
+</blockquote>
+<blockquote>
+<p>单位是（FLOPS，floating points operation）</p>
+</blockquote>
+<p><strong>C = 6 * N * D（适用于训练过程）</strong></p>
+<ul>
+<li>N :  参数量</li>
+<li>D ： 数据量</li>
+<li>算力是六倍的参数量 * 数据量</li>
+</ul>
+<h3 id="Scaling-Laws-2">Scaling Laws</h3>
+<p>L -&gt; Cross-Entropy</p>
+<p>Cross-Entropy Loss 是被数据集决定下限的， 随着parameters越老越多， 会有一个趋向data熵值的趋势</p>
+<blockquote>
+<p>用log - log图表呈现</p>
+</blockquote>
+<img src="/2026/09/24/CMU711/7_ScalingLaws/1.png" class="" title="ScalingLaws">
+<blockquote>
+<p>repeating data 4 epoches is good enough -&gt; 多了的话边际效应很明显<br>
+在4 epoched内， 用重复数据降低的loss几乎等同于用新的数据</p>
+</blockquote>
+<p>$$L(N, D) = E + \frac{A}{N^\alpha} + \frac{B}{D^\beta}$$</p>
+<h4 id="Using-scaling-laws-to-choose-hyperprameters">Using scaling laws to choose hyperprameters</h4>
+<ol>
+<li>run many experiments at a small scale</li>
+<li>using scaling law to estimate the best hyper parameters for larger scaling</li>
+</ol>
+<p>[Chichilla论文]:</p>
+<ol>
+<li>run experiments</li>
+<li>fit a line in the log-log plots and predict hte optimal model size and tokens<br>
+*这个图标是X 是log算力， Y是 log数据量或者参数量</li>
+</ol>
+<img src="/2026/09/24/CMU711/7_ScalingLaws/2.png" class="" title="ScalingLaws">
+<blockquote>
+<p>batch_size  , learning_rate等超参数也有随着FLOPs的scaling laws</p>
+</blockquote>
+<p><em>Recap:SCALING LAWS是一系列揭示变量和perfoemance之间的公式，一般遵循幂律，也就是LOG-LOG上的线性</em></p>
+<h3 id="Prompting">Prompting</h3>
+<p>我们想要输出， 我们给定一个输入让它最大化后面那个输出的可能</p>
+<ul>
+<li>Aside: Generation</li>
+</ul>
+<ol>
+<li>如果没有format prompt</li>
+</ol>
+<ul>
+<li>它会补充输入的内容</li>
+</ul>
+<ol start="2">
+<li>zero shot(给它指示让它行动)</li>
+</ol>
+<ul>
+<li>这个需要详细的Fine-tuning</li>
+</ul>
+<ol start="3">
+<li>few shots(给它指示和例子)</li>
+</ol>
+<ul>
+<li>prompt:f(x_test, instructions, [(x,y)1, (x,y)2, …])</li>
+<li>IN-CONTEXT LEARNING -&gt; 没有任何参数更新</li>
+</ul>
+<blockquote>
+<p>在大规模的预训练的时候，模型已经见过IN-CONTEST LEARNING所要求的任务， 所以它并不会学习新的任务，所以一般没有给特定示例的ICL 会 达到更高的准确率</p>
+</blockquote>
+<blockquote>
+<p>为了防止它只是从原来的任务中检索， 我们可以用Reinforcement ICL</p>
+</blockquote>
+<ul>
+<li>
+<p>如果给更多的示例会让更准确吗？</p>
+</li>
+<li>
+<p>会的， 甚至可以达到和default差不多</p>
+</li>
+</ul>
+<img src="/2026/09/24/CMU711/7_ScalingLaws/3.png" class="" title="ICL">
+<blockquote>
+<p>语言模型对上下文学习（In-Context Learning）中的微小变化非常敏感,比如示例的顺序变化就会造成很大的改变</p>
+</blockquote>
+<blockquote>
+<p>说明ICL 不够健壮（robust）</p>
+</blockquote>
+<h4 id="Chat-Prompts">Chat Prompts</h4>
+<p><strong>现在的语言模型都被fin-tuned成为chatbots,输入被微调为特定的format</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">messages = [</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;role&quot;</span>: <span class="string">&quot;user&quot;</span>,  <span class="comment"># system/ yuser</span></span><br><span class="line">        <span class="string">&quot;content&quot;</span>: <span class="string">&quot;&quot;&quot;Solve the problem:</span></span><br><span class="line"><span class="string">On average Joe throws 25 punches per minute. </span></span><br><span class="line"><span class="string">A fight lasts 5 rounds of 3 minutes. </span></span><br><span class="line"><span class="string">How many punches did he throw?&quot;&quot;&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<h4 id="CoT">CoT</h4>
+<blockquote>
+<p>用专门的模型训练</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/09/24/CMU711/7_ScalingLaws/" data-id="cmufbbqk9000dvktlghym77fi" data-title="7.ScalingLaws" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CMU711/" rel="tag">CMU711</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Prompt/" rel="tag">Prompt</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ScalingLaw/" rel="tag">ScalingLaw</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2026/09/23/CMU711/6_Pretraining/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">6.Pretraining</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Activation-Functions/" rel="tag">Activation Functions</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BackPropagation/" rel="tag">BackPropagation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMU711/" rel="tag">CMU711</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CNN/" rel="tag">CNN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CS231n/" rel="tag">CS231n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-drivern-approaches/" rel="tag">Data drivern approaches</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dropout/" rel="tag">Dropout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K-Nearest-Neighbor/" rel="tag">K-Nearest Neighbor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" rel="tag">K最近邻居算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LSTM/" rel="tag">LSTM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linear-Classification/" rel="tag">Linear Classification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NN/" rel="tag">NN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Normalization-Layers/" rel="tag">Normalization Layers</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Optimization/" rel="tag">Optimization</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pretraining/" rel="tag">Pretraining</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Prompt/" rel="tag">Prompt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RNN/" rel="tag">RNN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Regulation/" rel="tag">Regulation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RestNet/" rel="tag">RestNet</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ScalingLaw/" rel="tag">ScalingLaw</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Weight-Initialization/" rel="tag">Weight Initialization</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dp/" rel="tag">dp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/language-modelling/" rel="tag">language modelling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sequence-modeling/" rel="tag">sequence modeling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/softmax/" rel="tag">softmax</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%88%86%E6%B3%95/" rel="tag">二分法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BC%98%E5%8C%96/" rel="tag">优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" rel="tag">单调栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/" rel="tag">完全背包</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1/" rel="tag">序列建模</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/" rel="tag">数据增强</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86/" rel="tag">数据预处理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E7%BB%84/" rel="tag">数组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%88/" rel="tag">栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E8%BF%81%E7%A7%BB/" rel="tag">模型迁移</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" rel="tag">正则化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" rel="tag">滑动窗口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" rel="tag">线性分类</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%92%E5%BD%92/" rel="tag">递归</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%93%BE%E8%A1%A8/" rel="tag">链表</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Activation-Functions/" style="font-size: 10px;">Activation Functions</a> <a href="/tags/BackPropagation/" style="font-size: 12px;">BackPropagation</a> <a href="/tags/CMU711/" style="font-size: 18px;">CMU711</a> <a href="/tags/CNN/" style="font-size: 12px;">CNN</a> <a href="/tags/CS231n/" style="font-size: 20px;">CS231n</a> <a href="/tags/Data-drivern-approaches/" style="font-size: 10px;">Data drivern approaches</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/K-Nearest-Neighbor/" style="font-size: 10px;">K-Nearest Neighbor</a> <a href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" style="font-size: 10px;">K最近邻居算法</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LeetCode/" style="font-size: 10px;">LeetCode</a> <a href="/tags/Linear-Classification/" style="font-size: 10px;">Linear Classification</a> <a href="/tags/NLP/" style="font-size: 18px;">NLP</a> <a href="/tags/NN/" style="font-size: 10px;">NN</a> <a href="/tags/Normalization-Layers/" style="font-size: 10px;">Normalization Layers</a> <a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a> <a href="/tags/Pretraining/" style="font-size: 10px;">Pretraining</a> <a href="/tags/Prompt/" style="font-size: 10px;">Prompt</a> <a href="/tags/RNN/" style="font-size: 12px;">RNN</a> <a href="/tags/Regulation/" style="font-size: 10px;">Regulation</a> <a href="/tags/RestNet/" style="font-size: 10px;">RestNet</a> <a href="/tags/ScalingLaw/" style="font-size: 10px;">ScalingLaw</a> <a href="/tags/Transformer/" style="font-size: 12px;">Transformer</a> <a href="/tags/Weight-Initialization/" style="font-size: 10px;">Weight Initialization</a> <a href="/tags/dp/" style="font-size: 10px;">dp</a> <a href="/tags/language-modelling/" style="font-size: 10px;">language modelling</a> <a href="/tags/sequence-modeling/" style="font-size: 10px;">sequence modeling</a> <a href="/tags/softmax/" style="font-size: 10px;">softmax</a> <a href="/tags/%E4%BA%8C%E5%88%86%E6%B3%95/" style="font-size: 10px;">二分法</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 10px;">优化</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 16px;">动态规划</a> <a href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" style="font-size: 14px;">单调栈</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 14px;">双指针</a> <a href="/tags/%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/" style="font-size: 10px;">完全背包</a> <a href="/tags/%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1/" style="font-size: 10px;">序列建模</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/" style="font-size: 10px;">数据增强</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86/" style="font-size: 10px;">数据预处理</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%A0%88/" style="font-size: 14px;">栈</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E8%BF%81%E7%A7%BB/" style="font-size: 10px;">模型迁移</a> <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" style="font-size: 10px;">正则化</a> <a href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" style="font-size: 10px;">滑动窗口</a> <a href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" style="font-size: 10px;">线性分类</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 10px;">递归</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/09/">September 2026</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/07/">July 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/09/24/CMU711/7_ScalingLaws/">7.ScalingLaws</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/23/CMU711/6_Pretraining/">6.Pretraining</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/16/CMU711/5_Transformer/">5. Attention and Transformers</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/15/CMU711/4_RNN/">4.Recurrent Neural Networks</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/14/CMU711/3_Autoaggrevssive_Language_Modelling/">Autoaggresive Language Modelling</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

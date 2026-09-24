@@ -71,6 +71,141 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-CMU711/7_ScalingLaws" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/24/CMU711/7_ScalingLaws/" class="article-date">
+  <time class="dt-published" datetime="2026-09-24T07:02:13.000Z" itemprop="datePublished">2026-09-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/09/24/CMU711/7_ScalingLaws/">7.ScalingLaws</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Scaling-Laws">Scaling Laws</h2>
+<p><em>决定了 -&gt; How many tokens, batchs size, learning rate</em></p>
+<h3 id="Compute（算力资源）">Compute（算力资源）</h3>
+<blockquote>
+<p>算力被消耗在前向反向传播中</p>
+</blockquote>
+<blockquote>
+<p>单位是（FLOPS，floating points operation）</p>
+</blockquote>
+<p><strong>C = 6 * N * D（适用于训练过程）</strong></p>
+<ul>
+<li>N :  参数量</li>
+<li>D ： 数据量</li>
+<li>算力是六倍的参数量 * 数据量</li>
+</ul>
+<h3 id="Scaling-Laws-2">Scaling Laws</h3>
+<p>L -&gt; Cross-Entropy</p>
+<p>Cross-Entropy Loss 是被数据集决定下限的， 随着parameters越老越多， 会有一个趋向data熵值的趋势</p>
+<blockquote>
+<p>用log - log图表呈现</p>
+</blockquote>
+<img src="/2026/09/24/CMU711/7_ScalingLaws/1.png" class="" title="ScalingLaws">
+<blockquote>
+<p>repeating data 4 epoches is good enough -&gt; 多了的话边际效应很明显<br>
+在4 epoched内， 用重复数据降低的loss几乎等同于用新的数据</p>
+</blockquote>
+<p>$$L(N, D) = E + \frac{A}{N^\alpha} + \frac{B}{D^\beta}$$</p>
+<h4 id="Using-scaling-laws-to-choose-hyperprameters">Using scaling laws to choose hyperprameters</h4>
+<ol>
+<li>run many experiments at a small scale</li>
+<li>using scaling law to estimate the best hyper parameters for larger scaling</li>
+</ol>
+<p>[Chichilla论文]:</p>
+<ol>
+<li>run experiments</li>
+<li>fit a line in the log-log plots and predict hte optimal model size and tokens<br>
+*这个图标是X 是log算力， Y是 log数据量或者参数量</li>
+</ol>
+<img src="/2026/09/24/CMU711/7_ScalingLaws/2.png" class="" title="ScalingLaws">
+<blockquote>
+<p>batch_size  , learning_rate等超参数也有随着FLOPs的scaling laws</p>
+</blockquote>
+<p><em>Recap:SCALING LAWS是一系列揭示变量和perfoemance之间的公式，一般遵循幂律，也就是LOG-LOG上的线性</em></p>
+<h3 id="Prompting">Prompting</h3>
+<p>我们想要输出， 我们给定一个输入让它最大化后面那个输出的可能</p>
+<ul>
+<li>Aside: Generation</li>
+</ul>
+<ol>
+<li>如果没有format prompt</li>
+</ol>
+<ul>
+<li>它会补充输入的内容</li>
+</ul>
+<ol start="2">
+<li>zero shot(给它指示让它行动)</li>
+</ol>
+<ul>
+<li>这个需要详细的Fine-tuning</li>
+</ul>
+<ol start="3">
+<li>few shots(给它指示和例子)</li>
+</ol>
+<ul>
+<li>prompt:f(x_test, instructions, [(x,y)1, (x,y)2, …])</li>
+<li>IN-CONTEXT LEARNING -&gt; 没有任何参数更新</li>
+</ul>
+<blockquote>
+<p>在大规模的预训练的时候，模型已经见过IN-CONTEST LEARNING所要求的任务， 所以它并不会学习新的任务，所以一般没有给特定示例的ICL 会 达到更高的准确率</p>
+</blockquote>
+<blockquote>
+<p>为了防止它只是从原来的任务中检索， 我们可以用Reinforcement ICL</p>
+</blockquote>
+<ul>
+<li>
+<p>如果给更多的示例会让更准确吗？</p>
+</li>
+<li>
+<p>会的， 甚至可以达到和default差不多</p>
+</li>
+</ul>
+<img src="/2026/09/24/CMU711/7_ScalingLaws/3.png" class="" title="ICL">
+<blockquote>
+<p>语言模型对上下文学习（In-Context Learning）中的微小变化非常敏感,比如示例的顺序变化就会造成很大的改变</p>
+</blockquote>
+<blockquote>
+<p>说明ICL 不够健壮（robust）</p>
+</blockquote>
+<h4 id="Chat-Prompts">Chat Prompts</h4>
+<p><strong>现在的语言模型都被fin-tuned成为chatbots,输入被微调为特定的format</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">messages = [</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;role&quot;</span>: <span class="string">&quot;user&quot;</span>,  <span class="comment"># system/ yuser</span></span><br><span class="line">        <span class="string">&quot;content&quot;</span>: <span class="string">&quot;&quot;&quot;Solve the problem:</span></span><br><span class="line"><span class="string">On average Joe throws 25 punches per minute. </span></span><br><span class="line"><span class="string">A fight lasts 5 rounds of 3 minutes. </span></span><br><span class="line"><span class="string">How many punches did he throw?&quot;&quot;&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<h4 id="CoT">CoT</h4>
+<blockquote>
+<p>用专门的模型训练</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/09/24/CMU711/7_ScalingLaws/" data-id="cmufbbqk9000dvktlghym77fi" data-title="7.ScalingLaws" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CMU711/" rel="tag">CMU711</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Prompt/" rel="tag">Prompt</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ScalingLaw/" rel="tag">ScalingLaw</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-CMU711/6_Pretraining" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2026/09/23/CMU711/6_Pretraining/" class="article-date">
@@ -215,7 +350,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/23/CMU711/6_Pretraining/" data-id="cmudzxpbi0007xstlcmk2g3bb" data-title="6.Pretraining" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/09/23/CMU711/6_Pretraining/" data-id="cmufbbqk8000bvktl8yw363qe" data-title="6.Pretraining" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -378,7 +513,7 @@ Silu = x * sigmoid (x&lt;0 接近 0 ， x&gt;0 接近relu)</li>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/16/CMU711/5_Transformer/" data-id="cmudzxpbm000kxstl98s5bg84" data-title="5. Attention and Transformers" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/09/16/CMU711/5_Transformer/" data-id="cmufbbqk70007vktl4zgh98ur" data-title="5. Attention and Transformers" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -489,7 +624,7 @@ output = Σa_n * h_n</p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/15/CMU711/4_RNN/" data-id="cmudzxpbi0005xstl3wog4cwz" data-title="4.Recurrent Neural Networks" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/09/15/CMU711/4_RNN/" data-id="cmufbbqk70005vktla0kp56sj" data-title="4.Recurrent Neural Networks" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -640,7 +775,7 @@ take advantage of GPU’s parallel hardware</li>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/14/CMU711/3_Autoaggrevssive_Language_Modelling/" data-id="cmudzxpb80000xstlak5h3m04" data-title="Autoaggresive Language Modelling" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/09/14/CMU711/3_Autoaggrevssive_Language_Modelling/" data-id="cmufbbqk40001vktldfkx6z4g" data-title="Autoaggresive Language Modelling" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -762,7 +897,7 @@ GPT-2 用的分词器就是基于BPE和UTF-8编码 <a target="_blank" rel="noope
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/12/CMU711/2_learnedrepresentations/" data-id="cmudzxpbg0003xstl7asebx2d" data-title="2.Learned Representations" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/09/12/CMU711/2_learnedrepresentations/" data-id="cmufbbqk60003vktl9n5w9btg" data-title="2.Learned Representations" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -832,7 +967,7 @@ S</p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/12/CMU711/1_Introduction/" data-id="cmudzxpbh0004xstl22kvegg9" data-title="1.Introduction" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/09/12/CMU711/1_Introduction/" data-id="cmufbbqk00000vktlg8y1dmrw" data-title="1.Introduction" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -892,7 +1027,7 @@ S</p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/10/CS231n/batchnorm/" data-id="cmudzxpbx003dxstleul512ya" data-title="batchnorm" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/09/10/CS231n/batchnorm/" data-id="cmufbbqkg0039vktldxhuef8b" data-title="batchnorm" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1027,7 +1162,7 @@ V = X`V</p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/09/CS231n/Transformer/" data-id="cmudzxpbn000oxstl5igf3536" data-title="Transformer" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/09/09/CS231n/Transformer/" data-id="cmufbbqkb000svktldh9j9s14" data-title="Transformer" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1148,66 +1283,11 @@ y_t = fW_hy(h_t) fW_hy-&gt; 将hidden state转化为输出的output</p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/15/CS231n/RNN/" data-id="cmudzxpbm000ixstl45wv8l3f" data-title="RNN" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/07/15/CS231n/RNN/" data-id="cmufbbqka000nvktlc5nxgq5h" data-title="RNN" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LSTM/" rel="tag">LSTM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RNN/" rel="tag">RNN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sequence-modeling/" rel="tag">sequence modeling</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1/" rel="tag">序列建模</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-leetcode/152. 乘积最大子数组-1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2026/07/15/leetcode/152.%20%E4%B9%98%E7%A7%AF%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84-1/" class="article-date">
-  <time class="dt-published" datetime="2026-07-15T04:18:41.000Z" itemprop="datePublished">2026-07-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2026/07/15/leetcode/152.%20%E4%B9%98%E7%A7%AF%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84-1/">152. 乘积最大子数组</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>给你一个整数数组 nums ，请你找出数组中乘积最大的非空连续 子数组（该子数组中至少包含一个数字），并返回该子数组所对应的乘积。</p>
-<p>测试用例的答案是一个 32-位 整数。</p>
-<p>请注意，一个只包含一个元素的数组的乘积是这个元素的值。</p>
-<p>示例 1:</p>
-<p>输入: nums = [2,3,-2,4]<br>
-输出: 6<br>
-解释: 子数组 [2,3] 有最大乘积 6。<br>
-示例 2:</p>
-<p>输入: nums = [-2,0,-1]<br>
-输出: 0<br>
-解释: 结果不能为 2, 因为 [-2,-1] 不是子数组。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">maxProduct</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># dp[i]</span></span><br><span class="line">        N = <span class="built_in">len</span>(nums)</span><br><span class="line">        dp = [<span class="number">0</span>] * N</span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        zeros = []</span><br><span class="line">        zeros.append(-<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">for</span> index, num <span class="keyword">in</span> <span class="built_in">enumerate</span>(nums):</span><br><span class="line">            <span class="keyword">if</span> num == <span class="number">0</span>:</span><br><span class="line">                zeros.append(index)</span><br><span class="line"></span><br><span class="line">        zeros.append(N)</span><br><span class="line">        <span class="keyword">if</span> N == <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> nums[<span class="number">0</span>]</span><br><span class="line">        M = <span class="built_in">len</span>(zeros)</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(M - <span class="number">1</span>):</span><br><span class="line">            flag = <span class="number">0</span></span><br><span class="line">            left =  zeros[j] + <span class="number">1</span></span><br><span class="line">            right = zeros[j + <span class="number">1</span>] - <span class="number">1</span></span><br><span class="line">            mul = <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> left &gt;= right:</span><br><span class="line">                    ans = <span class="built_in">max</span>(ans,nums[right])</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">for</span> num <span class="keyword">in</span> nums[left: right + <span class="number">1</span>]:</span><br><span class="line">                <span class="keyword">if</span> num &lt; <span class="number">0</span>:</span><br><span class="line">                    flag += <span class="number">1</span></span><br><span class="line">                mul *= num</span><br><span class="line">            <span class="keyword">if</span> flag % <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line">                ans = <span class="built_in">max</span>(ans, mul)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                cal = mul</span><br><span class="line">                <span class="keyword">while</span> nums[left] &gt; <span class="number">0</span>:</span><br><span class="line">                    cal /= nums[left]</span><br><span class="line">                    left += <span class="number">1</span></span><br><span class="line">                cal /= nums[left]</span><br><span class="line">                ans = <span class="built_in">max</span>(ans,cal)</span><br><span class="line">                cal = mul</span><br><span class="line">                <span class="keyword">while</span> nums[right] &gt; <span class="number">0</span>:</span><br><span class="line">                    cal /= nums[right]</span><br><span class="line">                    right -= <span class="number">1</span></span><br><span class="line">                cal /= nums[right]</span><br><span class="line">                ans = <span class="built_in">max</span>(ans,cal)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">int</span>(ans)</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>以0为间隔，左右双指针找到最近的负数</p>
-</blockquote>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/15/leetcode/152.%20%E4%B9%98%E7%A7%AF%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84-1/" data-id="cmudzxpbo000rxstldufmb1wx" data-title="152. 乘积最大子数组" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li></ul>
 
     </footer>
   </div>
@@ -1235,7 +1315,7 @@ y_t = fW_hy(h_t) fW_hy-&gt; 将hidden state转化为输出的output</p>
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Activation-Functions/" rel="tag">Activation Functions</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BackPropagation/" rel="tag">BackPropagation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMU711/" rel="tag">CMU711</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CNN/" rel="tag">CNN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CS231n/" rel="tag">CS231n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-drivern-approaches/" rel="tag">Data drivern approaches</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dropout/" rel="tag">Dropout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K-Nearest-Neighbor/" rel="tag">K-Nearest Neighbor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" rel="tag">K最近邻居算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LSTM/" rel="tag">LSTM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linear-Classification/" rel="tag">Linear Classification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NN/" rel="tag">NN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Normalization-Layers/" rel="tag">Normalization Layers</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Optimization/" rel="tag">Optimization</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pretraining/" rel="tag">Pretraining</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RNN/" rel="tag">RNN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Regulation/" rel="tag">Regulation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RestNet/" rel="tag">RestNet</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Weight-Initialization/" rel="tag">Weight Initialization</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dp/" rel="tag">dp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/language-modelling/" rel="tag">language modelling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sequence-modeling/" rel="tag">sequence modeling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/softmax/" rel="tag">softmax</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%88%86%E6%B3%95/" rel="tag">二分法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BC%98%E5%8C%96/" rel="tag">优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" rel="tag">单调栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/" rel="tag">完全背包</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1/" rel="tag">序列建模</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/" rel="tag">数据增强</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86/" rel="tag">数据预处理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E7%BB%84/" rel="tag">数组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%88/" rel="tag">栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E8%BF%81%E7%A7%BB/" rel="tag">模型迁移</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" rel="tag">正则化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" rel="tag">滑动窗口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" rel="tag">线性分类</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%92%E5%BD%92/" rel="tag">递归</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%93%BE%E8%A1%A8/" rel="tag">链表</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Activation-Functions/" rel="tag">Activation Functions</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BackPropagation/" rel="tag">BackPropagation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMU711/" rel="tag">CMU711</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CNN/" rel="tag">CNN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CS231n/" rel="tag">CS231n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-drivern-approaches/" rel="tag">Data drivern approaches</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dropout/" rel="tag">Dropout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K-Nearest-Neighbor/" rel="tag">K-Nearest Neighbor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" rel="tag">K最近邻居算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LSTM/" rel="tag">LSTM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linear-Classification/" rel="tag">Linear Classification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NN/" rel="tag">NN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Normalization-Layers/" rel="tag">Normalization Layers</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Optimization/" rel="tag">Optimization</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pretraining/" rel="tag">Pretraining</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Prompt/" rel="tag">Prompt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RNN/" rel="tag">RNN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Regulation/" rel="tag">Regulation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RestNet/" rel="tag">RestNet</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ScalingLaw/" rel="tag">ScalingLaw</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Weight-Initialization/" rel="tag">Weight Initialization</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dp/" rel="tag">dp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/language-modelling/" rel="tag">language modelling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sequence-modeling/" rel="tag">sequence modeling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/softmax/" rel="tag">softmax</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%88%86%E6%B3%95/" rel="tag">二分法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BC%98%E5%8C%96/" rel="tag">优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" rel="tag">单调栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/" rel="tag">完全背包</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1/" rel="tag">序列建模</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/" rel="tag">数据增强</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86/" rel="tag">数据预处理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E7%BB%84/" rel="tag">数组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%88/" rel="tag">栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E8%BF%81%E7%A7%BB/" rel="tag">模型迁移</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" rel="tag">正则化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" rel="tag">滑动窗口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" rel="tag">线性分类</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%92%E5%BD%92/" rel="tag">递归</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%93%BE%E8%A1%A8/" rel="tag">链表</a></li></ul>
     </div>
   </div>
 
@@ -1245,7 +1325,7 @@ y_t = fW_hy(h_t) fW_hy-&gt; 将hidden state转化为输出的output</p>
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Activation-Functions/" style="font-size: 10px;">Activation Functions</a> <a href="/tags/BackPropagation/" style="font-size: 12px;">BackPropagation</a> <a href="/tags/CMU711/" style="font-size: 18px;">CMU711</a> <a href="/tags/CNN/" style="font-size: 12px;">CNN</a> <a href="/tags/CS231n/" style="font-size: 20px;">CS231n</a> <a href="/tags/Data-drivern-approaches/" style="font-size: 10px;">Data drivern approaches</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/K-Nearest-Neighbor/" style="font-size: 10px;">K-Nearest Neighbor</a> <a href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" style="font-size: 10px;">K最近邻居算法</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LeetCode/" style="font-size: 10px;">LeetCode</a> <a href="/tags/Linear-Classification/" style="font-size: 10px;">Linear Classification</a> <a href="/tags/NLP/" style="font-size: 18px;">NLP</a> <a href="/tags/NN/" style="font-size: 10px;">NN</a> <a href="/tags/Normalization-Layers/" style="font-size: 10px;">Normalization Layers</a> <a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a> <a href="/tags/Pretraining/" style="font-size: 10px;">Pretraining</a> <a href="/tags/RNN/" style="font-size: 12px;">RNN</a> <a href="/tags/Regulation/" style="font-size: 10px;">Regulation</a> <a href="/tags/RestNet/" style="font-size: 10px;">RestNet</a> <a href="/tags/Transformer/" style="font-size: 12px;">Transformer</a> <a href="/tags/Weight-Initialization/" style="font-size: 10px;">Weight Initialization</a> <a href="/tags/dp/" style="font-size: 10px;">dp</a> <a href="/tags/language-modelling/" style="font-size: 10px;">language modelling</a> <a href="/tags/sequence-modeling/" style="font-size: 10px;">sequence modeling</a> <a href="/tags/softmax/" style="font-size: 10px;">softmax</a> <a href="/tags/%E4%BA%8C%E5%88%86%E6%B3%95/" style="font-size: 10px;">二分法</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 10px;">优化</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 16px;">动态规划</a> <a href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" style="font-size: 14px;">单调栈</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 14px;">双指针</a> <a href="/tags/%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/" style="font-size: 10px;">完全背包</a> <a href="/tags/%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1/" style="font-size: 10px;">序列建模</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/" style="font-size: 10px;">数据增强</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86/" style="font-size: 10px;">数据预处理</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%A0%88/" style="font-size: 14px;">栈</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E8%BF%81%E7%A7%BB/" style="font-size: 10px;">模型迁移</a> <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" style="font-size: 10px;">正则化</a> <a href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" style="font-size: 10px;">滑动窗口</a> <a href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" style="font-size: 10px;">线性分类</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 10px;">递归</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a>
+      <a href="/tags/Activation-Functions/" style="font-size: 10px;">Activation Functions</a> <a href="/tags/BackPropagation/" style="font-size: 12px;">BackPropagation</a> <a href="/tags/CMU711/" style="font-size: 18px;">CMU711</a> <a href="/tags/CNN/" style="font-size: 12px;">CNN</a> <a href="/tags/CS231n/" style="font-size: 20px;">CS231n</a> <a href="/tags/Data-drivern-approaches/" style="font-size: 10px;">Data drivern approaches</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/K-Nearest-Neighbor/" style="font-size: 10px;">K-Nearest Neighbor</a> <a href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" style="font-size: 10px;">K最近邻居算法</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LeetCode/" style="font-size: 10px;">LeetCode</a> <a href="/tags/Linear-Classification/" style="font-size: 10px;">Linear Classification</a> <a href="/tags/NLP/" style="font-size: 18px;">NLP</a> <a href="/tags/NN/" style="font-size: 10px;">NN</a> <a href="/tags/Normalization-Layers/" style="font-size: 10px;">Normalization Layers</a> <a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a> <a href="/tags/Pretraining/" style="font-size: 10px;">Pretraining</a> <a href="/tags/Prompt/" style="font-size: 10px;">Prompt</a> <a href="/tags/RNN/" style="font-size: 12px;">RNN</a> <a href="/tags/Regulation/" style="font-size: 10px;">Regulation</a> <a href="/tags/RestNet/" style="font-size: 10px;">RestNet</a> <a href="/tags/ScalingLaw/" style="font-size: 10px;">ScalingLaw</a> <a href="/tags/Transformer/" style="font-size: 12px;">Transformer</a> <a href="/tags/Weight-Initialization/" style="font-size: 10px;">Weight Initialization</a> <a href="/tags/dp/" style="font-size: 10px;">dp</a> <a href="/tags/language-modelling/" style="font-size: 10px;">language modelling</a> <a href="/tags/sequence-modeling/" style="font-size: 10px;">sequence modeling</a> <a href="/tags/softmax/" style="font-size: 10px;">softmax</a> <a href="/tags/%E4%BA%8C%E5%88%86%E6%B3%95/" style="font-size: 10px;">二分法</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 10px;">优化</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 16px;">动态规划</a> <a href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" style="font-size: 14px;">单调栈</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 14px;">双指针</a> <a href="/tags/%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/" style="font-size: 10px;">完全背包</a> <a href="/tags/%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1/" style="font-size: 10px;">序列建模</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/" style="font-size: 10px;">数据增强</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86/" style="font-size: 10px;">数据预处理</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%A0%88/" style="font-size: 14px;">栈</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E8%BF%81%E7%A7%BB/" style="font-size: 10px;">模型迁移</a> <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" style="font-size: 10px;">正则化</a> <a href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" style="font-size: 10px;">滑动窗口</a> <a href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" style="font-size: 10px;">线性分类</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 10px;">递归</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a>
     </div>
   </div>
 
@@ -1267,6 +1347,10 @@ y_t = fW_hy(h_t) fW_hy-&gt; 将hidden state转化为输出的output</p>
       <ul>
         
           <li>
+            <a href="/2026/09/24/CMU711/7_ScalingLaws/">7.ScalingLaws</a>
+          </li>
+        
+          <li>
             <a href="/2026/09/23/CMU711/6_Pretraining/">6.Pretraining</a>
           </li>
         
@@ -1280,10 +1364,6 @@ y_t = fW_hy(h_t) fW_hy-&gt; 将hidden state转化为输出的output</p>
         
           <li>
             <a href="/2026/09/14/CMU711/3_Autoaggrevssive_Language_Modelling/">Autoaggresive Language Modelling</a>
-          </li>
-        
-          <li>
-            <a href="/2026/09/12/CMU711/2_learnedrepresentations/">2.Learned Representations</a>
           </li>
         
       </ul>
