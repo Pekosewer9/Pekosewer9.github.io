@@ -1,1417 +1,216 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  
-  
-  <title>Hexo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta property="og:type" content="website">
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="website">
 <meta property="og:title" content="Hexo">
 <meta property="og:url" content="http://example.com/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
-  
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
-  
-  
-    <link rel="shortcut icon" href="/favicon.png">
-  
-  
-  
-<link rel="stylesheet" href="/css/style.css">
-
-  
-    
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
-
-  
-  
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
-
-<meta name="generator" content="Hexo 7.3.0"></head>
-
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Hexo</a>
-      </h1>
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Hexo",
+  "alternateName": [
+    "example.com"
+  ],
+  "url": "http://example.com/"
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css"><script>
+    (() => {
       
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
         
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-        
-          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
-        
-        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
-      </div>
-    </div>
-  </div>
-</header>
-
-      <div class="outer">
-        <section id="main">
-  
-    <article id="post-CMU711/7_ScalingLaws" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2026/09/24/CMU711/7_ScalingLaws/" class="article-date">
-  <time class="dt-published" datetime="2026-09-24T07:02:13.000Z" itemprop="datePublished">2026-09-24</time>
-</a>
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
     
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2026/09/24/CMU711/7_ScalingLaws/">7.ScalingLaws</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="Scaling-Laws">Scaling Laws</h2>
-<p><em>决定了 -&gt; How many tokens, batchs size, learning rate</em></p>
-<h3 id="Compute（算力资源）">Compute（算力资源）</h3>
-<blockquote>
-<p>算力被消耗在前向反向传播中</p>
-</blockquote>
-<blockquote>
-<p>单位是（FLOPS，floating points operation）</p>
-</blockquote>
-<p><strong>C = 6 * N * D（适用于训练过程）</strong></p>
-<ul>
-<li>N :  参数量</li>
-<li>D ： 数据量</li>
-<li>算力是六倍的参数量 * 数据量</li>
-</ul>
-<h3 id="Scaling-Laws-2">Scaling Laws</h3>
-<p>L -&gt; Cross-Entropy</p>
-<p>Cross-Entropy Loss 是被数据集决定下限的， 随着parameters越老越多， 会有一个趋向data熵值的趋势</p>
-<blockquote>
-<p>用log - log图表呈现</p>
-</blockquote>
-<img src="/2026/09/24/CMU711/7_ScalingLaws/1.png" class="" title="ScalingLaws">
-<blockquote>
-<p>repeating data 4 epoches is good enough -&gt; 多了的话边际效应很明显<br>
-在4 epoched内， 用重复数据降低的loss几乎等同于用新的数据</p>
-</blockquote>
-<p>$$L(N, D) = E + \frac{A}{N^\alpha} + \frac{B}{D^\beta}$$</p>
-<h4 id="Using-scaling-laws-to-choose-hyperprameters">Using scaling laws to choose hyperprameters</h4>
-<ol>
-<li>run many experiments at a small scale</li>
-<li>using scaling law to estimate the best hyper parameters for larger scaling</li>
-</ol>
-<p>[Chichilla论文]:</p>
-<ol>
-<li>run experiments</li>
-<li>fit a line in the log-log plots and predict hte optimal model size and tokens<br>
-*这个图标是X 是log算力， Y是 log数据量或者参数量</li>
-</ol>
-<img src="/2026/09/24/CMU711/7_ScalingLaws/2.png" class="" title="ScalingLaws">
-<blockquote>
-<p>batch_size  , learning_rate等超参数也有随着FLOPs的scaling laws</p>
-</blockquote>
-<p><em>Recap:SCALING LAWS是一系列揭示变量和perfoemance之间的公式，一般遵循幂律，也就是LOG-LOG上的线性</em></p>
-<h3 id="Prompting">Prompting</h3>
-<p>我们想要输出， 我们给定一个输入让它最大化后面那个输出的可能</p>
-<ul>
-<li>Aside: Generation</li>
-</ul>
-<ol>
-<li>如果没有format prompt</li>
-</ol>
-<ul>
-<li>它会补充输入的内容</li>
-</ul>
-<ol start="2">
-<li>zero shot(给它指示让它行动)</li>
-</ol>
-<ul>
-<li>这个需要详细的Fine-tuning</li>
-</ul>
-<ol start="3">
-<li>few shots(给它指示和例子)</li>
-</ol>
-<ul>
-<li>prompt:f(x_test, instructions, [(x,y)1, (x,y)2, …])</li>
-<li>IN-CONTEXT LEARNING -&gt; 没有任何参数更新</li>
-</ul>
-<blockquote>
-<p>在大规模的预训练的时候，模型已经见过IN-CONTEST LEARNING所要求的任务， 所以它并不会学习新的任务，所以一般没有给特定示例的ICL 会 达到更高的准确率</p>
-</blockquote>
-<blockquote>
-<p>为了防止它只是从原来的任务中检索， 我们可以用Reinforcement ICL</p>
-</blockquote>
-<ul>
-<li>
-<p>如果给更多的示例会让更准确吗？</p>
-</li>
-<li>
-<p>会的， 甚至可以达到和default差不多</p>
-</li>
-</ul>
-<img src="/2026/09/24/CMU711/7_ScalingLaws/3.png" class="" title="ICL">
-<blockquote>
-<p>语言模型对上下文学习（In-Context Learning）中的微小变化非常敏感,比如示例的顺序变化就会造成很大的改变</p>
-</blockquote>
-<blockquote>
-<p>说明ICL 不够健壮（robust）</p>
-</blockquote>
-<h4 id="Chat-Prompts">Chat Prompts</h4>
-<p><strong>现在的语言模型都被fin-tuned成为chatbots,输入被微调为特定的format</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">messages = [</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;role&quot;</span>: <span class="string">&quot;user&quot;</span>,  <span class="comment"># system/ yuser</span></span><br><span class="line">        <span class="string">&quot;content&quot;</span>: <span class="string">&quot;&quot;&quot;Solve the problem:</span></span><br><span class="line"><span class="string">On average Joe throws 25 punches per minute. </span></span><br><span class="line"><span class="string">A fight lasts 5 rounds of 3 minutes. </span></span><br><span class="line"><span class="string">How many punches did he throw?&quot;&quot;&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-<h4 id="CoT">CoT</h4>
-<blockquote>
-<p>用专门的模型训练</p>
-</blockquote>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/24/CMU711/7_ScalingLaws/" data-id="cmufbmdkf002vb0tl95kafo14" data-title="7.ScalingLaws" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CMU711/" rel="tag">CMU711</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Prompt/" rel="tag">Prompt</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ScalingLaw/" rel="tag">ScalingLaw</a></li></ul>
-
-    </footer>
-  </div>
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
   
-</article>
-
-
-
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Hexo',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'home'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="page" id="body-wrap"><header class="full_page" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a></span><div id="menus"></div></nav><div id="site-info"><h1 id="site-title">Hexo</h1></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/09/24/CMU711/7_ScalingLaws/" title="7.ScalingLaws">7.ScalingLaws</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2026-09-24T07:02:13.000Z" title="Created 2026-09-24 15:02:13">2026-09-24</time></span></div><div class="content">Scaling Laws 决定了 -&gt; How many tokens, batchs size, learning rate Compute（算力资源）  算力被消耗在前向反向传播中   单位是（FLOPS，floating points operation）  C = 6 * N * D（适用于训练过程）  N :  参数量 D ： 数据量 算力是六倍的参数量 * 数据量  Scaling Laws L -&gt; Cross-Entropy Cross-Entropy Loss 是被数据集决定下限的， 随着parameters越老越多， 会有一个趋向data熵值的趋势  用log - log图表呈现    repeating data 4 epoches is good enough -&gt; 多了的话边际效应很明显 在4 epoched内， 用重复数据降低的loss几乎等同于用新的数据  $$L(N, D) = E + \frac{A}{N^\alpha} + \frac{B}{D^\beta}$$ Using scaling laws to choose hyp...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/09/23/CMU711/6_Pretraining/" title="6.Pretraining">6.Pretraining</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2026-09-23T07:28:17.000Z" title="Created 2026-09-23 15:28:17">2026-09-23</time></span></div><div class="content">Outline Data -Pretrain-&gt; Base Model -Adapt-&gt; specific task Base Model + prompt - &gt;{translation, Sentiment analysis, …}   Pretrain  是base model 训练的第一步    目的   用更少的数据来进行 在相同的数据的情况下， 获得更好的表现 一个模型可以应用于不同的任务  Pretrained_models: BERT, GPT-3, Llama, Deepseek-v3 我们如何评判这些Pretrained model  架构   (pre-norm vs post-norm) (分组查询query)   任务 预训练使用的Data hyperparameters -&gt; e.g. learning_rate batch_size  Pre-training task  两个主要的Pre_training 任务  Masked Language Modelling(不是next-token predictions)  ran...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/09/16/CMU711/5_Transformer/" title="5. Attention and Transformers">5. Attention and Transformers</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2026-09-16T06:29:20.000Z" title="Created 2026-09-16 14:29:20">2026-09-16</time></span></div><div class="content">sequence modeling  给一组token输入， 输出相同大小的hidden state 和最后的隐藏状态 例子：  123import torch.nnself.decoder = nn.GRU(embed_size, hidden_size, batch_first = True)Hidden, last = self.decoder(Yin) # Yin是一个token， 所以输出的就是Ty = 1 SELF - Attention 当我们没有Encoder，我们只需要看输入token前面的序列 Query Vector ^ Tr @ Key Vector 得到一个值， 把Tx的值softmax归一化， 加上每个的 Value Vector  我们可以去掉recurrent的思想  k_i = W_k() @ h_i v_i = W_v() @ h_i c_j = q_i^T @ k_j q_ij 的 attention score 计算score function c_j  Scaled Dot Product  a(q, k) = (q^T @ k) / s...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/09/15/CMU711/4_RNN/" title="4.Recurrent Neural Networks">4.Recurrent Neural Networks</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2026-09-15T06:25:17.000Z" title="Created 2026-09-15 14:25:17">2026-09-15</time></span></div><div class="content">Context  因为马尔可夫链，理论上，我们可以让上下文无限长 但是很容易遇到梯度消失问题  Sequence modelling  Recurrence -&gt; RNN Convolution -&gt; CNN Attention -&gt; Transformer  Standard RNN  Example: Language modeling -&gt; BPTT total loss = Σloss  问题  难以并行化，计算之间有依赖关系  RNN的推理时间复杂度是O(N) 12345678910111213141516# Write our own RNN cell import torch.nn as nnclass RNNCell(torch.nn.Module):    def __init__(self, input_size, hidden_size):        super(RNNCell, self).__init__()        self.input_size = input_size        self.hidden_size...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/09/14/CMU711/3_Autoaggrevssive_Language_Modelling/" title="Autoaggresive Language Modelling">Autoaggresive Language Modelling</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2026-09-14T04:45:20.000Z" title="Created 2026-09-14 12:45:20">2026-09-14</time></span></div><div class="content">Types of prediction:  Binary Multi-class Structered - Exponential/infinate labels (maybe like translatations,sequence prediction)  Language Modelling language model is a probability distribution over all sequences  P(X)  Conditional generation: x_t+1:T(output) = P(X_t+1:T(output) | X_1:t(input)) Auto-regressive Language Models P(X) = multi(p(x_t | x_1, … x_t-1)) t = 1-&gt;T  用马尔可夫链来预测next token  Bigram models Each token is determined by the previous one token  split the dataset into training,...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/09/12/CMU711/2_learnedrepresentations/" title="2.Learned Representations">2.Learned Representations</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2026-09-12T05:28:39.000Z" title="Created 2026-09-12 13:28:39">2026-09-12</time></span></div><div class="content">Tokenization  需要解决的问题:   subwrod Models (各种词的变形) sol: 分词法的不同 , 将词分为different tokens  example: the compan_ ies are expand_ ing &lt; 后缀提取 &gt;    我们可以减少词汇量， 共享参数 我们不想要tokenize的种类太多或者太少   用UTF-8 bytes tokenize text  1234utf = &quot;我是傻逼。Hello!&quot;.encode(&quot;utf-8&quot;)print([x for x in utf])# 输出列表# 用0-255的数字序列表示token  用Byte Pair Encoding   将经常用的连续token对 pairs into new tokens GPT-2 用的分词器就是基于BPE和UTF-8编码 https://github.com/openai/gpt-2/blob/master/src/encoder.py  12345678910111213141516171819...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/09/12/CMU711/1_Introduction/" title="1.Introduction">1.Introduction</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2026-09-12T01:40:19.000Z" title="Created 2026-09-12 09:40:19">2026-09-12</time></span></div><div class="content">NLP ASPECTS  Learn useful representations Generate Language Bridge language and action (e.g: code IDE)  past methods  Based ON Rules  1234def classify(x: str) -&gt; str:    sports = [&#x27;basketball&#x27;,&#x27;soccer&#x27;] ..    if (key in x afor key in sports_keywords):        return &quot;sports&quot;  Supervised Learning Data -&gt; Training -&gt; Model Reinforcement Learning Agent -&gt; action -&gt; environment -&gt; reward  A Rule-Based NLP System Exp: 分类评论 -&gt; postive(1) neutral(0) ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/09/10/CS231n/batchnorm/" title="batchnorm">batchnorm</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2026-09-10T07:24:20.000Z" title="Created 2026-09-10 15:24:20">2026-09-10</time></span></div><div class="content">初始化过大 最后的 softmax 因为要进入 exp 函数，exp 是越来越尖锐的，所以两边的梯度会变化很大，$(p_i - 1)$ 会很接近 0；而且传播过程中也会乘以很大的 $W$，从而发生变化。 初始化过小 在前向传播中，数据经过多层矩阵乘法 $Y = XW$。当 $W$ 的元素标准差过小时，每一层激活值的方差会呈指数级衰减，深层神经元的输出迅速趋近于 0。 在反向传播中，链式法则导致梯度的幅度同样逐层指数衰减，引发梯度消失（Vanishing Gradients），参数无法得到有效更新。 解决方案 所以我们引入 $\gamma$、$\beta$ 因子，让模型自我学习，避免梯度爆炸和梯度消失。  Inline Question 2  Describe the results of this experiment. What does this imply about the relationship between batch normalization and batch size? Why is this relationship observed?  Answer:...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/09/09/CS231n/Transformer/" title="Transformer">Transformer</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2026-09-09T08:02:09.000Z" title="Created 2026-09-09 16:02:09">2026-09-09</time></span></div><div class="content">ATTENTION Seq2Seq with RNN  A ENCODER ht = fW(x_t,h_t-1) RNN ENCODER will summarize the all the context as C(  Last hidden state  )   A DECODER A DIFFERENT RNN 有一个Initial decoder state s0  s_t = Gu(y_t-1, s_t-1, c)  问题: 获取上下文的唯一向量只有一个C， 维度也固定 想法: 给予Decoder回看Encoder模型的方法   initial state s0 计算s0和前面 Encoder 不同隐藏状态的对齐得分(Alignment scores)， 这个得分e_t_i是一个标量 softmax函数来 让对齐得分同一个s_t 对不同的h_i 归一化 把之前的信息按照重要度汇总，变成 c_t = sigma(a_t_i * hi) Deocder: s_T = Gu(y_t1, s_t1, c_t)   how to initialize state s0 有不同的方...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/07/15/CS231n/RNN/" title="RNN">RNN</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2026-07-15T06:47:27.000Z" title="Created 2026-07-15 14:47:27">2026-07-15</time></span></div><div class="content">Recurrent Neural Network  普通的NN 一个输入对应一个输出 一对多 ： 如image - &gt; sequcence of words(图片对应一句话描述) 多对一 : 如视频识别标签 多对多 ：视频描述   RNN的内部状态(隐藏状态) 在每一次输入都进行更新   h_t(new_state) = fW(h_t-1, x_t) y_t = fW_hy(h_t) fW_hy-&gt; 将hidden state转化为输出的output   更新的fW 和 转化的fW_hy 都用一致的函数 Vanilla（普通）RNN   用tanh的好处是可以吧ht的值压在(-1,1)之间  RNN 的 计算图(computational graph)   每一步的Loss 相加得到总Loss，对每个时间步Loss都能得到对W的梯度  对于多对一，可能只对最后的hidden state相关，所以只用考虑最后的Loss $$\delta_t = \frac{\partial L_t}{\partial s_t} + \frac{\partial s_{t+1}}{\pa...</div></div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/#content-inner">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/#content-inner">4</a><a class="extend next" rel="next" href="/page/2/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">33</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">45</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/24/CMU711/7_ScalingLaws/" title="7.ScalingLaws">7.ScalingLaws</a><time datetime="2026-09-24T07:02:13.000Z" title="Created 2026-09-24 15:02:13">2026-09-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/23/CMU711/6_Pretraining/" title="6.Pretraining">6.Pretraining</a><time datetime="2026-09-23T07:28:17.000Z" title="Created 2026-09-23 15:28:17">2026-09-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/16/CMU711/5_Transformer/" title="5. Attention and Transformers">5. Attention and Transformers</a><time datetime="2026-09-16T06:29:20.000Z" title="Created 2026-09-16 14:29:20">2026-09-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/15/CMU711/4_RNN/" title="4.Recurrent Neural Networks">4.Recurrent Neural Networks</a><time datetime="2026-09-15T06:25:17.000Z" title="Created 2026-09-15 14:25:17">2026-09-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/14/CMU711/3_Autoaggrevssive_Language_Modelling/" title="Autoaggresive Language Modelling">Autoaggresive Language Modelling</a><time datetime="2026-09-14T04:45:20.000Z" title="Created 2026-09-14 12:45:20">2026-09-14</time></div></div></div></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>Tags</span></div><div class="card-tag-cloud"><a href="/tags/NLP/" style="font-size: 1.42em; color: #99a6b7">NLP</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 1.26em; color: #999fa8">双指针</a> <a href="/tags/CNN/" style="font-size: 1.18em; color: #999ca1">CNN</a> <a href="/tags/dp/" style="font-size: 1.1em; color: #999">dp</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 1.1em; color: #999">递归</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 1.1em; color: #999">优化</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 1.34em; color: #99a3b0">动态规划</a> <a href="/tags/LSTM/" style="font-size: 1.1em; color: #999">LSTM</a> <a href="/tags/Transformer/" style="font-size: 1.18em; color: #999ca1">Transformer</a> <a href="/tags/Regulation/" style="font-size: 1.1em; color: #999">Regulation</a> <a href="/tags/softmax/" style="font-size: 1.1em; color: #999">softmax</a> <a href="/tags/Dropout/" style="font-size: 1.1em; color: #999">Dropout</a> <a href="/tags/Prompt/" style="font-size: 1.1em; color: #999">Prompt</a> <a href="/tags/BackPropagation/" style="font-size: 1.18em; color: #999ca1">BackPropagation</a> <a href="/tags/language-modelling/" style="font-size: 1.1em; color: #999">language modelling</a> <a href="/tags/RNN/" style="font-size: 1.18em; color: #999ca1">RNN</a> <a href="/tags/RestNet/" style="font-size: 1.1em; color: #999">RestNet</a> <a href="/tags/CS231n/" style="font-size: 1.5em; color: #99a9bf">CS231n</a> <a href="/tags/LeetCode/" style="font-size: 1.1em; color: #999">LeetCode</a> <a href="/tags/Normalization-Layers/" style="font-size: 1.1em; color: #999">Normalization Layers</a> <a href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" style="font-size: 1.1em; color: #999">线性分类</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 1.1em; color: #999">数组</a> <a href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" style="font-size: 1.1em; color: #999">K最近邻居算法</a> <a href="/tags/Data-drivern-approaches/" style="font-size: 1.1em; color: #999">Data drivern approaches</a> <a href="/tags/Weight-Initialization/" style="font-size: 1.1em; color: #999">Weight Initialization</a> <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" style="font-size: 1.1em; color: #999">正则化</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E8%BF%81%E7%A7%BB/" style="font-size: 1.1em; color: #999">模型迁移</a> <a href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" style="font-size: 1.26em; color: #999fa8">单调栈</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 1.1em; color: #999">链表</a> <a href="/tags/ScalingLaw/" style="font-size: 1.1em; color: #999">ScalingLaw</a> <a href="/tags/Pretraining/" style="font-size: 1.1em; color: #999">Pretraining</a> <a href="/tags/%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/" style="font-size: 1.1em; color: #999">完全背包</a> <a href="/tags/NN/" style="font-size: 1.1em; color: #999">NN</a> <a href="/tags/sequence-modeling/" style="font-size: 1.1em; color: #999">sequence modeling</a> <a href="/tags/Linear-Classification/" style="font-size: 1.1em; color: #999">Linear Classification</a> <a href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" style="font-size: 1.1em; color: #999">滑动窗口</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86/" style="font-size: 1.1em; color: #999">数据预处理</a> <a href="/tags/Optimization/" style="font-size: 1.1em; color: #999">Optimization</a> <a href="/tags/%E4%BA%8C%E5%88%86%E6%B3%95/" style="font-size: 1.1em; color: #999">二分法</a> <a href="/tags/K-Nearest-Neighbor/" style="font-size: 1.1em; color: #999">K-Nearest Neighbor</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline"><i class="fas fa-archive"></i><span>Archives</span></div>
   
-    <article id="post-CMU711/6_Pretraining" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2026/09/23/CMU711/6_Pretraining/" class="article-date">
-  <time class="dt-published" datetime="2026-09-23T07:28:17.000Z" itemprop="datePublished">2026-09-23</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2026/09/23/CMU711/6_Pretraining/">6.Pretraining</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
+    <ul class="card-archive-list">
       
-        <h3 id="Outline">Outline</h3>
-<p>Data -Pretrain-&gt; Base Model -Adapt-&gt; specific task</p>
-<p>Base Model + prompt - &gt;{translation, Sentiment analysis, …}</p>
- <img src="/2026/09/23/CMU711/6_Pretraining/1.png" class="" title="Fine-tuning">
-<h3 id="Pretrain">Pretrain</h3>
-<blockquote>
-<p>是base model 训练的第一步</p>
-</blockquote>
-<img src="/2026/09/23/CMU711/6_Pretraining/2.png" class="" title="Fine-tuning">
-<ul>
-<li>目的</li>
-</ul>
-<ol>
-<li>用更少的数据来进行</li>
-<li>在相同的数据的情况下， 获得更好的表现</li>
-<li>一个模型可以应用于不同的任务</li>
-</ol>
-<p>Pretrained_models:</p>
-<p>BERT, GPT-3, Llama, Deepseek-v3</p>
-<p>我们如何评判这些Pretrained model</p>
-<ol>
-<li>架构</li>
-</ol>
-<ul>
-<li>(pre-norm vs post-norm) (分组查询query)</li>
-</ul>
-<ol start="2">
-<li>任务</li>
-<li>预训练使用的Data</li>
-<li>hyperparameters -&gt; e.g. learning_rate batch_size</li>
-</ol>
-<h2 id="Pre-training-task">Pre-training task</h2>
-<blockquote>
-<p>两个主要的Pre_training 任务</p>
-</blockquote>
-<h3 id="Masked-Language-Modelling-不是next-token-predictions">Masked Language Modelling(不是next-token predictions)</h3>
-<ol>
-<li>randomly mask the token</li>
-<li>predict the token</li>
-</ol>
-<blockquote>
-<p>Example: BERT</p>
-</blockquote>
-<ul>
-<li>DATA:Wikipedia, BooksCorpus</li>
-</ul>
-<img src="/2026/09/23/CMU711/6_Pretraining/3.png" class="" title="BERT">
-<p><strong>随机选择15%tokens， 在这些些token中， 80%被MASK， 10%被用随机的token替换这些token,10%不变</strong></p>
-<p><em>10%随机token可以让模型对提供的数据更有审视性</em></p>
-<p><em>BERT不擅长generate文本,但我们可以finetuning</em></p>
-<p>FineTuning Example:</p>
-<p>Fine-tune the weights (either just W, or all weights). Example:</p>
-<p>Data: (movie review, {positive, neutral, negative})</p>
-<p>Initialize the model with BERT</p>
-<p>Minimize cross-entropy loss with gradient-based optimization</p>
-<p><strong>我们只取BERT模型最后的hidden layer,用来当作这句话经过Transformer的represent</strong></p>
-<blockquote>
-<p>由于BERT的TransFormer是双向的， 所以每一个Ti都包含全部的上下文信息，我们取开头的[CLS] 字符的Hidden layer来进行表征</p>
-</blockquote>
-<h3 id="Autoregressive-language-modeling-就是训练目的是预测下一个词的modelling">Autoregressive language modeling(就是训练目的是预测下一个词的modelling)</h3>
-<p>Maximum Likeihood -&gt; learn to compress</p>
-<ul>
-<li>我们有一些data distribution， 我们的目标是压缩它</li>
-<li>我们要寻找binary code{0，1}的序列去表示这个分布</li>
-</ul>
-<h4 id="Arithmetic-coding（算术编码）">Arithmetic coding（算术编码）</h4>
-<blockquote>
-<p>我们可以将整个输入的数据序列映射为(0,1)之间的一个[a,b) 区间， 最终用这个区间内的一个二进制小数来代表整段数据</p>
-</blockquote>
-<img src="/2026/09/23/CMU711/6_Pretraining/4.png" class="" title="Arithmetic coding">
-<blockquote>
-<p>Example: GPT-2， Llama</p>
-</blockquote>
-<p>How-can model do zero-shot data</p>
-<p>模型已经学习到了下游的任务</p>
-<img src="/2026/09/23/CMU711/6_Pretraining/5.png" class="" title="BERT">
-<blockquote>
-<p>规律：随着喂给模型的数据和模型的参数量变大，出现收益递减的趋势<br>
-参数量大的模型Loss降得更快， 高维空间中有更少的鞍点与局部极小值阻碍 ， 所以梯度下降更高效， 而且有更好的拟合能力， 所以LOSS下降快<br>
-会有training spike 可能原因：梯度裁剪， 数据集切换， 刚好到被污染的数据集， 中间经历了checkpoint恢复，FP16等的overflow</p>
-</blockquote>
-<h3 id="Evaluate-the-pre-training">Evaluate the pre-training</h3>
-<ol>
-<li>
-<p>Loss(Training,validation,test)</p>
-</li>
-<li>
-<p>few-shot prompting -&gt; Few-Shot Prompting<br>
-<strong>（少样本提示） 是使用大语言模型（LLM）时的一种提示工程（Prompt Engineering）技巧。<br>
-它的核心做法是：在发送给模型的 Prompt（提示词）中，显式地提供少量（通常是 1 到 5 个）“输入-输出”的示例（Exemplars），以此来“示范”并引导模型按照你期望的格式、逻辑或风格来完成当前任务。</strong></p>
-</li>
-<li>
-<p>Fine-tuning</p>
-</li>
-</ol>
-<blockquote>
-<p>How to choose evaluation tasks<br>
-[AI2 2025]</p>
-</blockquote>
-<p>对不同领域的benchmark task ranking 做 聚类</p>
-<h3 id="如何构建好的数据集">如何构建好的数据集</h3>
-<img src="/2026/09/23/CMU711/6_Pretraining/5.png" class="" title="quantity of data">
-<ol>
-<li>web data<br>
-<strong>用commom crawl</strong><br>
-<em>common crawl(html) -&gt; extract(txt) -&gt; filter -&gt; deduplicated(防止重复数据)</em></li>
-</ol>
-<ul>
-<li>要注意数学结构， 需要注意LaTex格式，保留code和Latex的格式</li>
-</ul>
-<p>[Penedo et al 2024]</p>
-<p>Dulplicate content</p>
-<p><strong>“Fuzzy strategy: minhash” 指的是在数据去重或相似性搜索中，利用 MinHash 算法来实现模糊匹配（Fuzzy Matching） 的一种策略。<br>
-简单来说，它的核心思路是：不要求两条数据完全一模一样，而是通过 MinHash 快速找出那些“高度相似”的数据。</strong></p>
-<blockquote>
-<p>我们需要区别data类型</p>
-</blockquote>
-<p>train classfier to detect desire data</p>
-
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2026/09/">
+            <span class="card-archive-list-date">
+              September 2026
+            </span>
+            <span class="card-archive-list-count">9</span>
+          </a>
+        </li>
       
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/23/CMU711/6_Pretraining/" data-id="cmufbmdkf002yb0tlc309hhz9" data-title="6.Pretraining" class="article-share-link"><span class="fa fa-share">Share</span></a>
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2026/07/">
+            <span class="card-archive-list-date">
+              July 2026
+            </span>
+            <span class="card-archive-list-count">24</span>
+          </a>
+        </li>
       
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CMU711/" rel="tag">CMU711</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Pretraining/" rel="tag">Pretraining</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-CMU711/5_Transformer" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2026/09/16/CMU711/5_Transformer/" class="article-date">
-  <time class="dt-published" datetime="2026-09-16T06:29:20.000Z" itemprop="datePublished">2026-09-16</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2026/09/16/CMU711/5_Transformer/">5. Attention and Transformers</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h3 id="sequence-modeling">sequence modeling</h3>
-<blockquote>
-<p>给一组token输入， 输出相同大小的hidden state 和最后的隐藏状态<br>
-例子：</p>
-</blockquote>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch.nn</span><br><span class="line"><span class="variable language_">self</span>.decoder = nn.GRU(embed_size, hidden_size, batch_first = <span class="literal">True</span>)</span><br><span class="line">Hidden, last = <span class="variable language_">self</span>.decoder(Yin) <span class="comment"># Yin是一个token， 所以输出的就是Ty = 1</span></span><br></pre></td></tr></table></figure>
-<h2 id="SELF-Attention">SELF - Attention</h2>
-<p><em>当我们没有Encoder，我们只需要看输入token前面的序列</em></p>
-<p><strong>Query Vector ^ Tr</strong> @ <strong>Key Vector</strong> 得到一个值， 把Tx的值softmax归一化， 加上每个的 <strong>Value Vector</strong></p>
-<ul>
-<li>我们可以去掉recurrent的思想</li>
-</ul>
-<p>k_i = W_k() @ h_i</p>
-<p>v_i = W_v() @ h_i</p>
-<p>c_j = q_i^T @ k_j<br>
-<em>q_ij 的 attention score</em></p>
-<h3 id="计算score-function-c-j">计算score function c_j</h3>
-<blockquote>
-<p>Scaled Dot Product</p>
-</blockquote>
-<p><strong>a(q, k) = (q^T @ k) / sqrt(dim_k)</strong></p>
-<blockquote>
-<p>就是除以k的维度，来保持a(q,k) 让score为方差等于原来q,k方差的的正态分布</p>
-</blockquote>
-<h2 id="Transformer-architecture">Transformer architecture</h2>
-<blockquote>
-<p>MBART : Encoder-Decoder Model<br>
-LLaMA : Decoder_Only</p>
-</blockquote>
-<p>现在基本上都是用Deocode _ only</p>
-<img src="/2026/09/16/CMU711/5_Transformer/1.png" class="" title="LLama">
-<blockquote>
-<p>这个黑框里可以num_layers叠加</p>
-</blockquote>
-<h4 id="Five-Concepts">Five Concepts</h4>
-<ol>
-<li><strong>Positional encodings</strong><br>
-&lt;分词&gt; :我们用subwords方式分词<br>
-&lt;位置编码&gt; : 如果没有位置编码， 我们会有置换不变性 -&gt; 因为Self-attention是所有输入的token并行进入的</li>
-</ol>
-<p>Positianl embeddings -&gt; W_positions(T_max * d) (T_max是输入token的数量)</p>
-<p>downside -&gt; 没法推理长于T_max的序列</p>
-<h4 id="RoPE-旋转位置编码">RoPE -&gt; 旋转位置编码</h4>
-<h3 id="Scaled-dot-product-multi-layers-self-attention">Scaled dot product (multi layers self-attention)</h3>
-<p>Q (T,d)  K(T,d) V(T,d)<br>
-Attention(Q,K,V) = softmax  ( (Q @ K^T) / sqrt(d_k) ) V</p>
-<p>H0(长度为输入token数量n * embedding_size) -做self-attention注意力加权-&gt; FFN(W = （embedding_size, hidden_size) -&gt; Layer normalization -&gt;,<br>
-H1(n * hidden_size) -&gt;</p>
-<h3 id="Multi-heads">Multi-heads</h3>
-<p>我们想要Multi copies of attention</p>
-<p>MultiHead(Q, K ,V) = Concat(head1, … headh) W<br>
-where head_i = Attention(QWi, KWi, VWi)</p>
-<p>每个头都有不同的Q K V</p>
-<ol>
-<li>
-<p>让 T(sequence len = 3) D(dimension = 4) * Wq (dimension(4), hidden_dimension(2) * multihead(2)) -&gt; output(3,2 * 2) split最后一行 -&gt; (3 * 2) * 2 两个Query矩阵</p>
-</li>
-<li>
-<p>由此获得2 个 (3 * 2) 的 key 和 value矩阵， 由此获得value matrix 的 加权和 之后获得两个context矩阵 (3 * 2)</p>
-</li>
-<li>
-<p>context矩阵按照最后一个维度(hidden_layers)的方向拼接成(3 * 4)的矩阵</p>
-</li>
-<li>
-<p>把这个矩阵再过一次linear layer</p>
-</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">    B, T, C = x.size() <span class="comment"># batch_Size , len of sequenc , embeddings</span></span><br><span class="line">    q, k, v = <span class="variable language_">self</span>.c_attn(x).split(<span class="variable language_">self</span>.n_embd,dim= <span class="number">2</span>) <span class="comment"># 把dim = 2按照n.embd切分</span></span><br><span class="line">    <span class="comment"># 其实就是 q,k,v = torch.zeros(x.size()) 只是为了空间考虑</span></span><br><span class="line">    k = k.view(B, T, <span class="variable language_">self</span>.n_heads, C//<span class="variable language_">self</span>.n_heads).tranpose(<span class="number">1</span>,<span class="number">2</span>) <span class="comment"># k = (B,heads,T,C/heads)</span></span><br><span class="line">    q = q.view(B, T, <span class="variable language_">self</span>.n_heads, C//<span class="variable language_">self</span>.n_heads).tranpose(<span class="number">1</span>,<span class="number">2</span>) <span class="comment"># q = (B,heads,T,C/heads)</span></span><br><span class="line">    v = v.view(B, T, <span class="variable language_">self</span>.n_heads, C//<span class="variable language_">self</span>.n_heads).tranpose(<span class="number">1</span>,<span class="number">2</span>) <span class="comment"># v = (B,heads,T,C/heads)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># causal self-attention</span></span><br><span class="line">    att = (q @ k.tranpose(<span class="number">1</span>,<span class="number">2</span>)) * (<span class="number">1.0</span>/math.sqrt(k.size(-<span class="number">1</span>)))</span><br><span class="line">    <span class="comment"># (B,heads,T,T)</span></span><br><span class="line">    <span class="comment"># 这里除的是 sqrt(c// heads)</span></span><br><span class="line">    att = att.masked_fill ....</span><br><span class="line">    att = F.softmax(att, dim = -<span class="number">1</span>)</span><br><span class="line">    att = <span class="variable language_">self</span>.attn_dropout(att)</span><br><span class="line">    y = att @ v</span><br><span class="line">    y = y.transpose(-<span class="number">1</span>, -<span class="number">2</span>).conctiguous.view(B, T, C)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> y</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>不同的heads关注不同的词汇</p>
-</blockquote>
-<h3 id="Masking-for-Language-Modelling">Masking for Language Modelling</h3>
-<ul>
-<li>prevernt the model from cheating when predicting another token</li>
-</ul>
-<img src="/2026/09/16/CMU711/5_Transformer/2.png" class="" title="mask">
-<p>让attention的logits变为负无穷，在这一步 att = att.masked_fill … ， 所以sofrmax后就近似零</p>
-<ul>
-<li>
-<p>在训练的数据中，我们会把应该输出的序列开始加一个特殊符号， 最后加一个[S]</p>
-</li>
-<li>
-<p>同样，训练的时候加上[pad]的地方，我们也需要mask</p>
-</li>
-</ul>
-<h3 id="Residual-and-LayerNormalization">Residual and LayerNormalization</h3>
-<img src="/2026/09/16/CMU711/5_Transformer/2.png" class="" title="Layer Normalization">
-<blockquote>
-<p>用可学习的gamma和beta控制layer normal后的放缩和平移</p>
-</blockquote>
-<p>residual(x,f) = f(x) + x</p>
-<blockquote>
-<p>传递residual到模型的深层</p>
-</blockquote>
-<p><strong>学习从这一层到深层该怎么在现在这一层的基础上改变，而不是直接变换</strong></p>
-<p>残差连接告诉我们每一层attention层输入输出都是(Batch_size, token_size, embd_size)</p>
-<h3 id="Feed-Forward-Layer">Feed-Forward Layer</h3>
-<blockquote>
-<p>我们想让attention后的网络更non-linear一点</p>
-</blockquote>
-<h3 id="Improved-Transformer-architecture">Improved Transformer architecture</h3>
-<ol>
-<li>activation函数<br>
-sigmoid = 1/ 1 + e(-x)<br>
-relu = max(0,x)<br>
-Silu = x * sigmoid (x&lt;0 接近 0 ， x&gt;0 接近relu)</li>
-</ol>
-<blockquote>
-<p>我们需要模型学会把一个系数快速成为0<br>
-非单调的</p>
-</blockquote>
-<h3 id="Relative-Positional-EnCoding-RPE">Relative Positional EnCoding(RPE)</h3>
-<p>加到 Value / Attention Score 上（如 Shaw et al. / T5）：<br>
-直接在 Attention 矩阵中加上一个根据相对距离偏置量 $R_{i-j}$：$$A_{i,j} = \frac{Q_i K_j^T}{\sqrt{d_k}} + R_{i-j}$$</p>
-<h3 id="Rotaty-Positional-Encodings-RoPE">Rotaty Positional Encodings(RoPE)</h3>
-<blockquote>
-<p>如果两个token在句子中的位置不同，但是相对距离相同，我们应该看到相同的变换方法</p>
-</blockquote>
-<img src="/2026/09/16/CMU711/5_Transformer/4.png" class="" title="RoPE">
-<p>$$\mathbf{R}_{\Theta, m}^d = \begin{pmatrix} \cos(m\theta) &amp; -\sin(m\theta) \ \sin(m\theta) &amp; \cos(m\theta) \end{pmatrix}$$</p>
-<p>$$(\mathbf{R}<em>{m\theta} \mathbf{q})^T (\mathbf{R}</em>{n\theta} \mathbf{k}) = \mathbf{q}^T \mathbf{R}<em>{m\theta}^T \mathbf{R}</em>{n\theta} \mathbf{k} = \mathbf{q}^T \mathbf{R}_{(n-m)\theta} \mathbf{k}$$</p>
-<h3 id="PRE-layer-norm">PRE-layer- norm</h3>
-<h3 id="Grouped-query">Grouped-query</h3>
-<img src="/2026/09/16/CMU711/5_Transformer/5.png" class="" title="LLAMA">
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/16/CMU711/5_Transformer/" data-id="cmufbmdke002qb0tl53iz9oey" data-title="5. Attention and Transformers" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CMU711/" rel="tag">CMU711</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-CMU711/4_RNN" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2026/09/15/CMU711/4_RNN/" class="article-date">
-  <time class="dt-published" datetime="2026-09-15T06:25:17.000Z" itemprop="datePublished">2026-09-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2026/09/15/CMU711/4_RNN/">4.Recurrent Neural Networks</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h3 id="Context">Context</h3>
-<ul>
-<li>因为马尔可夫链，理论上，我们可以让上下文无限长</li>
-<li>但是很容易遇到梯度消失问题</li>
-</ul>
-<h3 id="Sequence-modelling">Sequence modelling</h3>
-<ol>
-<li>Recurrence -&gt; RNN</li>
-<li>Convolution -&gt; CNN</li>
-<li>Attention -&gt; Transformer</li>
-</ol>
-<p><strong>Standard RNN</strong></p>
-<img src="/2026/09/15/CMU711/4_RNN/1.png" class="" title="alt text">
-<h4 id="Example-Language-modeling-BPTT">Example: Language modeling -&gt; BPTT</h4>
-<p>total loss = Σloss</p>
-<img src="/2026/09/15/CMU711/4_RNN/2.png" class="" title="alt text">
-<p><em>问题</em></p>
-<ol>
-<li>难以并行化，计算之间有依赖关系</li>
-</ol>
-<p>RNN的推理时间复杂度是O(N)</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Write our own RNN cell </span></span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RNNCell</span>(torch.nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, input_size, hidden_size</span>):</span><br><span class="line">        <span class="built_in">super</span>(RNNCell, <span class="variable language_">self</span>).__init__()</span><br><span class="line">        <span class="variable language_">self</span>.input_size = input_size</span><br><span class="line">        <span class="variable language_">self</span>.hidden_size = hidden_size</span><br><span class="line">        <span class="variable language_">self</span>.Wh = torch.nn.Linear(hidden_size, hidden_size)</span><br><span class="line">        <span class="variable language_">self</span>.Wx = torch.nn.Linear(input_size, hidden_size)</span><br><span class="line">        <span class="variable language_">self</span>.activation = torch.nn.Tanh()</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x, h</span>):</span><br><span class="line">        h = <span class="variable language_">self</span>.activation(<span class="variable language_">self</span>.Wh(h) + <span class="variable language_">self</span>.Wx(x))</span><br><span class="line">        <span class="keyword">return</span> h</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RNNLM</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, vocab_size, hidden_size</span>):</span><br><span class="line">        <span class="built_in">super</span>(RNNLM, <span class="variable language_">self</span>).__init__()</span><br><span class="line">        <span class="variable language_">self</span>.embedding = nn.Embedding(vocab_size, hidden_size)</span><br><span class="line">        <span class="variable language_">self</span>.rnn = RNNCell(hidden_size, hidden_size)</span><br><span class="line">        <span class="variable language_">self</span>.output = nn.Linear(hidden_size, vocab_size)</span><br><span class="line">        <span class="variable language_">self</span>.hidden_size = hidden_size</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x, hidden=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="keyword">if</span> hidden <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            hidden = <span class="variable language_">self</span>.init_hidden(x.size(<span class="number">0</span>))</span><br><span class="line">        </span><br><span class="line">        x = <span class="variable language_">self</span>.embedding(x)</span><br><span class="line">        </span><br><span class="line">        outs = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(x.size(<span class="number">1</span>)):</span><br><span class="line">            hidden = <span class="variable language_">self</span>.rnn(x[:, i:i+<span class="number">1</span>], hidden)</span><br><span class="line">            out = <span class="variable language_">self</span>.output(hidden)</span><br><span class="line">            outs.append(out)</span><br><span class="line">        </span><br><span class="line">        outs = torch.cat(outs, dim=<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> outs, hidden</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">init_hidden</span>(<span class="params">self, batch_size</span>):</span><br><span class="line">        <span class="keyword">return</span> torch.zeros(batch_size, <span class="number">1</span>, <span class="variable language_">self</span>.hidden_size)</span><br></pre></td></tr></table></figure>
-<h2 id="Vanishing-Gradient">Vanishing Gradient</h2>
-<blockquote>
-<p>容易梯度爆炸或者梯度消失，取决于|W|</p>
-</blockquote>
-<h2 id="Solutions">Solutions</h2>
-<ol>
-<li>Gating function(门控)<br>
-我们会有一个可学习的标量z_t<br>
-ht = (1 - z_t) * h_t - 1 + z_t * ~h_t(这个~h_t是之前算出来的)</li>
-</ol>
-<ul>
-<li>若z_t = 0, 那么就是RNN</li>
-<li>若z_t = 1 ,那么就是记住很之前的东西，达到长距离依赖</li>
-</ul>
-<ol start="2">
-<li>
-<p>残差<br>
-h_t = h_t-1 + ~h_t</p>
-</li>
-<li>
-<p>GRU(Gated Recurrent Unit)<br>
-有两个门，一个是update gate， 另一个是 reset gate（给出了有一个擦除）</p>
-</li>
-</ol>
-<img src="/2026/09/15/CMU711/4_RNN/3.png" class="" title="alt text">
-<blockquote>
-<p>先重置门r_t * h_t-1 ，再让更新们决定最后的隐藏状态，r_t,z_t都是长度为(hidden_state,)的向量</p>
-</blockquote>
-<ol start="3">
-<li>LSTM</li>
-</ol>
-<h3 id="Encoder-Decoder">Encoder-Decoder</h3>
-<p><strong>如果让Decoder和Encoder都成为RNN，问题是如何链接</strong></p>
-<ul>
-<li>
-<p>把decoder的初始隐藏层变成Encoder的最后一层隐藏层的变换或者直接相等</p>
-</li>
-<li>
-<p>同样的将Encoder和Decoder一起训练， 由于Encoder没有输出， 所以让Decoder的每层输出都softmax</p>
-</li>
-</ul>
-<h3 id="Attention">Attention</h3>
-<blockquote>
-<p>我们会看每一个hidden state<br>
-current_hidden state - Query<br>
-an = score(Q,h_n) normalization<br>
-output = Σa_n * h_n</p>
-</blockquote>
-<img src="/2026/09/15/CMU711/4_RNN/4.png" class="" title="alt text">
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/15/CMU711/4_RNN/" data-id="cmufbmdk7000ib0tldjusc06u" data-title="4.Recurrent Neural Networks" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CMU711/" rel="tag">CMU711</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RNN/" rel="tag">RNN</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-CMU711/3_Autoaggrevssive_Language_Modelling" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2026/09/14/CMU711/3_Autoaggrevssive_Language_Modelling/" class="article-date">
-  <time class="dt-published" datetime="2026-09-14T04:45:20.000Z" itemprop="datePublished">2026-09-14</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2026/09/14/CMU711/3_Autoaggrevssive_Language_Modelling/">Autoaggresive Language Modelling</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>Types of prediction:</p>
-<ul>
-<li>Binary</li>
-<li>Multi-class</li>
-<li>Structered - Exponential/infinate labels (maybe like translatations,sequence prediction)</li>
-</ul>
-<h3 id="Language-Modelling">Language Modelling</h3>
-<p>language model is a probability distribution over all sequences</p>
-<blockquote>
-<p>P(X)</p>
-</blockquote>
-<p>Conditional generation:</p>
-<p>x_t+1:T(output) = P(X_t+1:T(output) | X_1:t(input))</p>
-<h3 id="Auto-regressive-Language-Models">Auto-regressive Language Models</h3>
-<p>P(X) = multi(p(x_t | x_1, … x_t-1)) t = 1-&gt;T</p>
-<blockquote>
-<p>用马尔可夫链来预测next token</p>
-</blockquote>
-<h3 id="Bigram-models">Bigram models</h3>
-<p>Each token is determined by the previous one token</p>
-<ol>
-<li>split the dataset into training,valid,test</li>
-<li>compute the probability distribution: p(x_t|x_t-1) = count(x_t-1, x_t) | Σt’ count(x_t-1,x_t’) -&gt; maximum likelihood(最大似然)</li>
-<li>minDkl = min{ -p*(x)logp/p*(x) } 用P去接近P*（P_Data）数量的散度<br>
-最后的结果是argmin {-1/D(data集大小) Σ（logp(x)}<br>
-max{Σx log(x)} -&gt; 操控参数来让让logp(x)最大化</li>
-</ol>
-<blockquote>
-<p>Using log space<br>
-用log 防止概率太小而产生下溢或者数值不稳定</p>
-</blockquote>
-<h3 id="Evaluation">Evaluation</h3>
-<ol>
-<li>
-<p>Log-likelihood - use test datasest<br>
-NLL = -Σlog(p_t | p_&lt;t)</p>
-</li>
-<li>
-<p>Per-token average NLL<br>
-上面的NLL / Ttotal</p>
-</li>
-<li>
-<p>Perplexity<br>
-exp(Average_NLL)</p>
-</li>
-</ol>
-<p>perplexity -&gt; 接近1 -&gt; 预测成功<br>
-perplexity -&gt; 接近num_class -&gt; 平均预测</p>
-<h3 id="Training-Ngram-Models">Training Ngram Models</h3>
-<ol>
-<li>有可能矩阵非常稀疏,有些甚至为0<br>
--&gt; 加上’fake count’ 去防止0的出现</li>
-</ol>
-<img src="/2026/09/14/CMU711/3_Autoaggrevssive_Language_Modelling/1.png" class="" title="alt text">
-<ol start="2">
-<li>
-<p>simliarity and intervening words<br>
--&gt; neural network</p>
-</li>
-<li>
-<p>Long-distances dependencies(长上下文)<br>
--&gt; Transformer</p>
-</li>
-</ol>
-<blockquote>
-<p>现在的LLM仍然基于Autoaggressive的马尔可夫预测，但是引入了思维链，赋予了模型在推理时间的动态分配计算资源的能力，有些最新的架构用MTP模块同时预测未来的多个token</p>
-</blockquote>
-<p>when to use n-gram models</p>
-<ul>
-<li>n-gram models查询速度快</li>
-<li>可用于快速过滤数据等</li>
-</ul>
-<h2 id="Neural-Language-Model">Neural Language Model</h2>
-<ul>
-<li>use learned, distributed representation</li>
-</ul>
-<p>N = 2 时：</p>
-<img src="/2026/09/14/CMU711/3_Autoaggrevssive_Language_Modelling/2.png" class="" title="alt text">
-<blockquote>
-<p>把Nwords的feature combined了<br>
-Loss function: Lt = -logp(x_t|x_1:t-1)<br>
-cross entropy loss</p>
-</blockquote>
-<p><strong>我们只是把language 任务变成了 classfication 任务</strong></p>
-<p>similar context create similar hidden state</p>
-<p>similar input create similar embeddings</p>
-<h3 id="pratical-advices">pratical advices</h3>
-<ol>
-<li>splitting the data into train,valid and test data<br>
-valid data to tune hyperparameters, perform ablations</li>
-</ol>
-<p>use test data at once in the end</p>
-<ol start="2">
-<li>initialize</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nn.init.xavier._uniform_</span><br></pre></td></tr></table></figure>
-<img src="/2026/09/14/CMU711/3_Autoaggrevssive_Language_Modelling/3.png" class="" title="alt text">
-<ol start="3">
-<li>Learning rate</li>
-</ol>
-<ul>
-<li>cosine schedule 先大后小</li>
-<li>with warmup 先开始小，后来变大后从大到小</li>
-</ul>
-<ol start="4">
-<li>Batching<br>
-take advantage of GPU’s parallel hardware</li>
-</ol>
-<blockquote>
-<p>比如padding tokens</p>
-</blockquote>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/14/CMU711/3_Autoaggrevssive_Language_Modelling/" data-id="cmufbmdkf002tb0tl6v6157cc" data-title="Autoaggresive Language Modelling" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CMU711/" rel="tag">CMU711</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/language-modelling/" rel="tag">language modelling</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-CMU711/2_learnedrepresentations" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2026/09/12/CMU711/2_learnedrepresentations/" class="article-date">
-  <time class="dt-published" datetime="2026-09-12T05:28:39.000Z" itemprop="datePublished">2026-09-12</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2026/09/12/CMU711/2_learnedrepresentations/">2.Learned Representations</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="Tokenization">Tokenization</h2>
-<blockquote>
-<p>需要解决的问题:</p>
-</blockquote>
-<ol>
-<li>subwrod Models (各种词的变形)<br>
-sol: 分词法的不同 , 将词分为different tokens<br>
-<font color = 'blue'><br>
-example: the compan_ ies are expand_ ing &lt; 后缀提取 &gt;<br>
-<font color = 'black'></li>
-</ol>
-<ul>
-<li>我们可以减少词汇量， 共享参数</li>
-<li>我们不想要tokenize的种类太多或者太少</li>
-</ul>
-<ol start="2">
-<li>用UTF-8 bytes tokenize text</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">utf = <span class="string">&quot;我是傻逼。Hello!&quot;</span>.encode(<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>([x <span class="keyword">for</span> x <span class="keyword">in</span> utf])</span><br><span class="line"><span class="comment"># 输出列表</span></span><br><span class="line"><span class="comment"># 用0-255的数字序列表示token</span></span><br></pre></td></tr></table></figure>
-<ol start="3">
-<li>用Byte Pair Encoding</li>
-</ol>
-<blockquote>
-<p>将经常用的连续token对 pairs into new tokens<br>
-GPT-2 用的分词器就是基于BPE和UTF-8编码 <a target="_blank" rel="noopener" href="https://github.com/openai/gpt-2/blob/master/src/encoder.py">https://github.com/openai/gpt-2/blob/master/src/encoder.py</a></p>
-</blockquote>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">text = <span class="string">&quot;&quot;&quot;Hello, world! Here is some example text to test</span></span><br><span class="line"><span class="string">the BPE algorithm. It is not very interesting, but it will</span></span><br><span class="line"><span class="string">do the job.</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span> </span><br><span class="line">tokens = text.encode(<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line">tokens = <span class="built_in">list</span>(<span class="built_in">map</span>(<span class="built_in">int</span>, tokens))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(text))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(tokens))</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_stats</span>(<span class="params">ids</span>):</span><br><span class="line">    counts = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> pair <span class="keyword">in</span> <span class="built_in">zip</span>(ids, ids[<span class="number">1</span>:]):</span><br><span class="line">        <span class="comment"># zip 把ids 的第i个元素，和ids的第i个元素组合起来成为元组</span></span><br><span class="line">        counts[pair] = counts.get(pair, <span class="number">0</span>) + <span class="number">1</span></span><br><span class="line">        <span class="comment"># 读取counts中key为pair的值， 如果没有pair则返回0</span></span><br><span class="line">        <span class="comment"># 为了保证安全性</span></span><br><span class="line">    <span class="keyword">return</span> counts</span><br><span class="line">    </span><br><span class="line">stats = get_stats(tokens)</span><br><span class="line"><span class="comment"># 返回元组的字典</span></span><br><span class="line"><span class="comment"># print(sorted(((v,k) for k,v in stats.items()), reverse=True))</span></span><br><span class="line"></span><br><span class="line">top_pair = <span class="built_in">max</span>(stats, key=stats.get)</span><br><span class="line"><span class="built_in">print</span>(top_pair, <span class="string">&#x27;&quot;&#x27;</span> + <span class="built_in">chr</span>(top_pair[<span class="number">0</span>]) + <span class="string">&#x27;&quot;&#x27;</span>, <span class="string">&#x27;&quot;&#x27;</span> + <span class="built_in">chr</span>(top_pair[<span class="number">1</span>]) + <span class="string">&#x27;&quot;&#x27;</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="用Tiktoken库分词">用Tiktoken库分词</h3>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># !pip install tiktoken</span></span><br><span class="line"><span class="keyword">import</span> tiktoken</span><br><span class="line"></span><br><span class="line">enc = tiktoken.get_encoding(<span class="string">&quot;gpt2&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(enc.encode(<span class="string">&quot;Hello, こんにちは&quot;</span>))</span><br><span class="line"></span><br><span class="line">enc = tiktoken.get_encoding(<span class="string">&quot;cl100k_base&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(enc.encode(<span class="string">&quot;Hello, こんにちは&quot;</span>))</span><br></pre></td></tr></table></figure>
-<font color = 'red'>
-1. 用正则预先分词
-2. 用utf-8编码
-3. 用BPE合并
-<font color = 'black'>
-<blockquote>
-<p>注意是以1Byte-&gt;token为单位合并的， 比如’我’编码为3个Byte，之后就按照频率合并，比如这三个Byte合成一个token</p>
-</blockquote>
-<ol start="4">
-<li>用Google的SentencePiece库</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sentencepiece <span class="keyword">as</span> spm</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;toy_tokenizer_txt.txt&quot;</span>, <span class="string">&quot;w&quot;</span>, encoding=<span class="string">&quot;utf-8&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.write(training_text)</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="comment"># There are a lot of sentencepiece options.</span></span><br><span class="line"><span class="comment"># If you are considering training your own tokenizer for a serious project</span></span><br><span class="line"><span class="comment"># or production, make sure you are aware of the exact setting you are running.</span></span><br><span class="line"><span class="comment"># Here we just make sure that we have set the vocab size and byte_fallback.</span></span><br><span class="line"><span class="comment"># For fun, we also split digits to show the use of such a rule.</span></span><br><span class="line">options = <span class="built_in">dict</span>(</span><br><span class="line">  <span class="comment"># input spec</span></span><br><span class="line">  <span class="built_in">input</span>=<span class="string">&quot;toy_tokenizer_txt.txt&quot;</span>,</span><br><span class="line">  input_format=<span class="string">&quot;text&quot;</span>,</span><br><span class="line">  model_prefix=<span class="string">&quot;toy_tokenizer&quot;</span>,</span><br><span class="line">  model_type=<span class="string">&quot;bpe&quot;</span>,</span><br><span class="line">  vocab_size=<span class="number">2048</span>,</span><br><span class="line">  byte_fallback=<span class="literal">True</span>,</span><br><span class="line">  split_digits=<span class="literal">True</span>,</span><br><span class="line">  num_threads=os.cpu_count(),</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">spm.SentencePieceTrainer.train(**options)</span><br></pre></td></tr></table></figure>
-<h3 id="Continous-Word-Embeddings">Continous Word Embeddings</h3>
-<p>Previous : ont hot</p>
-<ul>
-<li>too sparse</li>
-</ul>
-<ol>
-<li>Continous Bag of Words(CBoW)<br>
-给不同的token给与连续的embedding vector<br>
-再将学到的embedding 加起来 成为(d,)<br>
-经过一个Linear Layer 变成(k,) 然后可以softmax</li>
-</ol>
-<blockquote>
-<p>Each vector element is a feature</p>
-</blockquote>
-<ol start="2">
-<li>Deep CBoW -&gt; using two-layers neural network.<br>
-用 tanh/relu 来进行activation function, Non-linearity</li>
-</ol>
-
-<h3 id="Training-CBoW">Training CBoW</h3>
-<blockquote>
-<p>gradient descent</p>
-</blockquote>
-<ul>
-<li>Loss Function: Binary Cross entropy<br>
-最后一层输出一个 - y</li>
-</ul>
-<p>用sigmoid将y限制在[0,1]</p>
-<p>之后用类似Cross entropy的方式进行 -&gt; 本质就是p 和 1-p 的cross entropy</p>
-<p>如果 y_truth = 1 就是 -log(p(y_pred)) 否则就是 -log(1 - y)</p>
-<blockquote>
-<p>没什么好说的， 就是softmax() 把 k维输出变成 K维的概率</p>
-</blockquote>
-<h3 id="what-is-cross-entropy-come-from">what is cross entropy come from</h3>
-<p>KL divergence -&gt; KL散度</p>
-<blockquote>
-<p>衡量概率距离的一种方法</p>
-</blockquote>
-<p>minKL(p1,p2) = min - sum(p1(x)log(p2(x)/p1(x)))</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="comment"># logits -&gt; p[0.5,0.2,0.3] ...</span></span><br><span class="line"><span class="comment"># target = y_truth</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ce_loss</span>(<span class="params">logits, target</span>):</span><br><span class="line">    logits_probs = torch.nn.functional.log_softmax(logits,dim= <span class="number">1</span>)</span><br><span class="line">    <span class="comment"># 这里torch 会创建一个计算图节点， 并且把cache保留到这个节点的grad_fn里面</span></span><br><span class="line">    loss = -logits_probs[:, target]</span><br><span class="line">    <span class="keyword">return</span> loss</span><br></pre></td></tr></table></figure>
-<h3 id="Optimizing-Parameters">Optimizing Parameters</h3>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/12/CMU711/2_learnedrepresentations/" data-id="cmufbmdk7000hb0tl1cpg60xt" data-title="2.Learned Representations" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CMU711/" rel="tag">CMU711</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-CMU711/1_Introduction" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2026/09/12/CMU711/1_Introduction/" class="article-date">
-  <time class="dt-published" datetime="2026-09-12T01:40:19.000Z" itemprop="datePublished">2026-09-12</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2026/09/12/CMU711/1_Introduction/">1.Introduction</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="NLP-ASPECTS">NLP ASPECTS</h2>
-<ol>
-<li>Learn useful representations</li>
-<li>Generate Language</li>
-<li>Bridge language and action (e.g: code IDE)</li>
-</ol>
-<h4 id="past-methods">past methods</h4>
-<ol>
-<li>Based ON Rules</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">classify</span>(<span class="params">x: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    sports = [<span class="string">&#x27;basketball&#x27;</span>,<span class="string">&#x27;soccer&#x27;</span>] ..</span><br><span class="line">    <span class="keyword">if</span> (key <span class="keyword">in</span> x afor key <span class="keyword">in</span> sports_keywords):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;sports&quot;</span></span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>Supervised Learning<br>
-Data -&gt; Training -&gt; Model</li>
-<li>Reinforcement Learning<br>
-Agent -&gt; action -&gt; environment -&gt; reward</li>
-</ol>
-<h3 id="A-Rule-Based-NLP-System">A Rule-Based NLP System</h3>
-<p>Exp: 分类评论 -&gt; postive(1) neutral(0) negative(-1)</p>
-<ol>
-<li>modeling -&gt;  怎么计算 -&gt; 点积, para怎么设计</li>
-<li>Learning -&gt; Learning the parameters based on data</li>
-<li>Inference -&gt; 决策</li>
-</ol>
-<h3 id="Embedding">Embedding</h3>
-<h4 id="BoW-Modelling">BoW Modelling</h4>
-<p>基本上就是One-hot vector<br>
-Features f(x) ∈ R_V V是size of words</p>
-<p>Auto_regression<br>
-S</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/12/CMU711/1_Introduction/" data-id="cmufbmdk7000fb0tlfsvvfi1i" data-title="1.Introduction" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CMU711/" rel="tag">CMU711</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-CS231n/batchnorm" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2026/09/10/CS231n/batchnorm/" class="article-date">
-  <time class="dt-published" datetime="2026-09-10T07:24:20.000Z" itemprop="datePublished">2026-09-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2026/09/10/CS231n/batchnorm/">batchnorm</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="初始化过大">初始化过大</h2>
-<p>最后的 softmax 因为要进入 exp 函数，exp 是越来越尖锐的，所以两边的梯度会变化很大，$(p_i - 1)$ 会很接近 0；而且传播过程中也会乘以很大的 $W$，从而发生变化。</p>
-<h2 id="初始化过小">初始化过小</h2>
-<p>在前向传播中，数据经过多层矩阵乘法 $Y = XW$。当 $W$ 的元素标准差过小时，每一层激活值的方差会呈指数级衰减，深层神经元的输出迅速趋近于 0。</p>
-<p>在反向传播中，链式法则导致梯度的幅度同样逐层指数衰减，引发<strong>梯度消失（Vanishing Gradients）</strong>，参数无法得到有效更新。</p>
-<h2 id="解决方案">解决方案</h2>
-<p>所以我们引入 $\gamma$、$\beta$ 因子，让模型自我学习，避免梯度爆炸和梯度消失。</p>
-<hr>
-<h2 id="Inline-Question-2">Inline Question 2</h2>
-<blockquote>
-<p>Describe the results of this experiment. What does this imply about the relationship between batch normalization and batch size? Why is this relationship observed?</p>
-</blockquote>
-<p><strong>Answer:</strong></p>
-<ul>
-<li><strong>批量较大时</strong>（如 32、64、128）：批量归一化能显著加速训练收敛，并提升最终准确率。</li>
-<li><strong>批量较小时</strong>（如 1、2、4）：批量归一化的效果明显变差，甚至可能不如不使用 BN。批量越小，训练越不稳定，性能下降越明显。</li>
-</ul>
-<blockquote>
-<p>补充：<code>layer_norm</code> 对 <code>batch_size</code> 没有要求。</p>
-</blockquote>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/10/CS231n/batchnorm/" data-id="cmufbmdk6000cb0tl7q2h3ewu" data-title="batchnorm" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-CS231n/Transformer" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2026/09/09/CS231n/Transformer/" class="article-date">
-  <time class="dt-published" datetime="2026-09-09T08:02:09.000Z" itemprop="datePublished">2026-09-09</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2026/09/09/CS231n/Transformer/">Transformer</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="ATTENTION">ATTENTION</h2>
-<p>Seq2Seq with RNN</p>
-<blockquote>
-<p>A ENCODER ht = fW(x_t,h_t-1) RNN<br>
-ENCODER will summarize the all the context as C( <font color = 'red'> Last hidden state <font color = 'black'> )</p>
-</blockquote>
-<blockquote>
-<p>A DECODER A DIFFERENT RNN<br>
-有一个Initial decoder state s0</p>
-</blockquote>
-<p>s_t = Gu(y_t-1, s_t-1, c)</p>
-<blockquote>
-<p>问题: 获取上下文的唯一向量只有一个C， 维度也固定<br>
-想法: 给予Decoder回看Encoder模型的方法</p>
-</blockquote>
-<ol>
-<li>initial state s0</li>
-<li>计算s0和前面 Encoder 不同隐藏状态的对齐得分(Alignment scores)， 这个得分e_t_i是一个标量</li>
-<li>softmax函数来 让对齐得分同一个s_t 对不同的h_i 归一化</li>
-<li>把之前的信息按照重要度汇总，变成 c_t = sigma(a_t_i * hi)</li>
-<li>Deocder: s_T = Gu(y_t1, s_t1, c_t)</li>
-</ol>
-<blockquote>
-<p>how to initialize state s0<br>
-有不同的方法</p>
-</blockquote>
-<p>我们可以看网络在关注什么</p>
-<img src="/2026/09/09/CS231n/Transformer/1.png" class="" title="coumpute graph">
-<blockquote>
-<p>ATTENTION 不只可以用在RNN上， 还有一个更加普遍的机制</p>
-</blockquote>
-<ul>
-<li>Query Vector(s) - Q</li>
-<li>Data Vector(h) - K</li>
-<li>output Vector© - V</li>
-</ul>
-<ol>
-<li>
-<p>计算相似性函数 - 用点积 / <a target="_blank" rel="noopener" href="http://sqrt.np">sqrt.np</a>(D_q)<br>
-<font color = 'red'> D_q 是 Query的维度， 让最后结果的方差仍然是1, 不然softmax会太过极端， softmax两头导数都是接近0<br>
-<font color = 'black'></p>
-</li>
-<li>
-<p>并行处理一组查询<br>
-Q[N_Q X D_Q]  ,<br>
-X[N_X X D_Q]</p>
-<blockquote>
-<p>E = Q * X^T / sqrt(D_Q)<br>
--&gt; E = [N,Q , D_Q , N_X]</p>
-</blockquote>
-</li>
-<li>
-<p>softmax对每一行执行</p>
-</li>
-<li>
-<p>A = softmax(E,dim = 1) = [N_Q , N_X]</p>
-</li>
-<li>
-<p>Y = AX -&gt; 线性组合</p>
-</li>
-</ol>
-<p>key_matrix : W_k = [D_x , D_Q]<br>
-query_matrix : Q = [N_Q , D_Q]<br>
-value_matrix : W_v = [D_x , D_V]</p>
-<p>K和V是两个不同的过滤X中信息的方式， 一个是注重于信息，一个是注重于计算相似度</p>
-<p>K = X · W_k -&gt; 查询相似度<br>
-V = X · W_v -&gt; 获取每个X能从上下文提取的的信息</p>
-<img src="/2026/09/09/CS231n/Transformer/2.png" class="" title="coumpute graph">
-<ul>
-<li>self-attention Query 和 X 是一样的 , 适用于输入是同一格式的情况<br>
-我们会将每一个输入的 X 都转化为 Q K V</li>
-</ul>
-<p>Q = X<code>Q K = X</code>K<br>
-V = X`V</p>
-<blockquote>
-<p>在硬件上， 执行大的矩阵乘法会比执行多次小的省时间<br>
-所以我们很常见就是把W_Q , W_K , W_V拼接起来一起点积X</p>
-</blockquote>
-<p>自注意层的置换不变性（在推理层面） -&gt; 自注意层本身对输入的位置无所谓， 输入相同的东西在不同位置也是一样的</p>
-<blockquote>
-<p>解决， 位置编码， 在输入X加入向量层表示token的索引</p>
-</blockquote>
-<p>掩蔽式注意力机制（masked attention）</p>
-<blockquote>
-<p>让K 和 X计算出来有些位置是 -无穷大， 这样softmax有些位置就是0</p>
-</blockquote>
-<p>应用：语言输入（不让语言看到后面的内容）</p>
-<h2 id="multi-head-attention">multi-head attention</h2>
-<blockquote>
-<p>将X路由到不同的self-attention-layer上  ， 用不同的Q K V，把输出的Y堆叠起来， 在输出的时候进行维度投影 -&gt; O</p>
-</blockquote>
-<p>现在的self-attention几乎都是多头的</p>
-<p>但是也可以用一个矩阵乘法来进行</p>
-<p>所以attention推理基本上就是4个矩阵乘法</p>
-<p>矩阵乘法highly - effienct, parallable</p>
-<h2 id="TransFormer">TransFormer</h2>
-<p>SELF-ATTENTION -&gt; LAYER_NORM -&gt; RESNET -&gt; MLP</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2026/09/09/CS231n/Transformer/" data-id="cmufbmdk6000bb0tl8pyq74v0" data-title="Transformer" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CS231n/" rel="tag">CS231n</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-CS231n/RNN" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2026/07/15/CS231n/RNN/" class="article-date">
-  <time class="dt-published" datetime="2026-07-15T06:47:27.000Z" itemprop="datePublished">2026-07-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2026/07/15/CS231n/RNN/">RNN</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="Recurrent-Neural-Network">Recurrent Neural Network</h2>
-<ol>
-<li>普通的NN 一个输入对应一个输出</li>
-<li>一对多 ： 如image - &gt; sequcence of words(图片对应一句话描述)</li>
-<li>多对一 : 如视频识别标签</li>
-<li>多对多 ：视频描述</li>
-</ol>
-<blockquote>
-<p>RNN的内部状态(隐藏状态) 在每一次输入都进行更新</p>
-</blockquote>
-<blockquote>
-<p>h_t(new_state) = fW(h_t-1, x_t)<br>
-y_t = fW_hy(h_t) fW_hy-&gt; 将hidden state转化为输出的output</p>
-</blockquote>
-<font color = 'black'>
-更新的fW 和 转化的fW_hy 都用一致的函数
-<h2 id="Vanilla（普通）RNN">Vanilla（普通）RNN</h2>
-<img src="/2026/07/15/CS231n/RNN/1.png" class="" title="alt text">
-<p><font color = 'green'> 用tanh的好处是可以吧ht的值压在(-1,1)之间</p>
-<font color = 'black'>
-<h2 id="RNN-的-计算图-computational-graph">RNN 的 计算图(computational graph)</h2>
-<img src="/2026/07/15/CS231n/RNN/2.png" class="" title="coumpute graph">
-<blockquote>
-<p>每一步的Loss 相加得到总Loss，对每个时间步Loss都能得到对W的梯度</p>
-</blockquote>
-<p>对于多对一，可能只对最后的hidden state相关，所以只用考虑最后的Loss</p>
-<p>$$\delta_t = \frac{\partial L_t}{\partial s_t} + \frac{\partial s_{t+1}}{\partial s_t} \delta_{t+1}$$</p>
-<p>用这条公式可以计算所有的L，其中$\delta_t$是总L 对 s_t的导数</p>
-<h4 id="问题-当时间序列长的时候，每一个时间步的反向传播都异常艰难">问题:当时间序列长的时候，每一个时间步的反向传播都异常艰难</h4>
-<p>loca<br>
-解决:随时间反向传播</p>
-<p>（多输出）我们分割时间窗，然后只看这个时间窗里面的Loss，之前的只看成为h_0</p>
-<p>（单输出） 前向传播和原来一样，反向传播从后往前分为不同的时间窗，每个时间窗给前面的只有Loss对x1和对前一个隐藏状态的导数</p>
-<p>如果每层W的不一样 -&gt; 失去递推性，相当于一个普通的NN了</p>
-<p>语言RNN模型: 将前一个状态softmax后的输出，作为第二个的输入，同时hidden layers也在由于输入在改变，同时前一个状态的输出是根据softmax输出的概率采样得到</p>
-<p>缺点：</p>
-<ol>
-<li>recurrent 反向传播（每一步都需要前面的hidden states）很慢</li>
-<li>失去前面的信息</li>
-</ol>
-<p>RNN在CV的应用：</p>
-<ol>
-<li>图片说明文字 h_0 为 CNN后的图片，序列输入为前一步预测的词元</li>
-</ol>
-<img src="/2026/07/15/CS231n/RNN/3.png" class="" title="coumpute graph">
-<ol start="2">
-<li>Visual Question Answering<br>
-…</li>
-</ol>
-<h3 id="Multilayer-RNN">Multilayer RNN</h3>
-<p>每一层的RNN</p>
-<blockquote>
-<p>hidden layer更新是基于每层独立<br>
-从层数来讲，上一层的输入是下一层的输出</p>
-</blockquote>
-<img src="/2026/07/15/CS231n/RNN/4.png" class="" title="alt text">
-<h2 id="LSTM">LSTM</h2>
-<p>RNN梯度计算 -&gt;</p>
-<img src="/2026/07/15/CS231n/RNN/5.png" class="" title="coumpute graph">
-<img src="/2026/07/15/CS231n/RNN/6.png" class="" title="coumpute graph">
-<blockquote>
-<p>十分容易出现梯度消失，所以我们用LSTM</p>
-</blockquote>
-<p>LSTM : (i, f, o, g) (sigmoid, sigmoid, sigmoid ,tanh) W(ht_1, x)</p>
-<p>每个门都有自己独立的一套权重矩阵 $W$ 和偏置 $b$。它们的计算公式高度一致，只有激活函数和物理意义不同。</p>
-<p>i,f,o由于是sigmoid，输出在(0, 1 )之间</p>
-<p>$$C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}_t$$</p>
-<blockquote>
-<p>f 控制之前的状态有多少要被记住， i控制新状态多少要被输入</p>
-</blockquote>
-<p>$$h_t = o_t \odot \tanh(C_t)$$</p>
-<blockquote>
-<p>o控制输出的状态和原来状态的关系</p>
-</blockquote>
-<p>由于C_t 到 C_t-1 之间不经过tanh函数，所以我们不用担心梯度消失</p>
-<p><font color = 'green'> 和ResNet的思想很相似,跳过一些层</p>
-<p><font color = 'black'>Modern RNNs(MAMBA)</p>
-<ol>
-<li>上下文没有限制 (相比Transformer的优势)</li>
-<li>前向传播的计算增长是线性的， 不需要遍历整个序列</li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2026/07/15/CS231n/RNN/" data-id="cmufbmdk50008b0tl62s1dyde" data-title="RNN" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LSTM/" rel="tag">LSTM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RNN/" rel="tag">RNN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sequence-modeling/" rel="tag">sequence modeling</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1/" rel="tag">序列建模</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-
-
-  <nav id="page-nav">
-    
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
-  </nav>
-
-</section>
-        
-          <aside id="sidebar">
-  
-    
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Activation-Functions/" rel="tag">Activation Functions</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BackPropagation/" rel="tag">BackPropagation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMU711/" rel="tag">CMU711</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CNN/" rel="tag">CNN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CS231n/" rel="tag">CS231n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-drivern-approaches/" rel="tag">Data drivern approaches</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dropout/" rel="tag">Dropout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K-Nearest-Neighbor/" rel="tag">K-Nearest Neighbor</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" rel="tag">K最近邻居算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LSTM/" rel="tag">LSTM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linear-Classification/" rel="tag">Linear Classification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NN/" rel="tag">NN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Normalization-Layers/" rel="tag">Normalization Layers</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Optimization/" rel="tag">Optimization</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pretraining/" rel="tag">Pretraining</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Prompt/" rel="tag">Prompt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RNN/" rel="tag">RNN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Regulation/" rel="tag">Regulation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RestNet/" rel="tag">RestNet</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ScalingLaw/" rel="tag">ScalingLaw</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Weight-Initialization/" rel="tag">Weight Initialization</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dp/" rel="tag">dp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/language-modelling/" rel="tag">language modelling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sequence-modeling/" rel="tag">sequence modeling</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/softmax/" rel="tag">softmax</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%88%86%E6%B3%95/" rel="tag">二分法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BC%98%E5%8C%96/" rel="tag">优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" rel="tag">单调栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag">双指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/" rel="tag">完全背包</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1/" rel="tag">序列建模</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/" rel="tag">数据增强</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86/" rel="tag">数据预处理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E7%BB%84/" rel="tag">数组</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%88/" rel="tag">栈</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E8%BF%81%E7%A7%BB/" rel="tag">模型迁移</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" rel="tag">正则化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" rel="tag">滑动窗口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" rel="tag">线性分类</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%92%E5%BD%92/" rel="tag">递归</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%93%BE%E8%A1%A8/" rel="tag">链表</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/Activation-Functions/" style="font-size: 10px;">Activation Functions</a> <a href="/tags/BackPropagation/" style="font-size: 12px;">BackPropagation</a> <a href="/tags/CMU711/" style="font-size: 18px;">CMU711</a> <a href="/tags/CNN/" style="font-size: 12px;">CNN</a> <a href="/tags/CS231n/" style="font-size: 20px;">CS231n</a> <a href="/tags/Data-drivern-approaches/" style="font-size: 10px;">Data drivern approaches</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/K-Nearest-Neighbor/" style="font-size: 10px;">K-Nearest Neighbor</a> <a href="/tags/K%E6%9C%80%E8%BF%91%E9%82%BB%E5%B1%85%E7%AE%97%E6%B3%95/" style="font-size: 10px;">K最近邻居算法</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LeetCode/" style="font-size: 10px;">LeetCode</a> <a href="/tags/Linear-Classification/" style="font-size: 10px;">Linear Classification</a> <a href="/tags/NLP/" style="font-size: 18px;">NLP</a> <a href="/tags/NN/" style="font-size: 10px;">NN</a> <a href="/tags/Normalization-Layers/" style="font-size: 10px;">Normalization Layers</a> <a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a> <a href="/tags/Pretraining/" style="font-size: 10px;">Pretraining</a> <a href="/tags/Prompt/" style="font-size: 10px;">Prompt</a> <a href="/tags/RNN/" style="font-size: 12px;">RNN</a> <a href="/tags/Regulation/" style="font-size: 10px;">Regulation</a> <a href="/tags/RestNet/" style="font-size: 10px;">RestNet</a> <a href="/tags/ScalingLaw/" style="font-size: 10px;">ScalingLaw</a> <a href="/tags/Transformer/" style="font-size: 12px;">Transformer</a> <a href="/tags/Weight-Initialization/" style="font-size: 10px;">Weight Initialization</a> <a href="/tags/dp/" style="font-size: 10px;">dp</a> <a href="/tags/language-modelling/" style="font-size: 10px;">language modelling</a> <a href="/tags/sequence-modeling/" style="font-size: 10px;">sequence modeling</a> <a href="/tags/softmax/" style="font-size: 10px;">softmax</a> <a href="/tags/%E4%BA%8C%E5%88%86%E6%B3%95/" style="font-size: 10px;">二分法</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 10px;">优化</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" style="font-size: 16px;">动态规划</a> <a href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" style="font-size: 14px;">单调栈</a> <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" style="font-size: 14px;">双指针</a> <a href="/tags/%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/" style="font-size: 10px;">完全背包</a> <a href="/tags/%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1/" style="font-size: 10px;">序列建模</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/" style="font-size: 10px;">数据增强</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86/" style="font-size: 10px;">数据预处理</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%A0%88/" style="font-size: 14px;">栈</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E8%BF%81%E7%A7%BB/" style="font-size: 10px;">模型迁移</a> <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" style="font-size: 10px;">正则化</a> <a href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" style="font-size: 10px;">滑动窗口</a> <a href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" style="font-size: 10px;">线性分类</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 10px;">递归</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/09/">September 2026</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/07/">July 2026</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2026/09/24/CMU711/7_ScalingLaws/">7.ScalingLaws</a>
-          </li>
-        
-          <li>
-            <a href="/2026/09/23/CMU711/6_Pretraining/">6.Pretraining</a>
-          </li>
-        
-          <li>
-            <a href="/2026/09/16/CMU711/5_Transformer/">5. Attention and Transformers</a>
-          </li>
-        
-          <li>
-            <a href="/2026/09/15/CMU711/4_RNN/">4.Recurrent Neural Networks</a>
-          </li>
-        
-          <li>
-            <a href="/2026/09/14/CMU711/3_Autoaggrevssive_Language_Modelling/">Autoaggresive Language Modelling</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      
-      &copy; 2026 John Doe<br>
-      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
-
-
-<script src="/js/jquery-3.6.4.min.js"></script>
-
-
-
-  
-<script src="/fancybox/jquery.fancybox.min.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-
-  </div>
-</body>
-</html>
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>Website Info</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">Article Count :</div><div class="item-count">33</div></div><div class="webinfo-item"><div class="item-name">Unique Visitors :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Page Views :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Last Update :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-09-24T09:27:50.181Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.7.0</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
