@@ -1,0 +1,266 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>CLIP | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="预训练: 预测哪个图像对应的标题这一简单的预训练任务  并观察到CLIP的迁移性能是计算量的平滑可预测函数 让自然语言（比如web上图片的描述， 比如html信息） 比众包更有迁移性， 也更容易把图片和语言连接起来， 而且更易训练 选择高效的预训练   基线：连续词袋模型（CBOW）的核心逻辑，就是通过上下文词来预测中心词。 也就是用图片的向量预测文本包含了哪些关键词   联合训练一个CNN和一个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CLIP">
+<meta property="og:url" content="http://example.com/2026/10/10/paper/clip/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="预训练: 预测哪个图像对应的标题这一简单的预训练任务  并观察到CLIP的迁移性能是计算量的平滑可预测函数 让自然语言（比如web上图片的描述， 比如html信息） 比众包更有迁移性， 也更容易把图片和语言连接起来， 而且更易训练 选择高效的预训练   基线：连续词袋模型（CBOW）的核心逻辑，就是通过上下文词来预测中心词。 也就是用图片的向量预测文本包含了哪些关键词   联合训练一个CNN和一个">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2026/10/10/paper/clip/cover.png">
+<meta property="article:published_time" content="2026-10-10T02:32:24.000Z">
+<meta property="article:modified_time" content="2026-10-10T06:12:07.741Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="paper">
+<meta property="article:tag" content="multimodal">
+<meta property="article:tag" content="CLIP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2026/10/10/paper/clip/cover.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CLIP",
+  "url": "http://example.com/2026/10/10/paper/clip/",
+  "image": "http://example.com/2026/10/10/paper/clip/cover.png",
+  "datePublished": "2026-10-10T02:32:24.000Z",
+  "dateModified": "2026-10-10T06:12:07.741Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2026/10/10/paper/clip/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'CLIP',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/2026/10/10/paper/clip/cover.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">CLIP</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">CLIP</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-10-10T02:32:24.000Z" title="Created 2026-10-10 10:32:24">2026-10-10</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-10-10T06:12:07.741Z" title="Updated 2026-10-10 14:12:07">2026-10-10</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><strong>预训练: 预测哪个图像对应的标题这一简单的预训练任务</strong></p>
+<img src="/2026/10/10/paper/clip/1.png" class="" title="实现大纲">
+<p><em>并观察到CLIP的迁移性能是计算量的平滑可预测函数</em></p>
+<p><em>让自然语言（比如web上图片的描述， 比如html信息） 比众包更有迁移性， 也更容易把图片和语言连接起来， 而且更易训练</em></p>
+<h4 id="选择高效的预训练">选择高效的预训练</h4>
+<ol>
+<li>
+<p>基线：连续词袋模型（CBOW）的核心逻辑，就是通过上下文词来预测中心词。<br>
+<em>也就是用图片的向量预测文本包含了哪些关键词</em></p>
+</li>
+<li>
+<p>联合训练一个CNN和一个文本转换器，用transformer预测图像caption的 next token<br>
+<em>太慢了， 比标准词袋慢了3倍</em></p>
+</li>
+</ol>
+<p><strong>这两种方法有一个关键的相似之处。它们都试图预测每张图像所附带文本的确切词语。由于图像通常会伴随各种各样的描述、评论和相关文本，这是一项艰巨的任务</strong></p>
+<p><strong>我们发现， 对比目标函数回避等效预测目标函数学习更好的表征</strong></p>
+<p><strong>我们探索了训练一个系统来解决一个可能更容易的代理任务：预测哪些文本整体与哪些图像配对，而不是预测文本中的具体词语。</strong></p>
+<ol start="3">
+<li>CLIP , 用对比学习交叉熵</li>
+</ol>
+<p><em>文本编码器： Transformer:6300 万参数、12 层、512 宽、8 个注意力头, 以[EOS]输出的向量为标准</em></p>
+<p><em>图像编码器：ViT 和 ResNet-50</em></p>
+<p><em>对于图像encoder, 我们平均分配计算资源给深度， 宽度（每一层通道数）和分辨率（patch大小）</em></p>
+<p><em>对于文本encoder，我们发现CLIP性能关于文本编码器的容量不敏感</em></p>
+<h4 id="zero-shot-实验">zero-shot 实验</h4>
+<ul>
+<li>零样本迁移：训练在测试的时候没见过某个版本的标注类别， 但是却能识别处理这个类别</li>
+</ul>
+<p><em>CLIP 经过预训练，能够预测其数据集中的图像和文本片段是否配对，我们用这个功能来进行zero-shot分类</em></p>
+<p><em>在零样本分类中， 我们对caption样本进行prompt enginnering, 再进行很好的ensembling可以让预测成功率上升近5%， 相当于4倍计算量达到的效果</em></p>
+<p><em>我们遇到的另一个问题是，在我们的预训练数据集中，与图像配对的文本很少只有一个词。通常情况下，文本是一个完整的句子，以某种方式描述图像。为了弥补这种分布上的差异，我们发现使用提示模板“一张{label}的照片。 ”是一个很好的默认选择，它有助于明确文本是关于图像内容的。与仅使用标签文本的基线方法相比，这通常可以提高性能。例如，仅使用此提示就能将 ImageNet 上的准确率提高 1.3%。</em></p>
+<p><em>包含更广泛的监督信息的数据集上CLIP表现得更好，  专业化抽象化复杂任务上不足</em></p>
+<ul>
+<li>少样本线性探针：在模型上再加入一个线性层， 通过训练这个数据集预测一个少样本的数据集</li>
+<li>一般是加载image encoder上</li>
+</ul>
+<p><strong>在CLIP里面， 少样本线性探针和零样本数据差不多， 因为CLIP本身就能通过自然语言的语义进行拓展， 而原来的监督学习不能直接和自然语言关联</strong></p>
+<p>解决零样本学习和少样本学习性能差异的一个潜在方法是，将 CLIP 的零样本分类器作为少样本分类器权重的先验信息。虽然对生成的权重添加 L2 正则化项是实现这一想法的直接方法，但我们发现，超参数优化通常会选择过大的 L2 正则化项值，导致最终得到的少样本分类器“仅仅”是零样本分类器。因此，探索如何更好地结合零样本迁移学习的优势和少样本学习的灵活性，是未来研究的一个有前景的方向。</p>
+<ul>
+<li>这里L2正则化是计算当前分类器权重和零样本先验权重之间的欧氏距离平方当作惩罚项， 告诉模型不要偏离零样本权重太远， W_zero是一个文本encoder矩阵， 和少样本最后一层新加的线性权重形状一样，可以计算欧氏距离</li>
+</ul>
+<p><em>零样本 CLIP 的性能随模型计算量的增加而平滑扩展， 符合scaling laws</em></p>
+<h4 id="表征学习">表征学习</h4>
+<ul>
+<li>为了知道CLIP学习到的表征是否有用， 我们进行表征学习</li>
+</ul>
+<p><strong>我们用线性探针进行图像分类数据集上的表现， 发现CLIP的特征比ImageNET的Res-Net学习到的特征更好</strong></p>
+<h4 id="对自然分布的robustness">对自然分布的robustness</h4>
+<p><em>但是，这些模型仍然会犯许多简单的错误，而新的基准测试表明，这些系统的性能往往远低于其在 ImageNet 上的准确率和人类的准确率。是什么造成了这种差异？人们提出了各种想法并进行了研究一个常见的解释是，深度学习模型非常擅长发现训练数据集中普遍存在的关联性和模式，从而提升其在分布内的性能。然而，许多此类关联性和模式实际上是虚假的，并不适用于其他分布，反而会导致在其他数据集上的性能大幅下降。</em></p>
+<p><strong>我们可以研究ImageNet模型在自然分布偏移评估下的性能变化， 这些图像用各种方式扰动现有图像而生成</strong></p>
+<p><em>CLIP 模型对自然分布偏移具有显著更高的“有效鲁棒性”（Effective Robustness）。简单说，就是当测试数据与训练数据分布不同时（比如把 ImageNet 的图片换成素描、卡通或不同角度的照片），CLIP 的性能下降幅度远小于传统的有监督模型。</em></p>
+<p><em>一般认为这个鲁棒性来源书数据集本身的多样性</em></p>
+<h4 id="数据污染的分析">数据污染的分析</h4>
+<p><em>对数据中的数据污染进行分析， 结果发现数据的overlap不大</em></p>
+<h4 id="局限性">局限性</h4>
+<ol>
+<li>抽象和系统性的任务上表现不佳(比如统计图像中物体数量)</li>
+<li></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2026/10/10/paper/clip/">http://example.com/2026/10/10/paper/clip/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/paper/">paper</a><a class="post-meta__tags" href="/tags/multimodal/">multimodal</a><a class="post-meta__tags" href="/tags/CLIP/">CLIP</a></div><div class="post-share"><div class="social-share" data-image="/2026/10/10/paper/clip/cover.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/10/09/CMU711/13_Eva_Techniques/" title="13.Evaluation Techniques"><img class="cover" src="/2026/10/09/CMU711/13_Eva_Techniques/cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">13.Evaluation Techniques</div></div><div class="info-2"><div class="info-item-1">Evaluate our model  validation loss 不一定和 solve rate 相关   伪过拟合（Grokking / Task Alignment） 在针对特定领域（如 AlphaCode 的竞赛编程）进行微调时：  通用语言能力的 Loss 在上升： 模型在微调过程中逐渐“遗忘”了通用预训练数据中的自然语言语法和多样表达（导致通用 validation loss 上升）。 特定任务能力的 Solve Rate 在上升： 模型将参数权重高度集中到了特定任务（如解题、生成约束代码）的模式匹配上。  概率校准退化（Overconfidence / Miscalibration）与过拟合 当 对大模型进行长时间微调（Finetuning）时：  模型对预测过于自信，极度压低了某些不常见词的概率。如果模型在一个不影响最终正确性的非关键 Token（比如代码中的变量名或标点）上预测失误，交叉熵损失就会受到极大惩罚（Log-loss 呈对数级激增），导致 Validation Loss 上升。 但这种概率校准的失效，并没有改变模型选择最关键推理步骤/正确词汇的相对...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/09/26/paper/olom3/" title="Olmo 3：全开放语言与思考模型家族"><img class="cover" src="/2026/09/26/paper/olom3/cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-26</div><div class="info-item-2">Olmo 3：全开放语言与思考模型家族</div></div><div class="info-2"><div class="info-item-1">  training = pretrain +  posttrain   pretrain = pretraining + midtraining + longcontext    pretraing -&gt; 让模型学习通用的语言结构、世界知识和基本逻辑,“Next Token Prediction（预测下一个词）”的自监督方式训练。’   Midtrain 是从通用预训练过渡到特定能力强化/对齐之前的高质量数据继续预训练阶段, 提升数据质量， 学习率衰减   Long Context -&gt; 将训练文本的序列长度拉长， 并配合位置编码(RoPE)的基频调整    post_train into 3 variants(后训练出三个变体)   Olmo 3 Think -&gt; 生成结构化的CoT Olmo 3 Instruct -&gt; 对用户的查询高响应(效率优先) Olmo 3 RL-Zero -&gt; 开源  Base model data 语料来自CommonCrawl  处理：   去重-&gt; MinHash去重， Jaccard相似度验证 精确去重 ...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">44</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">59</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%89%E6%8B%A9%E9%AB%98%E6%95%88%E7%9A%84%E9%A2%84%E8%AE%AD%E7%BB%83"><span class="toc-number">1.</span> <span class="toc-text">选择高效的预训练</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#zero-shot-%E5%AE%9E%E9%AA%8C"><span class="toc-number">2.</span> <span class="toc-text">zero-shot 实验</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A1%A8%E5%BE%81%E5%AD%A6%E4%B9%A0"><span class="toc-number">3.</span> <span class="toc-text">表征学习</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E8%87%AA%E7%84%B6%E5%88%86%E5%B8%83%E7%9A%84robustness"><span class="toc-number">4.</span> <span class="toc-text">对自然分布的robustness</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%B1%A1%E6%9F%93%E7%9A%84%E5%88%86%E6%9E%90"><span class="toc-number">5.</span> <span class="toc-text">数据污染的分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B1%80%E9%99%90%E6%80%A7"><span class="toc-number">6.</span> <span class="toc-text">局限性</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/10/10/paper/clip/" title="CLIP"><img src="/2026/10/10/paper/clip/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="CLIP"/></a><div class="content"><a class="title" href="/2026/10/10/paper/clip/" title="CLIP">CLIP</a><time datetime="2026-10-10T02:32:24.000Z" title="Created 2026-10-10 10:32:24">2026-10-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/09/CMU711/13_Eva_Techniques/" title="13.Evaluation Techniques"><img src="/2026/10/09/CMU711/13_Eva_Techniques/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="13.Evaluation Techniques"/></a><div class="content"><a class="title" href="/2026/10/09/CMU711/13_Eva_Techniques/" title="13.Evaluation Techniques">13.Evaluation Techniques</a><time datetime="2026-10-09T04:42:22.000Z" title="Created 2026-10-09 12:42:22">2026-10-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/09/CMU711/Simple_rag/" title="RAG"><img src="/2026/10/09/CMU711/Simple_rag/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="RAG"/></a><div class="content"><a class="title" href="/2026/10/09/CMU711/Simple_rag/" title="RAG">RAG</a><time datetime="2026-10-09T04:12:18.000Z" title="Created 2026-10-09 12:12:18">2026-10-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/08/CMU711/12_MultimodalLLMsII/" title="12.Multimodal LLMs II"><img src="/2026/10/08/CMU711/12_MultimodalLLMsII/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="12.Multimodal LLMs II"/></a><div class="content"><a class="title" href="/2026/10/08/CMU711/12_MultimodalLLMsII/" title="12.Multimodal LLMs II">12.Multimodal LLMs II</a><time datetime="2026-10-08T06:43:09.000Z" title="Created 2026-10-08 14:43:09">2026-10-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/07/CMU711/Restnet/" title="The Position of ResNet in Transformer"><img src="/2026/10/07/CMU711/Restnet/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="The Position of ResNet in Transformer"/></a><div class="content"><a class="title" href="/2026/10/07/CMU711/Restnet/" title="The Position of ResNet in Transformer">The Position of ResNet in Transformer</a><time datetime="2026-10-07T08:53:21.000Z" title="Created 2026-10-07 16:53:21">2026-10-07</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.7.0</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
