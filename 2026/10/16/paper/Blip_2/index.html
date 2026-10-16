@@ -1,0 +1,332 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>BLIP-2 | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Q：BLIP-1中的ITC的文本编码器是预训练过的这我知道， 我的问题是BLIP1中的ITM,LM架构比起原来的文本Transformer多了Cross-Attention层，这是否意味着这两个是从头开始训练的  Ans:不是的， cross-attention随即初始权重，其它层都是可以和自回归LLM的参数继承的  问题:这样子预训练会应用于到所有LLM层，规模太大了  解决：在VLP期间保持">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BLIP-2">
+<meta property="og:url" content="http://example.com/2026/10/16/paper/Blip_2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Q：BLIP-1中的ITC的文本编码器是预训练过的这我知道， 我的问题是BLIP1中的ITM,LM架构比起原来的文本Transformer多了Cross-Attention层，这是否意味着这两个是从头开始训练的  Ans:不是的， cross-attention随即初始权重，其它层都是可以和自回归LLM的参数继承的  问题:这样子预训练会应用于到所有LLM层，规模太大了  解决：在VLP期间保持">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2026/10/16/paper/Blip_2/cover.png">
+<meta property="article:published_time" content="2026-10-16T05:44:12.000Z">
+<meta property="article:modified_time" content="2026-10-16T07:28:01.881Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="paper">
+<meta property="article:tag" content="multimodal">
+<meta property="article:tag" content="Blip">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2026/10/16/paper/Blip_2/cover.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "BLIP-2",
+  "url": "http://example.com/2026/10/16/paper/Blip_2/",
+  "image": "http://example.com/2026/10/16/paper/Blip_2/cover.png",
+  "datePublished": "2026-10-16T05:44:12.000Z",
+  "dateModified": "2026-10-16T07:28:01.881Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2026/10/16/paper/Blip_2/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'BLIP-2',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/2026/10/16/paper/Blip_2/cover.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">BLIP-2</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">BLIP-2</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-10-16T05:44:12.000Z" title="Created 2026-10-16 13:44:12">2026-10-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-10-16T07:28:01.881Z" title="Updated 2026-10-16 15:28:01">2026-10-16</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><ul>
+<li>Q：BLIP-1中的ITC的文本编码器是预训练过的这我知道， 我的问题是BLIP1中的ITM,LM架构比起原来的文本Transformer多了Cross-Attention层，这是否意味着这两个是从头开始训练的</li>
+</ul>
+<p>Ans:<strong>不是的， cross-attention随即初始权重，其它层都是可以和自回归LLM的参数继承的</strong></p>
+<ul>
+<li><p>问题:这样子预训练会应用于到所有LLM层，规模太大了</p>
+</li>
+<li><p>解决：在VLP期间保持现成的预训练模型冻结(图像编码器/文本编码器)</p>
+</li>
+</ul>
+<p><strong>BLIP-2框架概述。我们采用两阶段策略预训练一个轻量级查询Transformer，以弥合模态差异。第一阶段从冻结的图像编码器中引导视觉-语言表征学习。第二阶段从冻结的LLM中引导视觉-语言生成学习，从而实现零样本指导的图像到文本生成</strong></p>
+<p><strong>第一段是视觉-语言表征，类似于BLIP的ITM</strong></p>
+<p><strong>第二段是视觉-语言生成，类似于LM</strong></p>
+<img src="/2026/10/16/paper/Blip_2/1.png" class="" title="Blip-2">
+<p><strong>我们已经知道了LLM的泛化能力，我们可以冻结LLM的</strong></p>
+<ul>
+<li>在端到端的VLQ的中， 我们有几个很好的目标:1.图像文本对比。 2.图像文本匹配 3.掩码语言建模(分别对应ITC,ITM,LM)</li>
+</ul>
+<h2 id="Q-Former"><a href="#Q-Former" class="headerlink" title="Q-Former"></a>Q-Former</h2><img src="/2026/10/16/paper/Blip_2/2.png" class="" title="Blip-2">
+<p><strong>左边Transformer的输入是32个可学习的768维度queries参数，经过层层self-attention，cross-attention学习image Encoder输出的表征， 提取出视觉</strong></p>
+<p><strong>右边是一个文本transformer,和self-attention共享参数</strong></p>
+<p>图像 → 冻结的 ViT → 图像特征 ─────────────┐<br>                                           ↓ Cross-Attention<br>可学习的 Query → [Q-Former 多层处理] → 更新后的 Query<br>                         ↕ Self-Attention<br>文本 token     → [同一套 Q-Former 层] → 文本表示</p>
+<p><strong>共享self-attention和FFN -&gt; 对其能力</strong></p>
+<p><strong>相当于query和text是在同一队列里面进入的，只不过query是经过cross-attention通路， text没有 ，text它们两个可以互相注意也可以进行注意力mask</strong></p>
+<ul>
+<li>我们联合优化了三个预训练目标</li>
+</ul>
+<h3 id="第一阶段"><a href="#第一阶段" class="headerlink" title="第一阶段"></a>第一阶段</h3><ol>
+<li>ITC预训练<br>图片这一路：ViT 把图片切成许多视觉特征。32 个可学习 Query 进入 Q-Former；在 Cross-Attention 层里，Query 读取 ViT 的图像特征，逐层形成带有图像信息的表示。最后每个 Query 输出一个向量，再经过投影层并归一化。得到 32 个图像向量。ViT 冻结，Query 和 Q-Former 可训练。</li>
+</ol>
+<p>文本这一路：句子被切成 token，例如 [CLS], a, cat, wearing, sunglasses, [SEP]。文本 token 进入同一 Q-Former 的文本路径。每一层的 Self-Attention 中，每个有效 token 都可以读取句子里其他有效 token；Padding 位会被屏蔽。经过多层后取 [CLS] 的输出，经过文本投影层并归一化，得到 一个文本向量。</p>
+<ol>
+<li>ITG预训练:<br><strong>因为要生成文本，所以要先由query提取， 再通过自注意层传递给文本token，每个文本token可以关注所有查询及其之前的文本token</strong></li>
+</ol>
+<p><em>我们将[CLS]标记替换为新的[DEC]标记,[DEC] 标记只能看到左侧已经提炼好的图像 Query,作为第一个标记指示解码任务</em></p>
+<ol>
+<li>ITM预训练</li>
+</ol>
+<p><em>这是一个二元分类任务，模型需要预测图像-文本对是正例（匹配）还是负例（不匹配）。我们使用双向自注意力掩码，其中所有查询和文本都可以相互关注。输出查询嵌入从而捕获多模态信息。我们将每个输出查询嵌入输入到一个二分类线性分类器中以获得logit值</em></p>
+<h3 id="第二阶段"><a href="#第二阶段" class="headerlink" title="第二阶段"></a>第二阶段</h3><p><strong>我们把32个Quries看图后经过Transformer的32个视觉向量(如果维度不对还要经过一个全连接层， 比如LLM隐藏层维度可能是4096， 那就需要768 * 4096的FFN)输入一个LLM模型(如OPT或者FLAN-T5)，这个大语言模型，基本就相当于差不多等于prompt enigneering里面的先注入， 就相当于先把前置的知识token输入，再输入问题</strong></p>
+<h3 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h3><p><em>模型预训练： 和BLIP一样的数据， 加上CapFilt方法合成的数据，我们用BLIP的方法生成是个标题， 并基于CLIP的文本相似度去取排名前两位的训练数据，并在每个预训练步骤中随机抽取一个标题</em></p>
+<p><em>预训练的视觉大模型:ViT-L/14,ViT-g/14</em></p>
+<img src="/2026/10/16/paper/Blip_2/3.png" class="" title="Blip-2">
+<h3 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h3><p><strong>BLIP-2依托了强大的LLM的原始权重，在零样本任务中表现特别好</strong></p>
+<p><strong>我们只需要改变文本提示， 就可以很轻易地控制图像到文本的生成</strong></p>
+<h3 id="局限"><a href="#局限" class="headerlink" title="局限"></a>局限</h3><p><strong>预先提供几组图片-文本对的样例后ICL的能力并没有提升， 可能是由于训练集的基本都是但对的图像-文本对， 没有多组或者多对一的数据</strong></p>
+<ul>
+<li>Q：那些参数更新了<br><strong>哪些参数会训练？</strong><br><strong>Q-Former 本身：Query 参数、Transformer 中的注意力层和 FFNCross-Attention，以及相应的投影层和任务输出层。Q-Former 从 BERT 权重初始化，所以它是从随机参数开始；训练会继续调整这些已有权重，并学习新增的跨注意力部分。第一阶段的 ViT 图像编码器冻结；外部的大语言模型还没有接入。Q-Former 约有 188M 参数</strong></li>
+</ul>
+<img src="/2026/10/16/paper/Blip_2/4.png" class="" title="Blip-2"></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2026/10/16/paper/Blip_2/">http://example.com/2026/10/16/paper/Blip_2/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/paper/">paper</a><a class="post-meta__tags" href="/tags/multimodal/">multimodal</a><a class="post-meta__tags" href="/tags/Blip/">Blip</a></div><div class="post-share"><div class="social-share" data-image="/2026/10/16/paper/Blip_2/cover.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/10/16/CMU711/17_ReinforcementLearning2/" title="17.Reinforcement Learning II: RL for LLMs"><img class="cover" src="/2026/10/16/CMU711/17_ReinforcementLearning2/cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">17.Reinforcement Learning II: RL for LLMs</div></div><div class="info-2"><div class="info-item-1">One-Step MDPstate: prompt / prompt + response Actions: generate the full response Policy: language model Environment transition:concatenate response to prompt Reward: eva the full sequence / intermediate steps  Q1:we should know what is the input for LLM RL Q2:Fine-tune the model first or not’ Q3:what is the reward fuction(R) Q4:what advantages function(A) we are using  我们要明白Finetuning和RL的不同之处 SFT:学会按照指令回答， 有标准的格式， 一个字一个字一板一眼地计算loss RL: 可以用非标准答案的形式做反馈， 比如最后结果， 多步长推理， 可以分配哪一个token贡献了分数(credit ...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/10/14/paper/Blip/" title="BLIP"><img class="cover" src="/2026/10/14/paper/Blip/cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-14</div><div class="info-item-2">BLIP</div></div><div class="info-2"><div class="info-item-1"> Q1: CLIP等基于Encoder的模型不太容易直接应用于文本生成任务（例如图像描述） Q2：噪声网络文本，基于网络的文本不匹配不精确  因此BLIP提出了1. MED(多模态Encoder-Deocoder)，该模型联合预训练了[图像文本对比学习][图像文本匹配][图像文本语言建模]2.CapFilt，一种新的数据集引导方式， 用于从噪声图像-文本对中学习 MED分为两个模块：一个图像描述器，用于根据网络图像生成合成图像描述；以及一个过滤器，用于从原始网络文本和合成文本中去除噪声图像描述  架构 我们用ViT作为图像编码器， 将提取出的特征放入一个[CLS]标记中用ViT计算出来更方便 我们提出MED， MED可以运行下面的三个任务中的任意分别对图像和文本进行编码，文本编码器用BERT基于图像的文本编码器， 在文本编码器的每个Transformer模块的(Self-Attention)和(FNN)层之间加一个额外的交叉注意力(CA)层来注入视觉信息。这里的视觉信息是经过ViT视觉处理后的视觉token在CA这一步，Query来自文本，Key和Value来自图像。因此，CA的...</div></div></div></a><a class="pagination-related" href="/2026/10/10/paper/clip/" title="CLIP"><img class="cover" src="/2026/10/10/paper/clip/cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-10</div><div class="info-item-2">CLIP</div></div><div class="info-2"><div class="info-item-1">预训练: 预测哪个图像对应的标题这一简单的预训练任务  并观察到CLIP的迁移性能是计算量的平滑可预测函数 让自然语言（比如web上图片的描述， 比如html信息） 比众包更有迁移性， 也更容易把图片和语言连接起来， 而且更易训练 选择高效的预训练 基线：连续词袋模型（CBOW）的核心逻辑，就是通过上下文词来预测中心词。也就是用图片的向量预测文本包含了哪些关键词  联合训练一个CNN和一个文本转换器，用transformer预测图像caption的 next token太慢了， 比标准词袋慢了3倍   这两种方法有一个关键的相似之处。它们都试图预测每张图像所附带文本的确切词语。由于图像通常会伴随各种各样的描述、评论和相关文本，这是一项艰巨的任务 我们发现， 对比目标函数回避等效预测目标函数学习更好的表征 我们探索了训练一个系统来解决一个可能更容易的代理任务：预测哪些文本整体与哪些图像配对，而不是预测文本中的具体词语。  CLIP , 用对比学习交叉熵  文本编码器： Transformer:6300 万参数、12 层、512 宽、8 个注意力头, 以[EOS]输出的向量为标准 图...</div></div></div></a><a class="pagination-related" href="/2026/09/26/paper/olom3/" title="Olmo 3：全开放语言与思考模型家族"><img class="cover" src="/2026/09/26/paper/olom3/cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-26</div><div class="info-item-2">Olmo 3：全开放语言与思考模型家族</div></div><div class="info-2"><div class="info-item-1">   training = pretrain +  posttrain pretrain = pretraining + midtraining + longcontext   pretraing -&gt; 让模型学习通用的语言结构、世界知识和基本逻辑,“Next Token Prediction（预测下一个词）”的自监督方式训练。’  Midtrain 是从通用预训练过渡到特定能力强化/对齐之前的高质量数据继续预训练阶段, 提升数据质量， 学习率衰减  Long Context -&gt; 将训练文本的序列长度拉长， 并配合位置编码(RoPE)的基频调整    post_train into 3 variants(后训练出三个变体)  Olmo 3 Think -&gt; 生成结构化的CoT Olmo 3 Instruct -&gt; 对用户的查询高响应(效率优先) Olmo 3 RL-Zero -&gt; 开源   Base modeldata语料来自CommonCrawl  处理：   去重-&gt; MinHash去重， Jaccard相似度验证 精确去重 -&gt; ...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">50</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">63</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Q-Former"><span class="toc-number">1.</span> <span class="toc-text">Q-Former</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5"><span class="toc-number">1.1.</span> <span class="toc-text">第一阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5"><span class="toc-number">1.2.</span> <span class="toc-text">第二阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83"><span class="toc-number">1.3.</span> <span class="toc-text">训练</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">1.4.</span> <span class="toc-text">实验</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B1%80%E9%99%90"><span class="toc-number">1.5.</span> <span class="toc-text">局限</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/10/16/paper/Blip_2/" title="BLIP-2"><img src="/2026/10/16/paper/Blip_2/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="BLIP-2"/></a><div class="content"><a class="title" href="/2026/10/16/paper/Blip_2/" title="BLIP-2">BLIP-2</a><time datetime="2026-10-16T05:44:12.000Z" title="Created 2026-10-16 13:44:12">2026-10-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/16/CMU711/17_ReinforcementLearning2/" title="17.Reinforcement Learning II: RL for LLMs"><img src="/2026/10/16/CMU711/17_ReinforcementLearning2/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="17.Reinforcement Learning II: RL for LLMs"/></a><div class="content"><a class="title" href="/2026/10/16/CMU711/17_ReinforcementLearning2/" title="17.Reinforcement Learning II: RL for LLMs">17.Reinforcement Learning II: RL for LLMs</a><time datetime="2026-10-16T01:32:29.000Z" title="Created 2026-10-16 09:32:29">2026-10-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/14/CMU711/16_Reinforcement_Learning1/" title="16.Reinforcement Learning I"><img src="/2026/10/14/CMU711/16_Reinforcement_Learning1/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="16.Reinforcement Learning I"/></a><div class="content"><a class="title" href="/2026/10/14/CMU711/16_Reinforcement_Learning1/" title="16.Reinforcement Learning I">16.Reinforcement Learning I</a><time datetime="2026-10-14T08:49:53.000Z" title="Created 2026-10-14 16:49:53">2026-10-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/14/paper/Blip/" title="BLIP"><img src="/2026/10/14/paper/Blip/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="BLIP"/></a><div class="content"><a class="title" href="/2026/10/14/paper/Blip/" title="BLIP">BLIP</a><time datetime="2026-10-14T05:33:51.000Z" title="Created 2026-10-14 13:33:51">2026-10-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/12/CMU711/15_diffusion/" title="15.MultimodalIII diffusion"><img src="/2026/10/12/CMU711/15_diffusion/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="15.MultimodalIII diffusion"/></a><div class="content"><a class="title" href="/2026/10/12/CMU711/15_diffusion/" title="15.MultimodalIII diffusion">15.MultimodalIII diffusion</a><time datetime="2026-10-12T11:37:40.000Z" title="Created 2026-10-12 19:37:40">2026-10-12</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.7.0</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><div class="js-pjax"><script>(() => {
+  const changeScriptToMath = article => {
+    article.querySelectorAll('script[type^="math/tex"]').forEach(el => {
+      const display = /mode=display/.test(el.type)
+      const node = document.createElement(display ? 'div' : 'span')
+      node.textContent = display
+        ? `$$${el.textContent}$$`
+        : `$${el.textContent}$`
+      el.parentNode.replaceChild(node, el)
+    })
+  }
+
+  const loadMathjax = () => {
+    const article = document.getElementById('article-container')
+    if (!article || article.querySelector('.hbe-container')) return
+    changeScriptToMath(article)
+
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem',
+            'ui/lazy'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          lazyMargin: '200px',
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.3/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.typesetClear()
+      MathJax.typesetPromise([ article ])
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
